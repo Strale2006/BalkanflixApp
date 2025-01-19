@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "rn-creash-course",
-    "slug": "rn-creash-course",
+    "name": "Aora",
+    "scheme": "aora",
+    "slug": "aora",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,13 +14,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "package": "com.bfx.aora"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.bfx.aora"
     },
     "web": {
       "favicon": "./assets/favicon.png"
