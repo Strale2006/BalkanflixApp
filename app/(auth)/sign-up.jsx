@@ -7,38 +7,31 @@ import {images} from '../../constants'
 import FormField from './../../components/FormField';
  
 import CustomButton from '../../components/CustomButton'
-import { createUser } from '../../lib/appwrite'
+import { registerUser } from '../../lib/appwrite'
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 
 const SignUp = () => {
-  const { setUser, setIsLoggedIn } = useGlobalContext();
-  const [isSubmitting, setSubmitting] = useState(false);
-
-  const [form, setForm] = useState({
-    username: '',
-    email: '',
-    password: ''
-  })
+  const { handleRegister } = useGlobalContext();
+  const [form, setForm] = useState({ username: '', email: '', password: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = async () => {
-    if(!form.username || !form.email || !form.password) {
-      Alert.alert('Error', 'Please fill in all the fields')
-    } 
-
-    setSubmitting(true)
-    try {
-      const result = await createUser(form.email, form.password, form.username);
-      setUser(result);
-      setIsLoggedIn(true);
-
-      router.replace('/home')
-    } catch (error) {
-      Alert.alert('Error', error.message)
-    } finally {
-      setSubmitting(false)
+    if (!form.username || !form.email || !form.password) {
+      Alert.alert('Error', 'Please fill in all the fields');
+      return;
     }
-  }
+    setIsSubmitting(true);
+    try {
+      await handleRegister(form.username, form.email, form.password);
+      Alert.alert('Success', 'You have successfully registered');
+      router.replace('/home');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">

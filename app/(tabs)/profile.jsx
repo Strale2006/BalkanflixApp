@@ -1,88 +1,114 @@
-import { View, Text, FlatList, Image, TouchableOpacity} from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import EmptyState from '../../components/EmptyState'
-import { getUserPosts, signOut } from '../../lib/appwrite'
-import useAppwrite from '../../lib/useAppwrite'
-import VideoCard from '../../components/VideoCard'
+import { View, Text, Image, TouchableOpacity, FlatList, ScrollView  } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalContext } from './../../context/GlobalProvider';
-import { icons } from '../../constants'
+import { icons } from '../../constants';
 import InfoBox from './../../components/InfoBox';
-import {router} from "expo-router"
+import { router } from "expo-router";
+import { logoutUser } from '../../lib/appwrite'; // Import your logout function
 
 const Profile = () => {
+  const { user, setUser, setIsLoggedIn } = useGlobalContext();
+  const totalEpisodesWatched = user?.full_ep.length;
 
-  const {user, setUser, setIsLoggedIn} = useGlobalContext();
-  const { data: posts } = useAppwrite(() => getUserPosts(user.$id));
+  const isTranslator = true;
+
 
   const logout = async () => {
-    await signOut();
-    setIsLoggedIn(false);
-    setUser(null)
+    try {
+      // Log out the user
+      await logoutUser(); // Clears the token and user session
 
-    router.replace('/sign-in')
-  }
+      // Reset context values
+      setIsLoggedIn(false);
+      setUser(null);
+
+      // Redirect to the login page
+      router.replace('/sign-in');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
-      <FlatList 
-        // data={[{ id: 1}, { id: 2}, { id: 3}]}
-        data={posts}
-        keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => (
-          <VideoCard
-            video={item}
+      <ScrollView className="flex-1">
+        {/* Banner Image */}
+        <View className="w-full h-40 relative mb-8">
+          <Image
+            source={{ uri: user?.banner }}
+            resizeMode="cover"
+            className="w-full h-full rounded-xl"
           />
-        )}
-        ListHeaderComponent={() => (
-          <View className="w-full justify-center items-center mt-6 mb-12 px-4">
-              <TouchableOpacity className="w-full items-end mb-10" onPress={logout}>
-                <Image
-                  source={icons.logout}
-                  resizeMode='contain'
-                  className="w-6 h-6"
-                />
-              </TouchableOpacity>
-              <View className="w-16 h-16 border border-secondary rounded-lg justify-center items-center">
-                <Image 
-                  source={{uri: user?.avatar}}
-                  resizeMode='contain'
-                  className="w-[90%] h-[90%] rounded-lg"
-                />
-              </View>
-
-              <InfoBox
-                title={user?.username}
-                containerStyles='mt-5'
-                titleStyles="text-lg"
-              />
-
-              <View className="mt-5 flex-row">
-                <InfoBox
-                  title={posts.length || 0}
-                  subtitle="Posts"
-                  containerStyles='mr-10'
-                  titleStyles="text-xl"
-                />
-                <InfoBox
-                  title="1.2k"
-                  subtitle="Followers"
-                  titleStyles="text-xl"
-                />
-              </View>
-
+          {/* Profile Picture */}
+          <View className="absolute left-4 bottom-[-30px]">
+            <Image
+              source={{ uri: user?.pfp }}
+              resizeMode="contain"
+              className="w-24 h-24 rounded-full border-4 border-secondary"
+            />
           </View>
-        )}
-        ListEmptyComponent={() => (
-          <EmptyState 
-            title="No videos found"
-            subtitle="No videos found for this search query"
-          />
-        )}
-      />
+        </View>
+
+        {/* User Info Section */}
+        <View className="px-6">
+          <Text className="text-3xl font-bold text-white">{user?.username}</Text>
+          <Text className="text-lg text-gray-400">{user?.email}</Text>
+
+          {user?.isVerified && (
+            <Text className="mt-2 text-sm text-green-500">Verifikovan Korisnik</Text>
+          )}
+
+          {/* Admin Badge */}
+          {user?.isAdmin && (
+            <Text className="mt-1 text-sm text-blue-500 font-semibold">Admin👑</Text>
+          )}
+
+          {isTranslator && (
+            <Text className="mt-1 text-sm text-red-500 font-semibold">Prevodilac📝</Text>
+          )}
+
+          <View className="w-full flex">
+              
+          {/* Episodes Watched Stats */}
+          <View className="flex-row mt-6 justify-between">
+            <InfoBox
+              title={totalEpisodesWatched}
+              subtitle="Odgledanih Epizoda"
+              containerStyles=" p-3 border border-red-500 rounded-lg"
+              titleStyles="text-xl font-semibold"
+              subtitleStyles="text-gray-400"
+            />
+
+          {isTranslator && (
+            <InfoBox
+              title="50"
+              subtitle="Prevedeno Epizoda"
+              containerStyles=" p-3 border border-red-500 rounded-lg"
+              titleStyles="text-xl font-semibold"
+              subtitleStyles="text-gray-400"
+            />
+          )}
+          </View>
+
+          
+          </View>
 
 
+          {/* Favorites Section */}
+          <View className="mt-6">
+            <Text className="text-xl font-bold text-white">Omiljeno</Text>
+            <View className="mt-4 flex-row flex-wrap">
+              {user?.favorites?.map((title, index) => (
+                <View key={index} className="bg-secondary rounded-lg p-2 mx-2 mb-2">
+                  <Text className="text-white text-sm">{title}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

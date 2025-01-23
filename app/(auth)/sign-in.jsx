@@ -7,39 +7,32 @@ import {images} from '../../constants'
 import FormField from './../../components/FormField';
 import CustomButton from '../../components/CustomButton'
 
-import { signIn, getCurrentUser } from '../../lib/appwrite'
+// import { signIn, getCurrentUser } from '../../lib/appwrite'
+import { loginUser, getUser } from '../../lib/appwrite'
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 
 const SignIn = () => {
-  const { setUser, setIsLoggedIn } = useGlobalContext();
-  const [isSubmitting, setSubmitting] = useState(false);
-
-  const [form, setForm] = useState({
-    email: '',
-    password: ''
-  })
+  const { handleLogin } = useGlobalContext();
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = async () => {
-      if(!form.email || !form.password) {
-        Alert.alert('Error', 'Please fill in all the fields')
-      } 
-  
-      setSubmitting(true)
-      try {
-        await signIn(form.email, form.password);
-        const result = await getCurrentUser();
-        setUser(result);
-        setIsLoggedIn(true);
-
-        Alert.alert('Success', 'You have successfully logged in')
-        router.replace('/home')
-      } catch (error) {
-        Alert.alert('Error', error.message)
-      } finally {
-        setSubmitting(false)
-      }
+    if (!form.email || !form.password) {
+      Alert.alert('Error', 'Please fill in all the fields');
+      return;
     }
+    setIsSubmitting(true);
+    try {
+      await handleLogin(form.email, form.password);
+      Alert.alert('Success', 'You have successfully logged in');
+      router.replace('/home');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
