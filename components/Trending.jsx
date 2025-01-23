@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { ResizeMode, Video } from "expo-av";
+import { useVideoPlayer, VideoView } from 'expo-video';
 import * as Animatable from "react-native-animatable";
 import {
   FlatList,
   Image,
   ImageBackground,
   TouchableOpacity,
+  View
 } from "react-native";
 
 import { icons } from "../constants";
+import { WebView } from 'react-native-webview';
 
 
 const zoomIn = {
@@ -41,15 +43,28 @@ const TrendingItem = ({activeItem, item}) => {
       duration={500}
     >
       {play ? (
-        <Text className="text-white">
-          Playing
-        </Text>
+        <View className=" w-52 h-72 ">
+          <WebView
+          source={{
+              uri: item.video,
+          }}
+          className="w-full h-60 rounded-xl mt-3"   
+          allowsFullscreenVideo
+          mixedContentMode='always'
+          />
+        </View>
       ): (
         <TouchableOpacity className="relative justify-center items-center" activeOpacity={0.7} onPress={() => setPlay(true)}>
           <ImageBackground
             source={{uri: item.thumbnail}}
             className="w-52 h-72 rounded-[35px] my-5 overflow-hidden shadow-lg shadow-black/40"
             resizeMode='cover'
+          />
+
+          <Image 
+            source={icons.play}
+            className="w-12 h-12 absolute"
+            resizeMode='contain'
           />
         </TouchableOpacity>
       )}
@@ -60,6 +75,10 @@ const TrendingItem = ({activeItem, item}) => {
 const Trending = ({ posts }) => {
 
   const [activeItem, setActiveItem] = useState(posts[0])
+
+  const viewableItemsChanged = ({ viewableItems }) => {
+    setActiveItem(viewableItems[0].key)
+  }
   
 
   return (
@@ -73,6 +92,11 @@ const Trending = ({ posts }) => {
               item={item}
             />
         )}
+        onViewableItemsChanged={viewableItemsChanged}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 70
+        }}
+        contentOffset={{x: 70}}
     />
   )
 }

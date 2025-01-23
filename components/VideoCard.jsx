@@ -1,6 +1,8 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import { icons } from '../constants'
 import { useState } from 'react'
+import { WebView } from "react-native-webview";
+
 
 const VideoCard = ({ video: {title, thumbnail, video, creator: {username, avatar}}}) => {
 
@@ -37,7 +39,16 @@ const VideoCard = ({ video: {title, thumbnail, video, creator: {username, avatar
         </View>
 
         {play ? (
-            <Text className="text-white">Playing</Text>
+            <View className=" w-52 h-72 ">
+                <WebView
+                source={{
+                    uri: video,
+                }}
+                className="w-full h-60 rounded-xl mt-3"   
+                allowsFullscreenVideo
+                mixedContentMode='always'
+                />
+          </View>
         ) : (
             <TouchableOpacity
             activeOpacity={0.7}
