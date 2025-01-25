@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "1.23.1",
     "axios": "^1.7.9",
     "expo": "~52.0.25",
     "expo-av": "~15.0.2",
@@ -33,8 +34,7 @@
     "react-native-screens": "~4.4.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-webview": "^13.13.1",
-    "rn-creash-course": "file:",
-    "@react-native-async-storage/async-storage": "1.23.1"
+    "rn-creash-course": "file:"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

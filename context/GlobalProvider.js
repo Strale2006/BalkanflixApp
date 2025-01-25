@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { registerUser, loginUser, getUser } from '../lib/appwrite'; // Update path to match your structure
+import { registerUser, loginUser, getUser } from '../lib/apiControllers'; // Update path to match your structure
 
 const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);

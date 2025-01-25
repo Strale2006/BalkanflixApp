@@ -4,14 +4,15 @@ import { useGlobalContext } from './../../context/GlobalProvider';
 import { icons } from '../../constants';
 import InfoBox from './../../components/InfoBox';
 import { router } from "expo-router";
-import { logoutUser } from '../../lib/appwrite'; // Import your logout function
+import { logoutUser } from '../../lib/apiControllers'; // Import your logout function
 
 const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
   const totalEpisodesWatched = user?.full_ep.length;
 
-  const isTranslator = true;
-
+  const dashboard = () => {
+    router.push('/dash-home')
+  }
 
   const logout = async () => {
     try {
@@ -55,42 +56,46 @@ const Profile = () => {
           <Text className="text-lg text-gray-400">{user?.email}</Text>
 
           {user?.isVerified && (
-            <Text className="mt-2 text-sm text-green-500">Verifikovan Korisnik</Text>
+            <Text className="mt-2 text-sm text-green-500 font-psemibold">Verifikovan Korisnik</Text>
           )}
 
           {/* Admin Badge */}
           {user?.isAdmin && (
-            <Text className="mt-1 text-sm text-blue-500 font-semibold">Admin👑</Text>
+            <Text className="mt-1 text-sm text-blue-500 font-psemibold">Admin👑</Text>
           )}
 
-          {isTranslator && (
-            <Text className="mt-1 text-sm text-red-500 font-semibold">Prevodilac📝</Text>
+          {user?.isTranslator && (
+            <Text className="mt-1 text-sm text-red-500 font-psemibold">Prevodilac📝</Text>
           )}
 
-          <View className="w-full flex">
-              
-          {/* Episodes Watched Stats */}
-          <View className="flex-row mt-6 justify-between">
-            <InfoBox
-              title={totalEpisodesWatched}
-              subtitle="Odgledanih Epizoda"
-              containerStyles=" p-3 border border-red-500 rounded-lg"
-              titleStyles="text-xl font-semibold"
-              subtitleStyles="text-gray-400"
-            />
-
-          {isTranslator && (
-            <InfoBox
-              title="50"
-              subtitle="Prevedeno Epizoda"
-              containerStyles=" p-3 border border-red-500 rounded-lg"
-              titleStyles="text-xl font-semibold"
-              subtitleStyles="text-gray-400"
-            />
+          {user?.isTranslator && (
+            <TouchableOpacity activeOpacity={0.8} onPress={dashboard}>
+              <Text className="mt-3 p-4 border border-dashed border-white w-32 text-center text-white font-psemibold bg-blue-600 rounded-xl">Dashboard</Text>
+            </TouchableOpacity>
           )}
-          </View>
 
           
+
+          <View className="w-full flex">   
+            <View className="flex-row mt-6 justify-between">
+              <InfoBox
+                title={totalEpisodesWatched}
+                subtitle="Odgledanih Epizoda"
+                containerStyles=" p-3 border border-red-500 rounded-lg"
+                titleStyles="text-xl font-semibold"
+                subtitleStyles="text-gray-400"
+              />
+
+              {user?.isTranslator && (
+                <InfoBox
+                  title="50"
+                  subtitle="Prevedeno Epizoda"
+                  containerStyles=" p-3 border border-red-500 rounded-lg"
+                  titleStyles="text-xl font-semibold"
+                  subtitleStyles="text-gray-400"
+                />
+              )}
+            </View>
           </View>
 
 

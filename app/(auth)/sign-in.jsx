@@ -8,7 +8,7 @@ import FormField from './../../components/FormField';
 import CustomButton from '../../components/CustomButton'
 
 // import { signIn, getCurrentUser } from '../../lib/appwrite'
-import { loginUser, getUser } from '../../lib/appwrite'
+import { loginUser, getUser } from '../../lib/apiControllers'
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 

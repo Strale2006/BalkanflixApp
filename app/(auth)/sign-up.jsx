@@ -7,7 +7,7 @@ import {images} from '../../constants'
 import FormField from './../../components/FormField';
  
 import CustomButton from '../../components/CustomButton'
-import { registerUser } from '../../lib/appwrite'
+import { registerUser } from '../../lib/apiControllers'
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 
