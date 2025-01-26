@@ -15,13 +15,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "package": "com.balkanflix.app"
+      "bundleIdentifier": "com.balkanflix.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
       },
+      "package": "com.balkanflix.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"

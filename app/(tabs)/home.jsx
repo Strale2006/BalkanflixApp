@@ -26,7 +26,7 @@ const Home = () => {
     setRefreshing(false);
   }
 
-  console.log(posts)
+  // console.log(posts)
 
   return (
     <SafeAreaView className="bg-primary h-full">

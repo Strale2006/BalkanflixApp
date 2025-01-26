@@ -50,6 +50,8 @@ const Profile = () => {
           </View>
         </View>
 
+        
+
         {/* User Info Section */}
         <View className="px-6">
           <Text className="text-3xl font-bold text-white">{user?.username}</Text>
@@ -73,6 +75,13 @@ const Profile = () => {
               <Text className="mt-3 p-4 border border-dashed border-white w-32 text-center text-white font-psemibold bg-blue-600 rounded-xl">Dashboard</Text>
             </TouchableOpacity>
           )}
+
+          <TouchableOpacity onPress={logout}>
+            <Image 
+              source={icons.logout}
+              className="w-6 h-6"
+            />
+          </TouchableOpacity>
 
           
 
