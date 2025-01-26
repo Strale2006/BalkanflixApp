@@ -126,15 +126,17 @@ const DevChat = () => {
                   source={{ uri: item.pfp }}
                   className="w-8 h-8 rounded-full mr-2"
                 />
-                <Text className="text-sm text-white font-bold">{item.username}</Text>
+                <Text className="text-sm text-white font-pbold mr-2">{item.username}</Text>
+                <Text className="text-sm text-gray-400 font-psemibold">{formatTime(item.$createdAt)}</Text>
+
               </View>
-              <Text className="text-white">{item.body}</Text>
+              <Text className="text-white font-pmedium">{item.body}</Text>
             </View>
           )}
           ref={messagesEndRef}
           onContentSizeChange={scrollToBottom}
         />
-        <View className="flex-row items-center px-4 py-4 bg-gray-800 absolute bottom-0">
+        <View className="flex-row items-center px-4 py-4 mt-16 bg-gray-800 absolute bottom-0">
           <TextInput
             className="flex-1 bg-gray-700 text-white p-3 rounded-md"
             placeholder="Enter your message..."
@@ -146,7 +148,7 @@ const DevChat = () => {
             className="ml-4 bg-blue-500 p-3 rounded-full"
             onPress={handleSubmit}
           >
-            <Text className="text-white font-bold">Send</Text>
+            <Text className="text-white font-pbold">Send</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
