@@ -1,9 +1,9 @@
 import { View, Text, ScrollView, TouchableOpacity, Image, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import FormField from './../../components/FormField';
+import FormField from '../../components/FormField';
 import { useState } from 'react';
 import { icons } from '../../constants';
-import CustomButton from './../../components/CustomButton';
+import CustomButton from '../../components/CustomButton';
 import { WebView } from 'react-native-webview';
 import * as ImagePicker from 'expo-image-picker'
 import { router } from 'expo-router';
