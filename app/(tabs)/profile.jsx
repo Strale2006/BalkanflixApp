@@ -97,7 +97,7 @@ const Profile = () => {
 
               {user?.isTranslator && (
                 <InfoBox
-                  title="50"
+                  title={user?.brojPrevoda}
                   subtitle="Prevedeno Epizoda"
                   containerStyles=" p-3 border border-red-500 rounded-lg"
                   titleStyles="text-xl font-semibold"
