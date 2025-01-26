@@ -110,7 +110,7 @@ const DevChat = () => {
     >
       <SafeAreaView className="flex-1 bg-gray-900">
         <View className="p-4 bg-gray-800">
-          <Text className="text-xl text-white font-semibold">Chat</Text>
+          <Text className="text-xl text-white font-psemibold">Chat</Text>
         </View>
         <FlatList
           data={messages}

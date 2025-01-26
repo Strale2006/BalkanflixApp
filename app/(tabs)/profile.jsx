@@ -8,7 +8,7 @@ import { logoutUser } from '../../lib/apiControllers'; // Import your logout fun
 
 const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
-  const totalEpisodesWatched = user?.full_ep.length;
+  const totalEpisodesWatched = user?.full_ep?.length || 0;
 
   const dashboard = () => {
     router.push('/dash-home')
@@ -54,7 +54,7 @@ const Profile = () => {
 
         {/* User Info Section */}
         <View className="px-6">
-          <Text className="text-3xl font-bold text-white">{user?.username}</Text>
+          <Text className="text-3xl font-pbold text-white">{user?.username}</Text>
           <Text className="text-lg text-gray-400">{user?.email}</Text>
 
           {user?.isVerified && (
@@ -91,7 +91,7 @@ const Profile = () => {
                 title={totalEpisodesWatched}
                 subtitle="Odgledanih Epizoda"
                 containerStyles=" p-3 border border-red-500 rounded-lg"
-                titleStyles="text-xl font-semibold"
+                titleStyles="text-xl font-psemibold"
                 subtitleStyles="text-gray-400"
               />
 
@@ -100,7 +100,7 @@ const Profile = () => {
                   title={user?.brojPrevoda}
                   subtitle="Prevedeno Epizoda"
                   containerStyles=" p-3 border border-red-500 rounded-lg"
-                  titleStyles="text-xl font-semibold"
+                  titleStyles="text-xl font-psemibold"
                   subtitleStyles="text-gray-400"
                 />
               )}
@@ -110,7 +110,7 @@ const Profile = () => {
 
           {/* Favorites Section */}
           <View className="mt-6">
-            <Text className="text-xl font-bold text-white">Omiljeno</Text>
+            <Text className="text-xl font-pbold text-white">Omiljeno</Text>
             <View className="mt-4 flex-row flex-wrap">
               {user?.favorites?.map((title, index) => (
                 <View key={index} className="bg-secondary rounded-lg p-2 mx-2 mb-2">
