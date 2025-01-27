@@ -6,7 +6,7 @@ import { ID, Query } from 'react-native-appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider'; // Adjust path
 
 
-const DevChat = () => {
+const Chat = () => {
   const { user, isLoading: isAuthLoading } = useGlobalContext();
   const [messages, setMessages] = useState([]);
   const [messageBody, setMessageBody] = useState('');
@@ -25,7 +25,7 @@ const DevChat = () => {
 
     const connectRealtime = () => {
       unsubscribe = client.subscribe(
-        `databases.${appwriteConfig.databaseId}.collections.${appwriteConfig.devCollectionId}.documents`,
+        `databases.${appwriteConfig.databaseId}.collections.${appwriteConfig.collectionId}.documents`,
         (response) => {
           if (response.events.includes("databases.*.collections.*.documents.*.create")) {
             setMessages((prevState) => [...prevState, response.payload]);
@@ -121,7 +121,7 @@ const DevChat = () => {
                 item.username === user?.username ? 'self-end bg-blue-500' : 'self-start bg-gray-700'
               } rounded-md m-2`}
             >
-              <View className="flex-row items-center justify-center text-center mb-1">
+              <View className="flex-row items-center mb-1">
                 <Image
                   source={{ uri: item.pfp }}
                   className="w-8 h-8 rounded-full mr-2"
@@ -156,4 +156,4 @@ const DevChat = () => {
   );
 };
 
-export default DevChat;
+export default Chat;

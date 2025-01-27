@@ -34,7 +34,8 @@ const TabsLayout = () => {
             backgroundColor: '#161622',
             borderTopWidth: 1,
             borderTopColor: '#232533',
-            height: 84
+            height: 84,
+            paddingTop: 10
           }
         }}
       >
@@ -46,19 +47,19 @@ const TabsLayout = () => {
             )
           }} />
 
-          <Tabs.Screen name='bookmark' options={{
-            title: 'Bookmark',
+          <Tabs.Screen name='[query]' options={{
+            title: 'Search',
             headerShown: false,
             tabBarIcon: ({ color, focused}) => (
-              <TabIcon icon={icons.bookmark} color={color} name="Bookmark" focused={focused} />
+              <TabIcon icon={icons.search} color={color} name="Search" focused={focused} />
             )
           }} />
 
-          <Tabs.Screen name='create' options={{
-            title: 'Create',
+          <Tabs.Screen name='chat' options={{
+            title: 'Chat',
             headerShown: false,
             tabBarIcon: ({ color, focused}) => (
-              <TabIcon icon={icons.plus} color={color} name="Create" focused={focused} />
+              <TabIcon icon={icons.plus} color={color} name="Chat" focused={focused} />
             )
           }} />
 

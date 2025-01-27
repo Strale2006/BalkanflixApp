@@ -36,7 +36,7 @@ const EditProfileModal = ({ visible, onClose }) => {
     >
       <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
         <View className="bg-primary p-6 w-80 rounded-xl">
-          <Text className="text-2xl font-bold text-white mb-4">Edit Profile</Text>
+          <Text className="text-2xl font-pbold text-white mb-4">Edit Profile</Text>
 
           {/* Banner Image */}
           <TouchableOpacity onPress={() => setNewBanner('https://new-banner-url.com')}>
