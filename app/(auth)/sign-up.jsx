@@ -40,44 +40,47 @@ const SignUp = () => {
           <Image
             source={images.logo}
             resizeMode='contain'
-            className="w-[115px] h-[35px]"
+            className="w-[182px] h-[60px]"
           />
 
-          <Text className="text-2xl text-white text-semibold mt-10 font-psemibold">Sign up to Aora</Text>
+          <Text className="text-2xl text-white mt-10 font-psemibold">Registruj se na BalkanFlix</Text>
 
           <FormField 
-            title='Username'
+            title='Korisničko ime'
+            placeholder='Unesite korisničko ime'
             value={form.username}
             handleChangeText={(e) => setForm({...form, username: e})}
             otherStyles='mt-10'
           />
           <FormField 
             title='Email'
+            placeholder='Unesite email'
             value={form.email}
             handleChangeText={(e) => setForm({...form, email: e})}
             otherStyles='mt-7'
             keyboardType='email-address'
           />
           <FormField 
-            title='Password'
+            title='Lozinka'
+            placeholder='Unesite lozinku'
             value={form.password}
             handleChangeText={(e) => setForm({...form, password: e})}
             otherStyles='mt-7'
           />
 
           <CustomButton
-            title='Sign Up'
+            title='Registruj se'
             handlePress={submit}
             containerStyles='mt-7'
-            isLoading={isSubmitting} 
+            isLoading={isSubmitting}
           />
 
           <View className="justify-center pt-5 flex-row gap-2">
             <Text className="text-lg text-gray-100 font-pregular">
-              Have an account already?
+              Već imaš nalog?
             </Text>
             <Link href='/sign-in' className='text-lg font-psemibold text-secondary'>
-              Sign In
+              Poveži se
             </Link>
           </View>
         </View>

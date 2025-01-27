@@ -41,13 +41,14 @@ const SignIn = () => {
           <Image
             source={images.logo}
             resizeMode='contain'
-            className="w-[115px] h-[35px]"
+            className="w-[182px] h-[60px]"
           />
 
-          <Text className="text-2xl text-white text-semibold mt-10 font-psemibold">Log in to Aora</Text>
+          <Text className="text-2xl text-white mt-10 font-psemibold">Prijavi se na BalkanFlix</Text>
 
           <FormField 
             title='Email'
+            placeholder='Unesite email'
             value={form.email}
             handleChangeText={(e) => setForm({...form, email: e})}
             otherStyles='mt-7'
@@ -55,25 +56,33 @@ const SignIn = () => {
           />
 
           <FormField 
-            title='Password'
+            title='Lozinka'
+            placeholder='Unesite lozinku'
             value={form.password}
             handleChangeText={(e) => setForm({...form, password: e})}
             otherStyles='mt-7'
           />
 
+          <View className="flex-row justify-end mt-3">
+            <Link href='/forgot-password' className='text-secondary text-base font-psemibold'>
+              Zaboravili ste lozinku?
+            </Link>
+          </View>
+
           <CustomButton
-            title='Sign in'
+            title='Prijavi se'
             handlePress={submit}
             containerStyles='mt-7'
-            isLoading={isSubmitting} 
+            isLoading={isSubmitting}
+            textStyle="text-white"
           />
 
           <View className="justify-center pt-5 flex-row gap-2">
             <Text className="text-lg text-gray-100 font-pregular">
-              Don't have an account?
+              Nemaš nalog?
             </Text>
             <Link href='/sign-up' className='text-lg font-psemibold text-secondary'>
-              Sign Up
+              Registruj se
             </Link>
           </View>
         </View>

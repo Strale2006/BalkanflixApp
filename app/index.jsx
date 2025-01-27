@@ -20,7 +20,7 @@ export default function App() {
         <View className="w-full justify-center items-center min-h-[85vh] px-4">
           <Image
             source={images.logo}
-            className="w-[130px] h-[84px]"
+            className="w-[175px] h-[112px]"
             resizeMode='contain'
           />
 
@@ -31,13 +31,13 @@ export default function App() {
           />
 
           <View className="relative mt-5">
-            <Text className="text-3xl text-white font-bold text-center">
+            <Text className="text-3xl text-white font-pbold text-center">
               Istražuj anime uz Balkan{''}
               <Text className="text-secondary-200">Flix</Text>
             </Text>
             <Image
               source={images.path}
-              className="w=[20px] h-[15px] absolute -bottom-2 -right-10"
+              className="w=[136px] h-[15px] absolute -bottom-2 -right-10"
               resizeMode='contain'
             />
           </View>
@@ -50,6 +50,7 @@ export default function App() {
               title="Poveži se"
               handlePress={() => router.push('sign-in')}
               containerStyles="w-full mt-7"
+              textStyle="text-white"
           />
         </View>
       </ScrollView>
