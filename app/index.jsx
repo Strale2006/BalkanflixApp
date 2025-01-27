@@ -32,22 +32,22 @@ export default function App() {
 
           <View className="relative mt-5">
             <Text className="text-3xl text-white font-bold text-center">
-              Discover Endless Possibilities with {''}
-              <Text className="text-secondary-200">Aora</Text>
+              Istražuj anime uz Balkan{''}
+              <Text className="text-secondary-200">Flix</Text>
             </Text>
             <Image
               source={images.path}
-              className="w=[136px] h-[15px] absolute -bottom-2 -right-16"
+              className="w=[20px] h-[15px] absolute -bottom-2 -right-10"
               resizeMode='contain'
             />
           </View>
           
           <Text className="text-sm font-pregular text-gray-100 mt-7 text-center">
-            Where creativity meets innovation: embark on a journey of limitless exploration with Aora
+            Uživajte gledajući omiljene serijale potpuno besplatno uz najbolji kvalitet na Balkanu
           </Text>
 
           <CustomButton 
-              title="Continue with Email"
+              title="Poveži se"
               handlePress={() => router.push('sign-in')}
               containerStyles="w-full mt-7"
           />
