@@ -8,8 +8,6 @@ import { logoutUser } from '../../lib/apiControllers'; // Import your logout fun
 
 const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
-  const totalEpisodesWatched = user?.full_ep?.length || 0;
-
   const dashboard = () => {
     router.push('/dash-home')
   }
@@ -88,7 +86,7 @@ const Profile = () => {
           <View className="w-full flex">   
             <View className="flex-row mt-6 justify-between">
               <InfoBox
-                title={totalEpisodesWatched}
+                title={user?.full_ep?.length || 0}
                 subtitle="Odgledanih Epizoda"
                 containerStyles=" p-3 border border-red-500 rounded-lg"
                 titleStyles="text-xl font-psemibold"
