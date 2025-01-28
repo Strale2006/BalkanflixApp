@@ -37,14 +37,14 @@ const SignIn = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
-        <View className="w-full justify-center h-full px-4 my-6">
+        <View className="w-full justify-center h-full px-4 my-5">
           <Image
             source={images.logo}
             resizeMode='contain'
-            className="w-[182px] h-[60px]"
+            className="w-[210px] h-[70px]"
           />
 
-          <Text className="text-2xl text-white mt-10 font-psemibold">Prijavi se na BalkanFlix</Text>
+          <Text className="text-2xl text-white mt-5 font-pbold">Prijavi se na BalkanFlix</Text>
 
           <FormField 
             title='Email'
