@@ -112,7 +112,7 @@ const Profile = () => {
             <View className="mt-4 flex-row flex-wrap">
               {user?.favorites?.map((title, index) => (
                 <View key={index} className="bg-secondary rounded-lg p-2 mx-2 mb-2">
-                  <Text className="text-white text-sm">{title}</Text>
+                  <Text className="text-white text-sm font-psemibold">{title}</Text>
                 </View>
               ))}
             </View>

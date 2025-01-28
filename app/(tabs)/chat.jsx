@@ -100,7 +100,7 @@ const Chat = () => {
     }, 1000);
   };
 
-  console.log(messages);
+  // console.log(messages);
   
 
   return (
