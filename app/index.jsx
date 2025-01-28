@@ -8,6 +8,7 @@ import CustomButton from '../components/CustomButton';
 
 import { useGlobalContext } from '../context/GlobalProvider';
 
+
 export default function App() {
 
   const {isLoading, isLoggedIn} = useGlobalContext();
