@@ -6,9 +6,10 @@ import {images} from '../../constants'
 import FormField from './../../components/FormField';
 import CustomButton from '../../components/CustomButton'
 import { useGlobalContext } from "../../context/GlobalProvider";
+import GoogleButton from '../../components/GoogleButton'
 
 const SignUp = () => {
-  const { handleRegister } = useGlobalContext();
+  const { handleRegister, handleGoogleLogin } = useGlobalContext();
   const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -21,6 +22,19 @@ const SignUp = () => {
     try {
       await handleRegister(form.username, form.email, form.password);
       Alert.alert('Success', 'You have successfully registered');
+      router.replace('/home');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  
+  const submitGoogle = async () => {
+    setIsSubmitting(true);
+    try {
+      await handleGoogleLogin();
       router.replace('/home');
     } catch (error) {
       Alert.alert('Error', error.message);
@@ -69,6 +83,14 @@ const SignUp = () => {
             handlePress={submit}
             containerStyles='mt-7'
             isLoading={isSubmitting}
+          />
+
+          <GoogleButton
+            title='Registruj se putem Googlea'
+            handlePress={submitGoogle}
+            containerStyles='mt-7'
+            isLoading={isSubmitting}
+            textStyles="text-white flex justify-center items-center text-center font-psemibold text-lg"
           />
 
           <View className="justify-center pt-5 flex-row gap-2">
