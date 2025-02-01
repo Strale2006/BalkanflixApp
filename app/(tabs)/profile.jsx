@@ -5,6 +5,7 @@ import { icons } from '../../constants';
 import InfoBox from './../../components/InfoBox';
 import { router } from "expo-router";
 import { logoutUser } from '../../lib/apiControllers'; // Import your logout function
+import LinearGradient from 'react-native-linear-gradient';
 
 const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
@@ -31,24 +32,79 @@ const Profile = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView className="flex-1">
-        {/* Banner Image */}
         <View className="w-full h-40 relative mb-8">
+          {/* Banner Image */}
           <Image
             source={{ uri: user?.banner }}
             resizeMode="cover"
-            className="w-full h-full rounded-xl"
+            className="w-full h-full"
           />
+          
+          {/* Gradient Overlay */}
+          <View
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 80,
+              flexDirection: 'row',
+            }}
+          >
+            {/* Gradient Layers */}
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+              }}
+            />
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+              }}
+            />
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+              }}
+            />
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+              }}
+            />
+          </View>
+
           {/* Profile Picture */}
-          <View className="absolute left-4 bottom-[-30px]">
+          <View
+            style={{
+              position: 'absolute',
+              left: 16,
+              bottom: -30,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.2,
+              shadowRadius: 6,
+              elevation: 5, // Android shadow
+            }}
+          >
             <Image
               source={{ uri: user?.pfp }}
               resizeMode="contain"
-              className="w-24 h-24 rounded-full border-4 border-secondary"
+              style={{
+                width: 96,
+                height: 96,
+                borderRadius: 48,
+                borderWidth: 2,
+                borderColor: 'red',
+                backgroundColor: '#fff', // Optional background to ensure clarity
+              }}
             />
           </View>
         </View>
-
-        
 
         {/* User Info Section */}
         <View className="px-6">
@@ -104,7 +160,6 @@ const Profile = () => {
               )}
             </View>
           </View>
-
 
           {/* Favorites Section */}
           <View className="mt-6">
