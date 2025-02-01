@@ -11,7 +11,7 @@ const VideoCard = ({ item }) => {
         />
         
         {/* Series Title */}
-      <Text className="text-white font-pmedium text-sm mt-2" numberOfLines={1}>
+      <Text className="text-white font-psemibold text-sm mt-2 mb-4 max-w-[170px]" numberOfLines={2}>
         {item.title}
       </Text>
     </View>
