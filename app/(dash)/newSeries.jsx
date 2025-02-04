@@ -118,6 +118,7 @@ const newSeries = () => {
             buttonText="Kreiraj Serijal"
             onSubmit={handleSeriesNoTmdbSubmit}
             malValue={seriesNoTmdb}
+            hasTmdb={false}
             // For this card, we do not require a TMDB input so we pass empty string and a no-op function
             tmdbValue={''}
             onChangeMal={setSeriesNoTmdb}

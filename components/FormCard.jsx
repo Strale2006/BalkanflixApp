@@ -13,6 +13,7 @@ const FormCard = ({
   tmdbValue,
   onChangeMal,
   onChangeTmdb,
+  hasTmdb=true
 }) => {
   return (
     <View
@@ -42,16 +43,23 @@ const FormCard = ({
                 className="bg-gray-800 border border-gray-700 text-white p-2 rounded"
               />
             </View>
-            <View className="flex-1 space-y-2">
-              <Text className="text-gray-300">{tmdbLabel}</Text>
-              <TextInput
-                placeholder="Unesi ID"
-                placeholderTextColor="#A1A1AA"
-                value={tmdbValue}
-                onChangeText={onChangeTmdb}
-                className="bg-gray-800 border border-gray-700 text-white p-2 rounded"
-              />
-            </View>
+              {hasTmdb ? 
+                <View className="flex-1 space-y-2">
+                  <Text className="text-gray-300">{tmdbLabel}</Text>
+                  <TextInput
+                    placeholder="Unesi ID"
+                    placeholderTextColor="#A1A1AA"
+                    value={tmdbValue}
+                    onChangeText={onChangeTmdb}
+                    className="bg-gray-800 border border-gray-700 text-white p-2 rounded"
+                  />
+              </View>
+              :
+              <View>
+
+              </View>
+            }
+            
           </View>
         </View>
         <TouchableOpacity onPress={onSubmit} activeOpacity={0.8}>
