@@ -1,8 +1,12 @@
 import React from 'react';
 import { View, Text, ImageBackground, TouchableOpacity, FlatList, Dimensions, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import axios from 'axios'
 
 const { width  } = Dimensions.get('window');
+
+const {data} = await axios.get("https://balkanflix-server.vercel.app/api/content/seriesHero");
+const series = data.series;
 
 const sliderData = [
   {
@@ -34,13 +38,13 @@ const sliderData = [
 const SliderItem = ({ item }) => (
   <View className="w-screen h-[250px]">
     <ImageBackground
-      source={item.image}
+      source={item.poster}
       className="w-screen h-[230px] justify-between p-[15px]"
       imageStyle={{ opacity: 0.8 }}
     >
-      <Text className="text-white text-2xl font-bold text-left">{item.text}</Text>
+      <Text className="text-white text-2xl font-bold text-left">{item.title}</Text>
       <TouchableOpacity className="bg-red-500 p-3 rounded-[5px] self-start">
-        <Text className="text-white font-bold text-base">{item.buttonText}</Text>
+        <Text className="text-white font-bold text-base">Gledaj</Text>
       </TouchableOpacity>
     </ImageBackground>
   </View>
@@ -50,9 +54,9 @@ const TopSlider = () => {
   return (
     <View className="flex-1">
       <FlatList
-        data={sliderData}
+        data={series}
         renderItem={({ item }) => <SliderItem item={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.title}
         horizontal
         showsHorizontalScrollIndicator={false}
         pagingEnabled
