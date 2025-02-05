@@ -39,44 +39,6 @@ const Profile = () => {
             resizeMode="cover"
             className="w-full h-full"
           />
-          
-          {/* Gradient Overlay */}
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: 80,
-              flexDirection: 'row',
-            }}
-          >
-            {/* Gradient Layers */}
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-              }}
-            />
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-              }}
-            />
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-              }}
-            />
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: 'rgba(0, 0, 0, 0.6)',
-              }}
-            />
-          </View>
 
           {/* Profile Picture */}
           <View
