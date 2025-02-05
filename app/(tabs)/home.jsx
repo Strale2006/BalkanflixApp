@@ -29,15 +29,14 @@ const MainHome = () => {
 
   const fetchData = async () => {
     try {
-      const [topUsersRes, episodesRes] = await Promise.all([
-        axios.get(
-          'https://balkanflix-server.vercel.app/api/auth/getTopUsersByEpisodesWatchedFull'
-        ),
-        axios.get('https://balkanflix-server.vercel.app/api/episode/newest'),
-      ]);
-
+      const topUsersRes = await axios.get(
+        'https://balkanflix-server.vercel.app/api/auth/getTopUsersByEpisodesWatchedFull'
+      );
       setTopUsers(topUsersRes.data.topUsers.slice(0, 5));
+
+      const episodesRes = await axios.get('https://balkanflix-server.vercel.app/api/episode/newest');
       setNewEpisodes(episodesRes.data);
+
     } catch (error) {
       console.error('Error fetching data:', error);
       Alert.alert('Error', 'Failed to fetch data');
@@ -56,127 +55,127 @@ const MainHome = () => {
     fetchData();
   }, []);
 
-  const renderNewEpisode = ({ item }) => (
-    <View
-      className="mx-2"
-      style={{ width: width * 0.31 }} // dynamic width
-    >
-      <TouchableOpacity
-        onPress={() => {/* navigation logic */}}
-        activeOpacity={0.9}
+    const renderNewEpisode = ({ item }) => (
+      <View
+        className="mx-2"
+        style={{ width: width * 0.31 }} // dynamic width
       >
-        <ImageBackground
-          source={{
-            uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}`,
-          }}
-          className="rounded-lg overflow-hidden justify-end"
-          style={{ height: width * 0.45 }} // dynamic height
-          imageStyle={{ resizeMode: 'cover' }}
+        <TouchableOpacity
+          onPress={() => {/* navigation logic */}}
+          activeOpacity={0.9}
         >
-          {item.partner && (
-            <FontAwesome
-              name="handshake-o"
-              size={24}
-              color="#FFD700"
-              className="absolute top-2 left-2 bg-black bg-opacity-70 rounded-full p-1"
-            />
-          )}
+          <ImageBackground
+            source={{
+              uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}`,
+            }}
+            className="rounded-lg overflow-hidden justify-end"
+            style={{ height: width * 0.45 }}
+            imageStyle={{ resizeMode: 'cover' }}
+          >
+            {item.partner && (
+              <FontAwesome
+                name="handshake-o"
+                size={24}
+                color="#FFD700"
+                className="absolute top-2 left-2 bg-black bg-opacity-70 rounded-full p-1"
+              />
+            )}
 
-          <View className="p-2">
-            <Text className="text-white text-xs text-right bg-red-600/90 px-2 py-1 rounded-md min-w-20 max-w-24 self-end">
-              Epizoda {item.ep}
-            </Text>
-          </View>
-        </ImageBackground>
-        <Text
-          className="text-white text-sm mt-2 px-1 font-psemibold"
-          numberOfLines={2}
-        >
-          {item.title}
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-
-  return (
-    <SafeAreaView className="flex-1 bg-[#0a0a0a]">
-      <FlatList
-        data={[]}
-        ListHeaderComponent={
-          <View className="pb-5">
-            <TopSlider />
-
-            {/* New Episodes Section */}
-            <View className="my-4">
-              <View className="flex-row justify-between items-center px-4 mb-2">
-                <Text className="text-white text-xl font-pbold">
-                  Najnovije Epizode
-                </Text>
-              </View>
-
-              {loading ? (
-                <FlatList
-                  horizontal
-                  data={[1, 2, 3, 4, 5]}
-                  renderItem={() => (
-                    <View
-                      className="mx-2 justify-center items-center rounded-lg bg-[#1a1a1a]"
-                      style={{
-                        width: width * 0.35,
-                        height: width * 0.5,
-                      }}
-                    >
-                      <ActivityIndicator size="large" color="#E50914" />
-                    </View>
-                  )}
-                  contentContainerStyle={{ paddingLeft: 15 }}
-                />
-              ) : (
-                <FlatList
-                  horizontal
-                  data={newEpisodes}
-                  renderItem={renderNewEpisode}
-                  contentContainerStyle={{ paddingLeft: 15 }}
-                  showsHorizontalScrollIndicator={false}
-                />
-              )}
+            <View className="p-2">
+              <Text className="text-white text-xs text-right font-psemibold bg-red-600/90 px-2 py-1 rounded-md min-w-20 max-w-24 self-end">
+                Epizoda {item.ep}
+              </Text>
             </View>
+          </ImageBackground>
+          <Text
+            className="text-white text-sm mt-2 px-1 font-psemibold"
+            numberOfLines={2}
+          >
+            {item.title}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
 
-            {/* Popular Section */}
-            <View className="my-4">
-              <View className="flex-row justify-between items-center px-4 mb-2">
-                <Text className="text-white text-xl font-pbold">Popularno</Text>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('Category', { category: 'popular' })
-                  }
-                >
-                  <Text className="text-[#E50914] text-sm font-psemibold">
-                    Više
+    return (
+      <SafeAreaView className="flex-1 bg-[#0a0a0a]">
+        <FlatList
+          data={[]}
+          ListHeaderComponent={
+            <View className="pb-5">
+              <TopSlider />
+
+              {/* New Episodes Section */}
+              <View className="my-4">
+                <View className="flex-row justify-between items-center px-4 mb-2">
+                  <Text className="text-white text-xl font-pbold">
+                    Najnovije Epizode
                   </Text>
-                </TouchableOpacity>
-              </View>
-              <MovieList category="popular" />
-            </View>
+                </View>
 
-            {/* Schedule Section */}
-            <View className="my-4 px-4">
-              <Text className="text-white text-xl font-pbold">Raspored</Text>
-              {/* Add schedule component here */}
+                {loading ? (
+                  <FlatList
+                    horizontal
+                    data={[1, 2, 3, 4, 5]}
+                    renderItem={() => (
+                      <View
+                        className="mx-2 justify-center items-center rounded-lg bg-[#1a1a1a]"
+                        style={{
+                          width: width * 0.35,
+                          height: width * 0.5,
+                        }}
+                      >
+                        <ActivityIndicator size="large" color="#E50914" />
+                      </View>
+                    )}
+                    contentContainerStyle={{ paddingLeft: 15 }}
+                  />
+                ) : (
+                  <FlatList
+                    horizontal
+                    data={newEpisodes}
+                    renderItem={renderNewEpisode}
+                    contentContainerStyle={{ paddingLeft: 15 }}
+                    showsHorizontalScrollIndicator={false}
+                  />
+                )}
+              </View>
+
+              {/* Popular Section */}
+              <View className="my-4">
+                <View className="flex-row justify-between items-center px-4 mb-2">
+                  <Text className="text-white text-xl font-pbold">Popularno</Text>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('Category', { category: 'popular' })
+                    }
+                  >
+                    <Text className="text-[#E50914] text-sm font-psemibold">
+                      Više
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <MovieList type="popular" />
+              </View>
+
+              {/* Schedule Section */}
+              <View className="my-4 px-4">
+                <Text className="text-white text-xl font-pbold">Raspored</Text>
+                {/* Add schedule component here */}
+              </View>
             </View>
-          </View>
-        }
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            tintColor="#E50914"
-          />
-        }
-        keyExtractor={(item, index) => index.toString()}
-      />
-    </SafeAreaView>
-  );
-};
+          }
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              tintColor="#E50914"
+            />
+          }
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </SafeAreaView>
+    );
+  };
 
 export default MainHome;
