@@ -9,18 +9,27 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.balkanflix.app"
+      "bundleIdentifier": "com.balkanflix.app",
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.140537177807-vc2dto6ikkvj69rvkpv1t3a47oijhn7o"
+            ]
+          }
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff",
+        "backgroundColor": "#ffffff"
       },
       "package": "com.balkanflix.app"
     },
@@ -29,7 +38,19 @@
     },
     "plugins": [
       "expo-video",
-      "expo-router"
-    ]
+      "expo-router",
+      "expo-secure-store",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.140537177807-vc2dto6ikkvj69rvkpv1t3a47oijhn7o"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9ba83abf-086c-461b-8613-9957ac12cb7b"
+      }
+    }
   }
 }

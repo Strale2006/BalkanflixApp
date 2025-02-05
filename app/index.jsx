@@ -8,6 +8,7 @@ import CustomButton from '../components/CustomButton';
 
 import { useGlobalContext } from '../context/GlobalProvider';
 
+
 export default function App() {
 
   const {isLoading, isLoggedIn} = useGlobalContext();
@@ -16,8 +17,8 @@ export default function App() {
 
   return (
     <SafeAreaView className="bg-primary h-full">
-      <ScrollView contentContainerStyle={{ height: '100%' }}>
-        <View className="w-full justify-center items-center min-h-[85vh] px-4">
+      <ScrollView className='h-full'>
+        <View className="w-full h-full justify-center items-center min-h-[85vh] px-4">
           <Image
             source={images.logo}
             className="w-[175px] h-[112px]"
@@ -55,7 +56,7 @@ export default function App() {
         </View>
       </ScrollView>
 
-      <StatusBar backgroundColor='#161622' style='light'/>
+      <StatusBar backgroundColor='#161622' style='dark' />
     </SafeAreaView>
   );
 }

@@ -4,6 +4,7 @@ import { client, databases, appwriteConfig } from '../../lib/appwrite';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ID, Query } from 'react-native-appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider'; // Adjust path
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 const DevChat = () => {
@@ -52,7 +53,7 @@ const DevChat = () => {
     try {
       const res = await databases.listDocuments(
         appwriteConfig.databaseId,
-        appwriteConfig.collectionId,
+        appwriteConfig.devCollectionId,
         [Query.orderAsc('$createdAt'), Query.limit(10000), Query.select(['$id', 'body', '$createdAt', 'username', 'pfp'])]
       );
       setMessages(res.documents);
@@ -100,60 +101,54 @@ const DevChat = () => {
     }, 1000);
   };
 
-  console.log(messages);
+  // console.log(messages);
   
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className="flex-1 bg-primary"
-    >
-      <SafeAreaView className="flex-1 bg-gray-900">
-        <View className="p-4 bg-gray-800">
-          <Text className="text-xl text-white font-psemibold">Chat</Text>
-        </View>
-        <FlatList
-          data={messages}
-          keyExtractor={(item) => item.$id}
-          renderItem={({ item }) => (
-            <View
-              className={`p-4 ${
-                item.username === user?.username ? 'self-end bg-blue-500' : 'self-start bg-gray-700'
-              } rounded-md m-2`}
-            >
-              <View className="flex-row items-center justify-center text-center mb-1">
-                <Image
-                  source={{ uri: item.pfp }}
-                  className="w-8 h-8 rounded-full mr-2"
-                />
-                <Text className="text-lg text-white font-pbold mr-2">{item.username}</Text>
-                <Text className="text-sm text-gray-300 font-psemibold">{formatTime(item.$createdAt)}</Text>
-
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className="flex-1 bg-[#151C2B]"
+      >
+        <SafeAreaView className="flex-1 bg-gray-900">
+          <FlatList
+            data={messages}
+            keyExtractor={(item) => item.$id}
+            renderItem={({ item }) => (
+              <View>
+                <View className="flex-row items-center mb-1">
+                  <Image
+                    source={{ uri: item.pfp }}
+                    className="ml-2 w-8 h-8 rounded-full mr-2"
+                  />
+                  <Text className="text-lg text-white font-pbold mr-2">{item.username}</Text>
+                  <Text className="text-sm text-gray-300 font-psemibold">{formatTime(item.$createdAt)}</Text>
+                </View>
+                <Text className={`p-3 ${
+                  item.username === user?.username ? 'self-end bg-blue-500 text-white font-psemibold' : 'self-start bg-[#22293E] text-white font-psemibold'
+                } rounded-3xl ml-2 mt-1 mb-3`}>{item.body}</Text>
               </View>
-              <Text className="text-white font-pmedium">{item.body}</Text>
-            </View>
-          )}
-          ref={messagesEndRef}
-          onContentSizeChange={scrollToBottom}
-        />
-        <View className="flex-row items-center px-4 py-4 bg-gray-800">
-          <TextInput
-            className="flex-1 bg-gray-700 text-white p-3 rounded-md"
-            placeholder="Enter your message..."
-            placeholderTextColor="#aaa"
-            value={messageBody}
-            onChangeText={setMessageBody}
+            )}
+            ref={messagesEndRef}
+            onContentSizeChange={scrollToBottom}
           />
-          <TouchableOpacity
-            className="ml-4 bg-blue-500 p-3 rounded-full"
-            onPress={handleSubmit}
-          >
-            <Text className="text-white font-pbold">Send</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
-  );
+          <View className="flex-row items-center px-4 py-4 bg-[#101420]">
+            <TextInput
+              className="flex-1 bg-[#1b202f] text-white p-3 rounded-2xl"
+              placeholder="Unesi poruku..."
+              placeholderTextColor="#aaa"
+              value={messageBody}
+              onChangeText={setMessageBody}
+            />
+            <TouchableOpacity
+              className="ml-4 bg-blue-500 p-3 rounded-full"
+              onPress={handleSubmit}
+            >
+              <Text className="text-white font-pbold"><Icon name="send" size={18} color="#E4E5E6" /></Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
+    );
 };
 
 export default DevChat;

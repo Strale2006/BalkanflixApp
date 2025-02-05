@@ -2,17 +2,14 @@ import { View, Text, ScrollView, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Link, router} from 'expo-router'
-
 import {images} from '../../constants'
 import FormField from './../../components/FormField';
- 
 import CustomButton from '../../components/CustomButton'
-import { registerUser } from '../../lib/apiControllers'
 import { useGlobalContext } from "../../context/GlobalProvider";
-
+import GoogleButton from '../../components/GoogleButton'
 
 const SignUp = () => {
-  const { handleRegister } = useGlobalContext();
+  const { handleRegister, handleGoogleLogin } = useGlobalContext();
   const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -33,17 +30,30 @@ const SignUp = () => {
     }
   };
 
+  
+  const submitGoogle = async () => {
+    setIsSubmitting(true);
+    try {
+      await handleGoogleLogin();
+      router.replace('/home');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
-        <View className="w-full justify-center h-full px-4 my-6">
+        <View className="w-full justify-center h-full px-4 my-5">
           <Image
             source={images.logo}
             resizeMode='contain'
-            className="w-[182px] h-[60px]"
+            className="w-[210px] h-[70px]"
           />
 
-          <Text className="text-2xl text-white mt-10 font-psemibold">Registruj se na BalkanFlix</Text>
+          <Text className="text-2xl text-white mt-5 font-pbold">Registruj se na BalkanFlix</Text>
 
           <FormField 
             title='Korisničko ime'
@@ -73,6 +83,14 @@ const SignUp = () => {
             handlePress={submit}
             containerStyles='mt-7'
             isLoading={isSubmitting}
+          />
+
+          <GoogleButton
+            title='Registruj se putem Googlea'
+            handlePress={submitGoogle}
+            containerStyles='mt-7'
+            isLoading={isSubmitting}
+            textStyles="text-white flex justify-center items-center text-center font-psemibold text-lg"
           />
 
           <View className="justify-center pt-5 flex-row gap-2">

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, ImageBackground, TouchableOpacity, FlatList, Dimensions, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 
@@ -32,7 +33,12 @@ const sliderData = [
 
 const SliderItem = ({ item }) => (
   <View style={styles.sliderItem}>
+    {/* <LinearGradient
+      colors={['rgba(0,0,0,0.8)', 'transparent']}
+      style={styles.background}
+    /> */}
     <ImageBackground source={item.image} style={styles.sliderImage} imageStyle={styles.imageStyle}>
+      {/* LinearGradient unutar ImageBackground sa apsolutnim pozicioniranjem */}
       <Text style={styles.sliderText}>{item.text}</Text>
       <TouchableOpacity style={styles.sliderButton}>
         <Text style={styles.buttonText}>{item.buttonText}</Text>
@@ -59,6 +65,13 @@ const TopSlider = () => {
 };
 
 const styles = StyleSheet.create({
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 300,
+  },
   sliderContainer: {
     flex: 1,
   },
