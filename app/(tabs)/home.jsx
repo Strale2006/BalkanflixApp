@@ -1,4 +1,13 @@
-import { View, Text, FlatList, ImageBackground, TouchableOpacity, Dimensions, RefreshControl, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  ImageBackground,
+  TouchableOpacity,
+  Dimensions,
+  RefreshControl,
+  ActivityIndicator,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
@@ -6,7 +15,7 @@ import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import TopSlider from '../../components/HeroSlide';
 import MovieList from '../../components/MovieList';
-import GoogleButton from '../../components/GoogleButton';
+import CustomButton from '../../components/CustomButton';
 
 const { width } = Dimensions.get('window');
 
@@ -21,8 +30,10 @@ const MainHome = () => {
   const fetchData = async () => {
     try {
       const [topUsersRes, episodesRes] = await Promise.all([
-        axios.get("https://balkanflix-server.vercel.app/api/auth/getTopUsersByEpisodesWatchedFull"),
-        axios.get('https://balkanflix-server.vercel.app/api/episode/newest')
+        axios.get(
+          'https://balkanflix-server.vercel.app/api/auth/getTopUsersByEpisodesWatchedFull'
+        ),
+        axios.get('https://balkanflix-server.vercel.app/api/episode/newest'),
       ]);
 
       setTopUsers(topUsersRes.data.topUsers.slice(0, 5));
@@ -46,90 +57,111 @@ const MainHome = () => {
   }, []);
 
   const renderNewEpisode = ({ item }) => (
-    <View style={styles.episodeContainer}>
+    <View
+      className="mx-2"
+      style={{ width: width * 0.31 }} // dynamic width
+    >
       <TouchableOpacity
-        onPress={() => navigation.navigate('Watch', { 
-          titleParams: item.title_params,
-          episode: item.ep 
-        })}
+        onPress={() => {/* navigation logic */}}
         activeOpacity={0.9}
       >
         <ImageBackground
-          source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}` }}
-          style={styles.episodeCard}
-          imageStyle={styles.episodeImage}
+          source={{
+            uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}`,
+          }}
+          className="rounded-lg overflow-hidden justify-end"
+          style={{ height: width * 0.45 }} // dynamic height
+          imageStyle={{ resizeMode: 'cover' }}
         >
           {item.partner && (
-            <FontAwesome 
-              name="handshake-o" 
-              size={24} 
-              color="#FFD700" 
-              style={styles.partnerIcon} 
+            <FontAwesome
+              name="handshake-o"
+              size={24}
+              color="#FFD700"
+              className="absolute top-2 left-2 bg-black bg-opacity-70 rounded-full p-1"
             />
           )}
-          
-          <View style={styles.episodeInfo}>
-            <GoogleButton style={styles.watchButton}>
-              <Text style={styles.watchButtonText}>GLEDAJ</Text>
-            </GoogleButton>
-            <Text style={styles.episodeNumber}>Epizoda {item.ep}</Text>
+
+          <View className="p-2">
+            <Text className="text-white text-xs text-right bg-red-600/90 px-2 py-1 rounded-md min-w-20 max-w-24 self-end">
+              Epizoda {item.ep}
+            </Text>
           </View>
         </ImageBackground>
-        <Text style={styles.episodeTitle} numberOfLines={1}>{item.title}</Text>
+        <Text
+          className="text-white text-sm mt-2 px-1 font-psemibold"
+          numberOfLines={2}
+        >
+          {item.title}
+        </Text>
       </TouchableOpacity>
     </View>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-[#0a0a0a]">
       <FlatList
         data={[]}
         ListHeaderComponent={
-          <View style={styles.content}>
+          <View className="pb-5">
             <TopSlider />
-            
+
             {/* New Episodes Section */}
-            <View style={styles.section}>
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Najnovije Epizode</Text>
+            <View className="my-4">
+              <View className="flex-row justify-between items-center px-4 mb-2">
+                <Text className="text-white text-xl font-pbold">
+                  Najnovije Epizode
+                </Text>
               </View>
-              
+
               {loading ? (
                 <FlatList
                   horizontal
                   data={[1, 2, 3, 4, 5]}
                   renderItem={() => (
-                    <View style={styles.skeletonContainer}>
+                    <View
+                      className="mx-2 justify-center items-center rounded-lg bg-[#1a1a1a]"
+                      style={{
+                        width: width * 0.35,
+                        height: width * 0.5,
+                      }}
+                    >
                       <ActivityIndicator size="large" color="#E50914" />
                     </View>
                   )}
-                  contentContainerStyle={styles.episodeList}
+                  contentContainerStyle={{ paddingLeft: 15 }}
                 />
               ) : (
                 <FlatList
                   horizontal
                   data={newEpisodes}
                   renderItem={renderNewEpisode}
-                  contentContainerStyle={styles.episodeList}
+                  contentContainerStyle={{ paddingLeft: 15 }}
                   showsHorizontalScrollIndicator={false}
                 />
               )}
             </View>
 
             {/* Popular Section */}
-            <View style={styles.section}>
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Popularno</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Category', { category: 'popular' })}>
-                  <Text style={styles.moreButton}>Više</Text>
+            <View className="my-4">
+              <View className="flex-row justify-between items-center px-4 mb-2">
+                <Text className="text-white text-xl font-pbold">Popularno</Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('Category', { category: 'popular' })
+                  }
+                >
+                  <Text className="text-[#E50914] text-sm font-psemibold">
+                    Više
+                  </Text>
                 </TouchableOpacity>
               </View>
               <MovieList category="popular" />
             </View>
 
             {/* Schedule Section */}
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Raspored</Text>
+            <View className="my-4 px-4">
+              <Text className="text-white text-xl font-pbold">Raspored</Text>
               {/* Add schedule component here */}
             </View>
           </View>
@@ -145,99 +177,6 @@ const MainHome = () => {
       />
     </SafeAreaView>
   );
-};
-
-const styles = {
-  container: {
-    flex: 1,
-    backgroundColor: '#0a0a0a',
-  },
-  content: {
-    paddingBottom: 20,
-  },
-  section: {
-    marginVertical: 15,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-    marginBottom: 10,
-  },
-  sectionTitle: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-    fontFamily: 'Poppins-Bold',
-  },
-  moreButton: {
-    color: '#E50914',
-    fontSize: 14,
-    fontFamily: 'Poppins-SemiBold',
-  },
-  episodeContainer: {
-    width: width * 0.35,
-    marginHorizontal: 8,
-  },
-  episodeCard: {
-    height: width * 0.5,
-    borderRadius: 8,
-    overflow: 'hidden',
-    justifyContent: 'flex-end',
-  },
-  episodeImage: {
-    resizeMode: 'cover',
-  },
-  partnerIcon: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    borderRadius: 20,
-    padding: 5,
-  },
-  episodeInfo: {
-    padding: 10,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-  },
-  watchButton: {
-    backgroundColor: '#E50914',
-    paddingVertical: 8,
-    borderRadius: 4,
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  watchButtonText: {
-    color: 'white',
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 14,
-  },
-  episodeNumber: {
-    color: 'white',
-    fontSize: 12,
-    fontFamily: 'Poppins-Regular',
-    textAlign: 'right',
-  },
-  episodeTitle: {
-    color: 'white',
-    fontSize: 14,
-    marginTop: 8,
-    paddingHorizontal: 5,
-    fontFamily: 'Poppins-SemiBold',
-  },
-  episodeList: {
-    paddingLeft: 15,
-  },
-  skeletonContainer: {
-    width: width * 0.35,
-    height: width * 0.5,
-    marginHorizontal: 8,
-    backgroundColor: '#1a1a1a',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-  },
 };
 
 export default MainHome;

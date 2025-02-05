@@ -47,7 +47,8 @@
     "react-native-url-polyfill": "^2.0.0",
     "react-native-vector-icons": "^10.2.0",
     "react-native-webview": "^13.13.1",
-    "rn-creash-course": "file:"
+    "rn-creash-course": "file:",
+    "expo-linear-gradient": "~14.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

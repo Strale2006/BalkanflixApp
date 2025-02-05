@@ -1,34 +1,19 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
+import { TouchableOpacity, ImageBackground, Text } from 'react-native';
 
 const MovieCard = ({ item }) => {
-    return (
-        <TouchableOpacity onPress={() => {/* navigation logic */}}>
-            <ImageBackground
-                source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}` }}
-                style={styles.card}
-                imageStyle={styles.image}
-            >
-                <Text style={styles.title}>{item.title}</Text>
-            </ImageBackground>
-        </TouchableOpacity>
-    );
-};
-
-const styles = {
-    card: {
-        aspectRatio: 0.7,
-        borderRadius: 8,
-        overflow: 'hidden',
-    },
-    image: {
-        resizeMode: 'cover',
-    },
-    title: {
-        color: 'white',
-        padding: 8,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-    }
+  return (
+    <TouchableOpacity onPress={() => {/* navigation logic */}}>
+      <ImageBackground
+        source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}` }}
+        className="overflow-hidden rounded"
+        style={{ aspectRatio: 0.7 }}
+        imageStyle={{ resizeMode: 'cover' }}
+      >
+      </ImageBackground>
+      <Text className="text-white font-psemibold p-2" numberOfLines={2}>{item.title}</Text>
+    </TouchableOpacity>
+  );
 };
 
 export default MovieCard;

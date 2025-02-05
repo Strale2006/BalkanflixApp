@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, ImageBackground, TouchableOpacity, FlatList, Dimensions, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const { width, height } = Dimensions.get('window');
+const { width  } = Dimensions.get('window');
 
 const sliderData = [
   {
@@ -32,16 +32,15 @@ const sliderData = [
 ];
 
 const SliderItem = ({ item }) => (
-  <View style={styles.sliderItem}>
-    {/* <LinearGradient
-      colors={['rgba(0,0,0,0.8)', 'transparent']}
-      style={styles.background}
-    /> */}
-    <ImageBackground source={item.image} style={styles.sliderImage} imageStyle={styles.imageStyle}>
-      {/* LinearGradient unutar ImageBackground sa apsolutnim pozicioniranjem */}
-      <Text style={styles.sliderText}>{item.text}</Text>
-      <TouchableOpacity style={styles.sliderButton}>
-        <Text style={styles.buttonText}>{item.buttonText}</Text>
+  <View className="w-screen h-[250px]">
+    <ImageBackground
+      source={item.image}
+      className="w-screen h-[230px] justify-between p-[15px]"
+      imageStyle={{ opacity: 0.8 }}
+    >
+      <Text className="text-white text-2xl font-bold text-left">{item.text}</Text>
+      <TouchableOpacity className="bg-red-500 p-3 rounded-[5px] self-start">
+        <Text className="text-white font-bold text-base">{item.buttonText}</Text>
       </TouchableOpacity>
     </ImageBackground>
   </View>
@@ -49,7 +48,7 @@ const SliderItem = ({ item }) => (
 
 const TopSlider = () => {
   return (
-    <View style={styles.sliderContainer}>
+    <View className="flex-1">
       <FlatList
         data={sliderData}
         renderItem={({ item }) => <SliderItem item={item} />}
@@ -63,48 +62,5 @@ const TopSlider = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  background: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 300,
-  },
-  sliderContainer: {
-    flex: 1,
-  },
-  sliderItem: {
-    width: width,
-    height: 250,
-  },
-  sliderImage: {  
-    width: width,
-    height: 230,
-    justifyContent: 'space-between',
-    padding: 15,
-  },
-  imageStyle: {
-    opacity: 0.8,
-  },
-  sliderText: {
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'left',
-  },
-  sliderButton: {
-    backgroundColor: 'red',
-    padding: 12,
-    borderRadius: 5,
-    alignSelf: 'flex-start',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-});
 
 export default TopSlider;
