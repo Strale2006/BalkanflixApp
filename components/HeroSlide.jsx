@@ -1,44 +1,13 @@
-import React from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, FlatList, Dimensions, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import axios from 'axios'
+import React, { useEffect, useState } from 'react';
+import { View, Text, ImageBackground, TouchableOpacity, FlatList, Dimensions } from 'react-native';
+import axios from 'axios';
 
-const { width  } = Dimensions.get('window');
-
-const {data} = await axios.get("https://balkanflix-server.vercel.app/api/content/seriesHero");
-const series = data.series;
-
-const sliderData = [
-  {
-    id: '1',
-    image: require('../assets/slider/DDDp.webp'),
-    text: 'Dandadan',
-    buttonText: 'Gledaj',
-  },
-  {
-    id: '2',
-    image: require('../assets/slider/AaRA2p.webp'),
-    text: 'Latest Trends',
-    buttonText: 'Gledaj',
-  },
-  {
-    id: '3',
-    image: require('../assets/slider/LLIAW.webp'),
-    text: 'Loner Life in Another World',
-    buttonText: 'Gledaj',
-  },
-  {
-    id: '4',
-    image: require('../assets/slider/BLu20p.webp'),
-    text: 'Blue Lock vs U.20',
-    buttonText: 'Gledaj',
-  },
-];
+const { width } = Dimensions.get('window');
 
 const SliderItem = ({ item }) => (
   <View className="w-screen h-[250px]">
     <ImageBackground
-      source={item.poster}
+      source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.poster}` }} // Postavi ispravno učitavanje slike
       className="w-screen h-[230px] justify-between p-[15px]"
       imageStyle={{ opacity: 0.8 }}
     >
@@ -51,6 +20,21 @@ const SliderItem = ({ item }) => (
 );
 
 const TopSlider = () => {
+  const [series, setSeries] = useState([]);
+
+  useEffect(() => {
+    const fetchSeries = async () => {
+      try {
+        const { data } = await axios.get("https://balkanflix-server.vercel.app/api/content/seriesHero");
+        setSeries(data.series);
+      } catch (error) {
+        console.error("Greška prilikom učitavanja serija:", error);
+      }
+    };
+
+    fetchSeries();
+  }, []);
+
   return (
     <View className="flex-1">
       <FlatList

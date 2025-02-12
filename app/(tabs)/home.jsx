@@ -151,7 +151,7 @@ const MainHome = () => {
                     }
                   >
                     <Text className="text-[#E50914] text-sm font-psemibold">
-                      ViÅ¡e
+                      Više
                     </Text>
                   </TouchableOpacity>
                 </View>

@@ -5,7 +5,6 @@ import { icons } from '../../constants';
 import InfoBox from './../../components/InfoBox';
 import { router } from "expo-router";
 import { logoutUser } from '../../lib/apiControllers'; // Import your logout function
-import LinearGradient from 'react-native-linear-gradient';
 
 const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
