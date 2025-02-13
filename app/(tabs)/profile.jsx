@@ -6,6 +6,9 @@ import InfoBox from './../../components/InfoBox';
 import { router } from "expo-router";
 import { logoutUser } from '../../lib/apiControllers'; // Import your logout function
 
+import LinearGradient from 'expo-linear-gradient';
+
+
 const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
   const dashboard = () => {
@@ -31,24 +34,51 @@ const Profile = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView className="flex-1">
-        {/* Banner Image */}
         <View className="w-full h-40 relative mb-8">
-          <Image
-            source={{ uri: user?.banner }}
-            resizeMode="cover"
-            className="w-full h-full rounded-xl"
-          />
+          {/* Banner Image */}
+          <View className="w-full h-40 relative mb-8 border-b-2 border-black">
+            <Image
+              source={{ uri: user?.banner }}
+              resizeMode="cover"
+              className="w-full h-full"
+            />
+
+            <View className="absolute inset-0 bg-white opacity-40 rounded-b-lg" />
+          </View>
+
           {/* Profile Picture */}
-          <View className="absolute left-4 bottom-[-30px]">
+          <View
+            style={{
+              position: 'absolute',
+              left: 16,
+              bottom: -30,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.2,
+              shadowRadius: 6,
+              elevation: 5, // Android shadow
+            }}
+          >
             <Image
               source={{ uri: user?.pfp }}
               resizeMode="contain"
-              className="w-24 h-24 rounded-full border-4 border-secondary"
+              style={{
+                width: 96,
+                height: 96,
+                borderRadius: 48,
+                borderWidth: 2,
+                borderColor: 'black',
+                shadowColor: '#fff',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.2,
+                shadowRadius: 6,
+                elevation: 5,
+                shadowOffset: { width: 0, height: 4 },
+                backgroundColor: '#fff', // Optional background to ensure clarity
+              }}
             />
           </View>
         </View>
-
-        
 
         {/* User Info Section */}
         <View className="px-6">
@@ -104,7 +134,6 @@ const Profile = () => {
               )}
             </View>
           </View>
-
 
           {/* Favorites Section */}
           <View className="mt-6">

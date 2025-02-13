@@ -114,17 +114,17 @@ const Chat = () => {
           keyExtractor={(item) => item.$id}
           renderItem={({ item }) => (
             <View>
-              <View className="flex-row items-center mb-1">
+              <View className={`${item.username === user?.username ? 'self-end' : 'self-start'} flex-row items-center mb-1`}>
                 <Image
                   source={{ uri: item.pfp }}
                   className="ml-2 w-8 h-8 rounded-full mr-2"
                 />
                 <Text className="text-lg text-white font-pbold mr-2">{item.username}</Text>
-                <Text className="text-sm text-gray-300 font-psemibold">{formatTime(item.$createdAt)}</Text>
+                <Text className="text-sm text-gray-300 font-psemibold mr-2">{formatTime(item.$createdAt)}</Text>
               </View>
               <Text className={`p-3 ${
-                item.username === user?.username ? 'self-end bg-blue-500 text-white font-psemibold' : 'self-start bg-[#22293E] text-white font-psemibold'
-              } rounded-3xl ml-2 mt-1 mb-3`}>{item.body}</Text>
+                item.username === user?.username ? 'self-end bg-blue-500' : 'self-start bg-[#22293E]'
+              } rounded-3xl ml-2 mr-2 mt-1 mb-3 text-white font-psemibold`}>{item.body}</Text>
             </View>
           )}
           ref={messagesEndRef}

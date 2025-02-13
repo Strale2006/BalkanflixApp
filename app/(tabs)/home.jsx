@@ -1,84 +1,181 @@
-import { View, Text, FlatList, Image, RefreshControl, Alert } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useEffect, useState } from 'react'
+import {
+  View,
+  Text,
+  FlatList,
+  ImageBackground,
+  TouchableOpacity,
+  Dimensions,
+  RefreshControl,
+  ActivityIndicator,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useEffect, useState } from 'react';
+import { FontAwesome } from '@expo/vector-icons';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
+import TopSlider from '../../components/HeroSlide';
+import MovieList from '../../components/MovieList';
+import CustomButton from '../../components/CustomButton';
 
-import {images} from '../../constants'
-import SearchInput from '../../components/SearchInput'
-import Trending from '../../components/Trending'
-import EmptyState from '../../components/EmptyState'
-import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
-import useAppwrite from '../../lib/useAppwrite'
-import VideoCard from '../../components/VideoCard'
-import { useGlobalContext } from '../../context/GlobalProvider'
+const { width } = Dimensions.get('window');
 
-const Home = () => {
-
-  const {user} = useGlobalContext();
-  const { data: posts, refetch } = useAppwrite(getAllPosts);
-  const { data: latestPosts } = useAppwrite(getLatestPosts)
-
-
+const MainHome = () => {
+  const navigation = useNavigation();
+  const [topUsers, setTopUsers] = useState([]);
+  const [newEpisodes, setNewEpisodes] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [scheduleVisible, setScheduleVisible] = useState(false);
 
-  const onRefresh = async () => {
+  const fetchData = async () => {
+    try {
+      const topUsersRes = await axios.get(
+        'https://balkanflix-server.vercel.app/api/auth/getTopUsersByEpisodesWatchedFull'
+      );
+      setTopUsers(topUsersRes.data.topUsers.slice(0, 5));
+
+      const episodesRes = await axios.get('https://balkanflix-server.vercel.app/api/episode/newest');
+      setNewEpisodes(episodesRes.data);
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      Alert.alert('Error', 'Failed to fetch data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRefresh = async () => {
     setRefreshing(true);
-    await refetch();
+    await fetchData();
     setRefreshing(false);
-  }
+  };
 
-  // console.log(posts)
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  return (
-    <SafeAreaView className="bg-primary h-full">
-      <FlatList 
-        // data={[{ id: 1}, { id: 2}, { id: 3}]}
-        data={posts}
-        keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => (
-          <VideoCard
-            video={item}
-          />
-        )}
-        ListHeaderComponent={() => (
-          <View className="my-6 px-4 space-y-6">
-            <View className="justify-between items-start flex-row mb-6">
-              <View>
-                <Text className="font-pmedium text-sm text-gray-100">
-                  Welcome Back
-                </Text>
-                <Text className="text-2xl font-psemibold text-white">
-                  {user?.username}
-                </Text>
-              </View>
+    const renderNewEpisode = ({ item }) => (
+      <View
+        className="mx-2"
+        style={{ width: width * 0.31 }} // dynamic width
+      >
+        <TouchableOpacity
+          onPress={() => {/* navigation logic */}}
+          activeOpacity={0.9}
+        >
+          <ImageBackground
+            source={{
+              uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}`,
+            }}
+            className="rounded-lg overflow-hidden justify-end"
+            style={{ height: width * 0.45 }}
+            imageStyle={{ resizeMode: 'cover' }}
+          >
+            {item.partner && (
+              <FontAwesome
+                name="handshake-o"
+                size={24}
+                color="#FFD700"
+                className="absolute top-2 left-2 bg-black bg-opacity-70 rounded-full p-1"
+              />
+            )}
 
-              <View className="mt-1.5">
-                <Image source={images.logoSmall} className="w-9 h-10" resizeMode='contain' />
-              </View>
-            </View>
-
-            <SearchInput />
-
-            <View className="w-full flex-1 pt-5 pb-8">
-              <Text className="text-gray-100 text-lg font-pregular mb-3">
-                Latest Videos
+            <View className="p-2">
+              <Text className="text-white text-xs text-right font-psemibold bg-red-600/90 px-2 py-1 rounded-md min-w-20 max-w-24 self-end">
+                Epizoda {item.ep}
               </Text>
-
-              <Trending posts={latestPosts ?? []} />
             </View>
-          </View>
-        )}
-        ListEmptyComponent={() => (
-          <EmptyState 
-            title="No videos found"
-            subtitle="Be the first one to upload a video"
-          />
-        )}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      />
+          </ImageBackground>
+          <Text
+            className="text-white text-sm mt-2 px-1 font-psemibold"
+            numberOfLines={2}
+          >
+            {item.title}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
 
+    return (
+      <SafeAreaView className="flex-1 bg-[#0a0a0a]">
+        <FlatList
+          data={[]}
+          ListHeaderComponent={
+            <View className="pb-5">
+              <TopSlider />
 
-    </SafeAreaView>
-  )
-}
+              {/* New Episodes Section */}
+              <View className="my-4">
+                <View className="flex-row justify-between items-center px-4 mb-2">
+                  <Text className="text-white text-xl font-pbold">
+                    Najnovije Epizode
+                  </Text>
+                </View>
 
-export default Home
+                {loading ? (
+                  <FlatList
+                    horizontal
+                    data={[1, 2, 3, 4, 5]}
+                    renderItem={() => (
+                      <View
+                        className="mx-2 justify-center items-center rounded-lg bg-[#1a1a1a]"
+                        style={{
+                          width: width * 0.35,
+                          height: width * 0.5,
+                        }}
+                      >
+                        <ActivityIndicator size="large" color="#E50914" />
+                      </View>
+                    )}
+                    contentContainerStyle={{ paddingLeft: 15 }}
+                  />
+                ) : (
+                  <FlatList
+                    horizontal
+                    data={newEpisodes}
+                    renderItem={renderNewEpisode}
+                    contentContainerStyle={{ paddingLeft: 15 }}
+                    showsHorizontalScrollIndicator={false}
+                  />
+                )}
+              </View>
+
+              {/* Popular Section */}
+              <View className="my-4">
+                <View className="flex-row justify-between items-center px-4 mb-2">
+                  <Text className="text-white text-xl font-pbold">Popularno</Text>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('Category', { category: 'popular' })
+                    }
+                  >
+                    <Text className="text-[#E50914] text-sm font-psemibold">
+                      Više
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <MovieList type="popular" />
+              </View>
+
+              {/* Schedule Section */}
+              <View className="my-4 px-4">
+                <Text className="text-white text-xl font-pbold">Raspored</Text>
+                {/* Add schedule component here */}
+              </View>
+            </View>
+          }
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              tintColor="#E50914"
+            />
+          }
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </SafeAreaView>
+    );
+  };
+
+export default MainHome;
