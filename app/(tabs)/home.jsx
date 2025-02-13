@@ -101,7 +101,7 @@ const MainHome = () => {
     );
 
     return (
-      <SafeAreaView className="flex-1 bg-[#0a0a0a]">
+      <SafeAreaView className="flex-1 bg-[#101420]">
         <FlatList
           data={[]}
           ListHeaderComponent={
