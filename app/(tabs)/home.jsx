@@ -177,7 +177,7 @@ const MainHome = () => {
           }
           keyExtractor={(item, index) => index.toString()}
         />
-              <StatusBar style='dark' hidden />
+              <StatusBar style='light' />
         
       </SafeAreaView>
     );
