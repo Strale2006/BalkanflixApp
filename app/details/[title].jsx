@@ -101,7 +101,7 @@ const DetailsScreen = () => {
       <View className="p-6">
         <View className="flex-row justify-between items-center">
           <Text className="text-white text-3xl font-pextrabold tracking-wide">{seriesData.title}</Text>
-          <TouchableOpacity onPress={toggleSaved} className="p-2 rounded-full bg-gray-800 dark:bg-gray-700">
+          <TouchableOpacity onPress={toggleSaved} className="p-2 rounded-full bg-gray-900 dark:bg-gray-700">
             <Feather name={isSaved ? "bookmark" : "bookmark-outline"} size={24} color="white" />
           </TouchableOpacity>
         </View>
