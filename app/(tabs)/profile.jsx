@@ -6,9 +6,6 @@ import InfoBox from './../../components/InfoBox';
 import { router } from "expo-router";
 import { logoutUser } from '../../lib/apiControllers'; // Import your logout function
 
-import LinearGradient from 'expo-linear-gradient';
-
-
 const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
   const dashboard = () => {
@@ -42,8 +39,6 @@ const Profile = () => {
               resizeMode="cover"
               className="w-full h-full"
             />
-
-            <View className="absolute inset-0 bg-white opacity-40 rounded-b-lg" />
           </View>
 
           {/* Profile Picture */}
@@ -99,8 +94,27 @@ const Profile = () => {
           )}
 
           {user?.isTranslator && (
-            <TouchableOpacity activeOpacity={0.8} onPress={dashboard}>
-              <Text className="mt-3 p-4 border border-dashed border-white w-32 text-center text-white font-psemibold bg-blue-600 rounded-xl">Dashboard</Text>
+            <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={dashboard}
+            style={{
+              backgroundColor: "#2563EB",
+              paddingVertical: 14,
+              paddingHorizontal: 20,
+              borderRadius: 25,
+              alignItems: "center",
+              justifyContent: "center",
+              width: 140,
+              borderWidth: 2,
+              borderColor: "#fff",
+              shadowColor: "#000",
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+              shadowOffset: { width: 0, height: 2 },
+              transform: [{ scale: 0.95 }],
+            }}
+            >
+            <Text style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}>Dashboard</Text>
             </TouchableOpacity>
           )}
 

@@ -17,6 +17,7 @@ import TopSlider from '../../components/HeroSlide';
 import MovieList from '../../components/MovieList';
 import CustomButton from '../../components/CustomButton';
 
+
 const { width } = Dimensions.get('window');
 
 const MainHome = () => {
