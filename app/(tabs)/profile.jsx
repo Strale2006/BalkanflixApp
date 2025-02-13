@@ -6,6 +6,9 @@ import InfoBox from './../../components/InfoBox';
 import { router } from "expo-router";
 import { logoutUser } from '../../lib/apiControllers'; // Import your logout function
 
+import LinearGradient from 'expo-linear-gradient';
+
+
 const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
   const dashboard = () => {
@@ -33,11 +36,15 @@ const Profile = () => {
       <ScrollView className="flex-1">
         <View className="w-full h-40 relative mb-8">
           {/* Banner Image */}
-          <Image
-            source={{ uri: user?.banner }}
-            resizeMode="cover"
-            className="w-full h-full"
-          />
+          <View className="w-full h-40 relative mb-8 border-b-2 border-black">
+            <Image
+              source={{ uri: user?.banner }}
+              resizeMode="cover"
+              className="w-full h-full"
+            />
+
+            <View className="absolute inset-0 bg-white opacity-40 rounded-b-lg" />
+          </View>
 
           {/* Profile Picture */}
           <View
@@ -60,7 +67,13 @@ const Profile = () => {
                 height: 96,
                 borderRadius: 48,
                 borderWidth: 2,
-                borderColor: 'red',
+                borderColor: 'black',
+                shadowColor: '#fff',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.2,
+                shadowRadius: 6,
+                elevation: 5,
+                shadowOffset: { width: 0, height: 4 },
                 backgroundColor: '#fff', // Optional background to ensure clarity
               }}
             />
