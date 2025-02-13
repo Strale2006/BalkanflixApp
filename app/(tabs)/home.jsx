@@ -153,7 +153,7 @@ const MainHome = () => {
                       navigation.navigate('Category', { category: 'popular' })
                     }
                   >
-                    <Text className="text-[#E50914] text-sm font-psemibold">
+                    <Text className="text-[#E50914] text-base font-pbold flex items-center text-center justify-center">
                       Više
                     </Text>
                   </TouchableOpacity>

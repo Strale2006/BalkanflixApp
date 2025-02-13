@@ -11,9 +11,10 @@ const SliderItem = ({ item }) => (
       className="w-screen h-[230px] justify-between p-[15px]"
       imageStyle={{ opacity: 0.8 }}
     >
-      <Text className="text-white text-2xl font-bold text-left">{item.title}</Text>
-      <TouchableOpacity className="bg-red-500 p-3 rounded-[5px] self-start">
-        <Text className="text-white font-bold text-base">Gledaj</Text>
+      <Text className="text-white text-2xl font-pbold text-left">{item.title}</Text>
+      <Text numberOfLines={4} className="text-white text-xs font-pmedium text-left">{item.description}</Text>
+      <TouchableOpacity className="bg-red-500 p-3 rounded-lg self-start">
+        <Text className="text-white font-pbold text-base">Gledaj</Text>
       </TouchableOpacity>
     </ImageBackground>
   </View>

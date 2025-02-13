@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useLocalSearchParams, Link, router } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const DetailsScreen = () => {
   // Extract the dynamic parameter “title” from the URL.
