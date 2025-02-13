@@ -15,12 +15,12 @@ import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import TopSlider from '../../components/HeroSlide';
 import MovieList from '../../components/MovieList';
-import CustomButton from '../../components/CustomButton';
+// import CustomButton from '../../components/CustomButton';
+import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
 const MainHome = () => {
-  const navigation = useNavigation();
   const [topUsers, setTopUsers] = useState([]);
   const [newEpisodes, setNewEpisodes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -61,7 +61,9 @@ const MainHome = () => {
         style={{ width: width * 0.31 }} // dynamic width
       >
         <TouchableOpacity
-          onPress={() => {/* navigation logic */}}
+          onPress={() => {
+            router.push(`/details/${encodeURIComponent(item.title_params)}`);
+          }}
           activeOpacity={0.9}
         >
           <ImageBackground

@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import axios from 'axios';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute } from 'expo-router'; // use expo-router's hook instead
 import { Feather } from '@expo/vector-icons';
-import { useAuth } from '../context/AuthContext'; // Ensure your AuthContext is set up
+import { useGlobalContext } from '../context/GlobalProvider';
 import { Link } from 'expo-router';
 
 const DetailsScreen = () => {
-  const route = useRoute();
-  const navigation = useNavigation();
-  const { title } = route.params || {};
-  const { authToken } = useAuth(); // Fetch auth token from context
+  const { details: title } = useRoute().params || {}; // Extract the dynamic parameter as 'title'
+  const { token } = useGlobalContext();
   
-  const [seriesData, setSeriesData] = useState<any>(null);
+  const [seriesData, setSeriesData] = useState(null);
   const [episodes, setEpisodes] = useState([]);
   const [visibleEpisodes, setVisibleEpisodes] = useState(40);
   const [isSaved, setIsSaved] = useState(false);
@@ -42,11 +40,11 @@ const DetailsScreen = () => {
     fetchEpisodes();
   }, [title]);
 
-  const fetchUserData = async (series: any) => {
-    if (!authToken) return;
+  const fetchUserData = async (series) => {
+    if (!token) return;
     try {
       const { data } = await axios.get('https://balkanflix-server.vercel.app/api/private', {
-        headers: { Authorization: `Bearer ${authToken}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setIsSaved(data.favorites.includes(series.title));
     } catch (error) {
@@ -55,8 +53,9 @@ const DetailsScreen = () => {
   };
 
   const toggleSaved = async () => {
-    if (!authToken) {
-      navigation.navigate("Login");
+    if (!token) {
+      // Use Expo Router for navigation to the login screen
+      router.push('/login');
       return;
     }
 
@@ -66,7 +65,7 @@ const DetailsScreen = () => {
 
     try {
       await axios.post(apiUrl, { title: seriesData?.title }, {
-        headers: { Authorization: `Bearer ${authToken}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setIsSaved(!isSaved);
     } catch (error) {
@@ -76,7 +75,6 @@ const DetailsScreen = () => {
 
   return (
     <ScrollView className="flex-1 bg-gray-900">
-      {/* Banner */}
       {seriesData ? (
         <>
           <Image 
@@ -85,7 +83,6 @@ const DetailsScreen = () => {
           />
 
           <View className="p-4">
-            {/* Title & Bookmark */}
             <View className="flex-row justify-between items-center">
               <Text className="text-white text-2xl font-bold">{seriesData?.title}</Text>
               <TouchableOpacity onPress={toggleSaved}>
@@ -93,17 +90,16 @@ const DetailsScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {/* Genres */}
             <View className="flex-row flex-wrap mt-2">
-              {seriesData?.genre?.map((genre: string) => (
-                <Text key={genre} className="text-gray-300 bg-gray-700 px-2 py-1 rounded mr-2 mb-2">{genre}</Text>
+              {seriesData?.genre?.map((genre) => (
+                <Text key={genre} className="text-gray-300 bg-gray-700 px-2 py-1 rounded mr-2 mb-2">
+                  {genre}
+                </Text>
               ))}
             </View>
 
-            {/* Description */}
             <Text className="text-gray-400 mt-3">{seriesData?.description}</Text>
 
-            {/* Episodes */}
             <View className="mt-5">
               <Text className="text-white text-lg font-semibold">Gledaj:</Text>
               <View className="flex-row flex-wrap mt-3">
@@ -118,7 +114,6 @@ const DetailsScreen = () => {
                 ))}
               </View>
 
-              {/* Pagination */}
               {episodes.length > 40 && (
                 <View className="flex-row justify-between mt-4">
                   <TouchableOpacity 
@@ -140,7 +135,6 @@ const DetailsScreen = () => {
               )}
             </View>
 
-            {/* Previous / Next Season */}
             {(seriesData?.previous || seriesData?.next) && (
               <View className="mt-6">
                 {seriesData?.previous && (
