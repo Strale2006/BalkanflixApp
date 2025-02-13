@@ -11,7 +11,7 @@ const MovieCard = ({ item }) => {
       >
       <ImageBackground
         source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}` }}
-        className="overflow-hidden rounded"
+        className="overflow-hidden rounded-lg"
         style={{ aspectRatio: 0.7 }}
         imageStyle={{ resizeMode: 'cover' }}
       >

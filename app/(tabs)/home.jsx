@@ -17,6 +17,7 @@ import TopSlider from '../../components/HeroSlide';
 import MovieList from '../../components/MovieList';
 // import CustomButton from '../../components/CustomButton';
 import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 
 const { width } = Dimensions.get('window');
 
@@ -176,6 +177,8 @@ const MainHome = () => {
           }
           keyExtractor={(item, index) => index.toString()}
         />
+              <StatusBar style='dark' hidden />
+        
       </SafeAreaView>
     );
   };
