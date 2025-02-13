@@ -1,9 +1,14 @@
 import React from 'react';
 import { TouchableOpacity, ImageBackground, Text } from 'react-native';
+import { router } from 'expo-router';
 
 const MovieCard = ({ item }) => {
   return (
-    <TouchableOpacity onPress={() => {/* navigation logic */}}>
+    <TouchableOpacity 
+      onPress={() => {
+        router.push(`/details/${encodeURIComponent(item.title_params)}`);
+      }}
+      >
       <ImageBackground
         source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}` }}
         className="overflow-hidden rounded"
