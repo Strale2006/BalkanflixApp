@@ -51,7 +51,7 @@ const TabsLayout = () => {
             title: 'Pretraži',
             headerShown: false,
             tabBarIcon: ({ color, focused}) => (
-              <TabIcon icon={icons.search} color={color} name="Pretraži" focused={focused} />
+              <TabIcon icon={icons.search} color="white"} name="Pretraži" focused={focused} />
             )
           }} />
 
