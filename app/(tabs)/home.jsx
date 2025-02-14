@@ -17,6 +17,7 @@ import TopSlider from '../../components/HeroSlide';
 import MovieList from '../../components/MovieList';
 // import CustomButton from '../../components/CustomButton';
 import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 
 
 const { width } = Dimensions.get('window');
@@ -101,7 +102,7 @@ const MainHome = () => {
     );
 
     return (
-      <SafeAreaView className="flex-1 bg-[#0a0a0a]">
+      <SafeAreaView className="flex-1 bg-[#101420]">
         <FlatList
           data={[]}
           ListHeaderComponent={
@@ -153,7 +154,7 @@ const MainHome = () => {
                       navigation.navigate('Category', { category: 'popular' })
                     }
                   >
-                    <Text className="text-[#E50914] text-sm font-psemibold">
+                    <Text className="text-[#E50914] text-base font-pbold flex items-center text-center justify-center">
                       Više
                     </Text>
                   </TouchableOpacity>
@@ -177,6 +178,8 @@ const MainHome = () => {
           }
           keyExtractor={(item, index) => index.toString()}
         />
+              <StatusBar style='light' />
+        
       </SafeAreaView>
     );
   };

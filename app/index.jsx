@@ -56,7 +56,7 @@ export default function App() {
         </View>
       </ScrollView>
 
-      <StatusBar backgroundColor='#161622' style='dark' />
+      <StatusBar style='dark' hidden />
     </SafeAreaView>
   );
 }
