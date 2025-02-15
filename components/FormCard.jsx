@@ -24,9 +24,9 @@ const FormCard = ({
     >
       <View className="bg-slate-900 border border-gray-800 shadow-2xl rounded-xl p-4">
         <View className="mb-4 space-y-1">
-          <Text className="text-xl font-bold text-cyan-400">{title}</Text>
+          <Text className="text-xl font-pbold text-cyan-400">{title}</Text>
           {subtitle && (
-            <Text className="text-sm text-gray-400 font-medium">
+            <Text className="text-sm text-gray-400 font-pmedium">
               {subtitle}
             </Text>
           )}
@@ -34,24 +34,24 @@ const FormCard = ({
         <View className="mb-4 space-y-4">
           <View className="flex-row space-x-4">
             <View className="flex-1 space-y-2">
-              <Text className="text-gray-300">{malLabel}</Text>
+              <Text className="text-gray-300 font-psemibold">{malLabel}</Text>
               <TextInput
                 placeholder="Unesi ID"
                 placeholderTextColor="#A1A1AA"
                 value={malValue}
                 onChangeText={onChangeMal}
-                className="bg-gray-800 border border-gray-700 text-white p-2 rounded"
+                className="bg-gray-800 border border-gray-700 text-white p-2 rounded font-pmedium"
               />
             </View>
               {hasTmdb ? 
                 <View className="flex-1 space-y-2">
-                  <Text className="text-gray-300">{tmdbLabel}</Text>
+                  <Text className="text-gray-300 font-psemibold">{tmdbLabel}</Text>
                   <TextInput
                     placeholder="Unesi ID"
                     placeholderTextColor="#A1A1AA"
                     value={tmdbValue}
                     onChangeText={onChangeTmdb}
-                    className="bg-gray-800 border border-gray-700 text-white p-2 rounded"
+                    className="bg-gray-800 border border-gray-700 text-white p-2 rounded font-pmedium"
                   />
               </View>
               :
@@ -64,7 +64,7 @@ const FormCard = ({
         </View>
         <TouchableOpacity onPress={onSubmit} activeOpacity={0.8}>
           <View className="w-full bg-blue-500 p-3 rounded-lg shadow-lg">
-            <Text className="text-center text-white font-medium">{buttonText}</Text>
+            <Text className="text-center text-white font-psemibold">{buttonText}</Text>
           </View>
         </TouchableOpacity>
       </View>

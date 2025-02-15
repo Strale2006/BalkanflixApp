@@ -23,8 +23,8 @@ const Profile = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0B0F19]">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+    // <SafeAreaView className="flex-1 bg-[#0B0F19]">
+      <ScrollView className="flex-1 bg-[#0B0F19]" contentContainerStyle={{ flexGrow: 1 }}>
         {/* Banner Section */}
         <View className="w-full h-40 relative mb-8 border-b-2 border-gray-800">
           <Image 
@@ -95,7 +95,7 @@ const Profile = () => {
           {/* Stats Section */}
           <View className="w-full flex-row justify-around gap-4 mb-4 mt-2">
             <InfoBox title={user?.full_ep?.length || 0} subtitle="Odgledanih Epizoda" />
-            {user?.isTranslator && <InfoBox title={user?.brojPrevoda} subtitle="Prevedeno Epizoda" />}
+            {user?.isTranslator && <InfoBox title={user?.brojPrevoda || 0} subtitle="Prevedeno Epizoda" />}
           </View>
 
           {/* Favorites Section */}
@@ -120,7 +120,7 @@ const Profile = () => {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    // </SafeAreaView>
   );
 };
 
