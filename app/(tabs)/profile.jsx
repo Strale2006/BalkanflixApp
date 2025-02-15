@@ -78,7 +78,7 @@ const Profile = () => {
 
           {/* Action Buttons */}
           <View className="flex-row justify-center w-full mb-6 px-4 gap-4">
-            <TouchableOpacity activeOpacity={0.7} onPress={dashboard} className="bg-gray-800 px-6 py-3 rounded-full border border-gray-700">
+            <TouchableOpacity activeOpacity={0.5} onPress={dashboard} className="bg-gray-800 px-6 py-3 rounded-full border border-gray-700">
               <Link href="/profileModal" className="text-white text-lg font-psemibold">Izmenite Profil</Link>
             </TouchableOpacity>
 
