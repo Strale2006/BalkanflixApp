@@ -16,7 +16,8 @@ const DetailsScreen = () => {
   const [isSaved, setIsSaved] = useState(false);
 
   // Remove spaces (or any undesired characters) for API consistency
-  const trimmedTitle = title ? title.replace(/\s/g, '') : '';
+  const trimmedTitle = seriesData?.title_params || title?.replace(/\s/g, '') || '';
+
 
 
   const [currentIndex, setCurrentIndex] = useState(0);
