@@ -80,7 +80,7 @@ const Profile = () => {
           <View className="flex-row justify-around w-full mb-6 px-4">
             {user?.isTranslator && (
               <TouchableOpacity onPress={dashboard} className="bg-blue-600 px-6 py-3 rounded-full border border-blue-400">
-                <Text className="text-white text-lg font-semibold">Dashboard</Text>
+                <Text className="text-white text-lg font-psemibold">Dashboard</Text>
               </TouchableOpacity>
             )}
 
@@ -99,8 +99,8 @@ const Profile = () => {
           </View>
 
           {/* Favorites Section */}
-          <View className="mb-8">
-            <Text className="text-xl font-bold text-white mb-4">Omiljeno</Text>
+          <View className="mb-8 flex justify-start items-start w-full">
+            <Text className="text-xl font-pbold text-white mb-4">Omiljeno</Text>
             <View className="flex-row flex-wrap gap-2">
               {user?.favorites?.length > 0 ? (
                 user.favorites.map((title, index) => (
@@ -108,7 +108,7 @@ const Profile = () => {
                     key={index}
                     className="px-3 py-2 bg-gray-800 rounded-lg border border-gray-700"
                   >
-                    <Text className="text-white text-sm font-medium">{title}</Text>
+                    <Text className="text-white text-sm font-pmedium">{title}</Text>
                   </View>
                 ))
               ) : (
