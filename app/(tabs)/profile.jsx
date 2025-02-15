@@ -95,7 +95,7 @@ const Profile = () => {
           {/* Stats Section */}
           <View className="w-full flex-row justify-around gap-4 mb-4 mt-2">
             <InfoBox title={user?.full_ep?.length || 0} subtitle="Odgledanih Epizoda" />
-            {user?.isTranslator && <InfoBox title={user?.brojPrevoda} subtitle="Prevedeno Epizoda" />}
+            {user?.isTranslator && <InfoBox title={user?.brojPrevoda || 0} subtitle="Prevedeno Epizoda" />}
           </View>
 
           {/* Favorites Section */}

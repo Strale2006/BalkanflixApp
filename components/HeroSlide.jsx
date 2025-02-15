@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ImageBackground, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import axios from 'axios';
+import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
@@ -13,7 +14,10 @@ const SliderItem = ({ item }) => (
     >
       <Text numberOfLines={2} className="text-white text-2xl font-pbold text-left">{item.title}</Text>
       <Text numberOfLines={3} className="text-white text-xs font-pmedium text-left">{item.description}</Text>
-      <TouchableOpacity className="bg-red-500 p-3 rounded-lg self-start">
+      <TouchableOpacity 
+        className="bg-red-500 p-3 rounded-lg self-start"
+        onPress={() => router.push(`/details/${encodeURIComponent(item.title_params)}`)}
+        >
         <Text className="text-white font-pbold text-base">Gledaj</Text>
       </TouchableOpacity>
     </ImageBackground>
