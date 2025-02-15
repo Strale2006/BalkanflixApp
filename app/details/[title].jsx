@@ -123,7 +123,7 @@ const DetailsScreen = () => {
           {visibleEpisodes.map((episode, index) => (
             <Link 
               key={index} 
-              href={`/watch/${trimmedTitle}/${episode.ep}`}
+              href={`/${encodeURIComponent(seriesData.title_params)}/${episode.ep}`}
               asChild
             >
               <TouchableOpacity className="w-12 h-12 bg-white/5 bg-gray-900 items-center justify-center rounded-lg active:bg-white/10">
