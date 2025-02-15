@@ -15,18 +15,18 @@ const SliderItem = ({ item }) => (
       <View className="bg-black/40 absolute inset-0" />
       
       <View className="z-10">
-        <Text className="text-white text-xl font-pextrabold" numberOfLines={2}>{item.title}</Text>
+        <Text className="text-white text-2xl font-pextrabold" numberOfLines={2}>{item.title}</Text>
         <View className="flex-row gap-2 mt-1">
           {item.genre?.map((genre, key) => (
-            <Text key={key} className="text-gray-200 text-xs font-bold mb-2">{genre}</Text>
+            <Text key={key} className="text-gray-200 text-xs font-pbold mb-2">{genre}</Text>
           ))}
         </View>
         <TouchableOpacity 
-        className="bg-red-600 py-1.5 px-3 rounded-full self-start flex-row items-center"
+        className="bg-red-600 py-1.5 px-3 rounded-full self-start flex flex-row items-center justify-center"
         onPress={() => router.push(`/details/${encodeURIComponent(item.title_params)}`)}
         >
-          <MaterialIcons name="play-circle" size={15} color="white" />
-          <Text className="text-white font-bold"> Gledaj</Text>
+          <MaterialIcons name="play-circle" size={18} color="white" />
+          <Text className="text-white font-pbold"> Gledaj</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>

@@ -47,18 +47,28 @@ const imageLists = {
       "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/narutopfp26.jpg",
       "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/narutopfp27.jpg",
     ],
-    Jojo: [
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jojopfp1.webp",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jojopfp2.webp",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jojopfp3.webp",
+    BlueLock: [
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp1.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp2.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp3.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp4.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp5.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp6.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp7.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp8.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp9.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp10.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp11.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp12.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp13.jpg",
     ],
-    OnePiece: [
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/onepiecepfp1.webp",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/onepiecepfp2.webp",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/onepiecepfp3.webp",
-    ],
-    Bleach: [
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/bleachpfp1.webp",
+    JJK: [
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jjpfp1.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jjpfp2.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jjpfp3.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jjpfp4.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jjpfp5.jpg",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jjpfp6.jpg",
     ],
     DragonBall: [
       "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/dbpfp1.jpg",
@@ -80,36 +90,26 @@ const imageLists = {
       "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/dbpfp17.webp",
       "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/dbpfp18.jpg",
     ],
+    Jojo: [
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jojopfp1.webp",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jojopfp2.webp",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jojopfp3.webp",
+    ],
+    OnePiece: [
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/onepiecepfp1.webp",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/onepiecepfp2.webp",
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/onepiecepfp3.webp",
+    ],
+    Bleach: [
+      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/bleachpfp1.webp",
+    ],
+
     Berserk: [
       "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/berserkpfp1.webp",
       "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/berserkpfp2.webp",
     ],
-    JJK: [
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jjpfp1.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jjpfp2.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jjpfp3.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jjpfp4.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jjpfp5.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/jjpfp6.jpg",
-    ],
-    AoT: [],
-    BlueLock: [
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp1.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp2.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp3.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp4.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp5.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp6.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp7.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp8.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp9.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp10.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp11.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp12.jpg",
-      "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/blpfp13.jpg",
-    ],
-    HxH: [],
-    DemonSlayer: [],
+
+
     Ostalo: [
       "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/yugiohpfp1.webp",
       "https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/hogurashipfp1.webp",
@@ -121,7 +121,7 @@ const imageLists = {
 
 export const ChangeInfoForm = () => {
   // Local state for form data and modal visibility for PFP selection
-  const [selectedPfpCategory, setSelectedPfpCategory] = useState(null);
+  const [selectedPfpCategory, setSelectedPfpCategory] = useState("JJK");
   const [pfp, setPfp] = useState(null);
   const [newPfp, setNewPfp] = useState(null);
   const [newUsername, setNewUsername] = useState("");
@@ -130,7 +130,7 @@ export const ChangeInfoForm = () => {
   const [pfpModalOpen, setPfpModalOpen] = useState(false);
 
   // Global context to obtain auth token and optionally update user info
-  const { token, setUser } = useGlobalContext();
+  const { token, setUser, user } = useGlobalContext();
 
   // Toggle profile picture selection modal
   const togglePfpModal = () => {
@@ -221,7 +221,7 @@ export const ChangeInfoForm = () => {
       setNewEmail("");
       setNewPfp(null);
       // Instead of reloading the window, navigate back
-      router.push("/profile");
+      router.replace("/profile");
       return response;
     } catch (error) {
       console.error("Error updating profile:", error);

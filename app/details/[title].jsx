@@ -24,12 +24,15 @@ const DetailsScreen = () => {
   const pageSize = 40;
   const visibleEpisodes = episodes.slice(currentIndex, currentIndex + pageSize);
 
+  const encodedTitle = encodeURIComponent(title || '');
+
+
   useEffect(() => {
     if (!title) return;
 
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/content/seriesDetail/${title}`);
+        const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/content/seriesDetail/${encodedTitle}`);
         setSeriesData(data.series[0]);
         fetchUserData(data.series[0]);
       } catch (error) {
@@ -85,7 +88,7 @@ const DetailsScreen = () => {
 
   if (!seriesData) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#121212' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
         <ActivityIndicator size="large" color="#1d284b" />
       </View>
     );

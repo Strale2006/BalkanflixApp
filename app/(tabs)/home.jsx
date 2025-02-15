@@ -124,13 +124,13 @@ const MainHome = () => {
                     data={[1, 2, 3, 4, 5]}
                     renderItem={() => (
                       <View
-                        className="mx-2 justify-center items-center rounded-lg bg-[#1a1a1a]"
+                        className="mx-2 justify-center items-center rounded-lg bg-[#091238]"
                         style={{
                           width: width * 0.35,
                           height: width * 0.5,
                         }}
                       >
-                        <ActivityIndicator size="large" color="#E50914" />
+                        <ActivityIndicator size="large" color="#D7F7F4" />
                       </View>
                     )}
                     contentContainerStyle={{ paddingLeft: 15 }}
@@ -150,7 +150,7 @@ const MainHome = () => {
               <View className="my-4">
                 <View className="flex-row justify-between items-center px-4 mb-2">
                   <Text className="text-white text-xl font-pbold">Popularno</Text>
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     onPress={() =>
                       navigation.navigate('Category', { category: 'popular' })
                     }
@@ -158,7 +158,7 @@ const MainHome = () => {
                     <Text className="text-[#E50914] text-base font-pbold flex items-center text-center justify-center">
                       Više
                     </Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
                 <MovieList type="popular" />
               </View>
