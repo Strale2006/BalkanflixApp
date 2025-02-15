@@ -114,7 +114,7 @@ const DetailsScreen = () => {
             </Text>
           ))}
           <TouchableOpacity onPress={toggleSaved} className="p-2 rounded-full bg-gray-900 dark:bg-gray-700">
-            <Feather name={isSaved ? "bookmark" : "bookmark-outline"} size={24} color="white" />
+            <Icon name={isSaved ? "bookmark" : "bookmark-o"} size={24} color="white" />
           </TouchableOpacity>
         </View>
         <Text className="text-gray-400 my-4 text-base font-pregular leading-relaxed">{seriesData.description}</Text>
