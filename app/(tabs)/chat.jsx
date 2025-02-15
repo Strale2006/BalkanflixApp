@@ -133,7 +133,7 @@ const Chat = () => {
         />
         <View className="flex-row items-center p-4 bg-[#101420]">
           <TextInput
-            className="flex-1 bg-[#1b202f] text-white p-3 rounded-2xl"
+            className="flex-1 bg-[#1b202f] text-white p-3 rounded-2xl font-psemibold"
             placeholder="Unesi poruku..."
             placeholderTextColor="#aaa"
             value={messageBody}

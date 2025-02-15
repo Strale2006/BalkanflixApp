@@ -35,6 +35,7 @@ const RootLayout = () => {
                 <Stack.Screen name="(dash)" options={{ headerShown: false }} />
                 <Stack.Screen name="details/[title]" options={{ headerShown: false }} />
                 <Stack.Screen name="[title]/[ep]" options={{ headerShown: false }} />
+                <Stack.Screen name="profileModal" options={{ headerShown: false, presentation: 'modal' }} />
 
                 {/* <Stack.Screen name='search/[query]' options={{headerShown: false}} /> */}
             </Stack>

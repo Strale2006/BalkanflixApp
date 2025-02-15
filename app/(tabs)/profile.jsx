@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalContext } from './../../context/GlobalProvider';
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { logoutUser } from '../../lib/apiControllers';
 import { Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import InfoBox from './../../components/InfoBox';
@@ -77,12 +77,10 @@ const Profile = () => {
             </View>
 
           {/* Action Buttons */}
-          <View className="flex-row justify-around w-full mb-6 px-4">
-            {user?.isTranslator && (
-              <TouchableOpacity onPress={dashboard} className="bg-blue-600 px-6 py-3 rounded-full border border-blue-400">
-                <Text className="text-white text-lg font-psemibold">Dashboard</Text>
-              </TouchableOpacity>
-            )}
+          <View className="flex-row justify-center w-full mb-6 px-4 gap-4">
+            <TouchableOpacity activeOpacity={0.7} onPress={dashboard} className="bg-gray-800 px-6 py-3 rounded-full border border-gray-700">
+              <Link href="/profileModal" className="text-white text-lg font-psemibold">Izmenite Profil</Link>
+            </TouchableOpacity>
 
             <TouchableOpacity 
               onPress={logout}
@@ -94,9 +92,16 @@ const Profile = () => {
 
           {/* Stats Section */}
           <View className="w-full flex-row justify-around gap-4 mb-4 mt-2">
-            <InfoBox title={user?.full_ep?.length || 0} subtitle="Odgledanih Epizoda" />
-            {user?.isTranslator && <InfoBox title={user?.brojPrevoda || 0} subtitle="Prevedeno Epizoda" />}
+            <InfoBox title={user?.full_ep?.length || 0} subtitle="Odgledanih Epizoda" titleStyles={"text-lg"} />
+            {user?.isTranslator && <InfoBox title={user?.brojPrevoda || 0} subtitle="Prevedeno Epizoda" titleStyles={"text-lg"} />}
           </View>
+
+          {user?.isTranslator && (
+              <TouchableOpacity onPress={dashboard} className="bg-blue-600 px-6 py-3 mb-5 rounded-full border border-blue-400">
+                <Text className="text-white text-lg font-psemibold">Dashboard</Text>
+              </TouchableOpacity>
+            )
+          }
 
           {/* Favorites Section */}
           <View className="mb-8 flex justify-start items-start w-full">
