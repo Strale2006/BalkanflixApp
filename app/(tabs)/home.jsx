@@ -18,6 +18,8 @@ import MovieList from '../../components/MovieList';
 // import CustomButton from '../../components/CustomButton';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import Schedule from './../schedule/schedule';
+
 
 const { width } = Dimensions.get('window');
 
@@ -164,7 +166,7 @@ const MainHome = () => {
               {/* Schedule Section */}
               <View className="my-4 px-4">
                 <Text className="text-white text-xl font-pbold">Raspored</Text>
-                {/* Add schedule component here */}
+                <Schedule />
               </View>
             </View>
           }

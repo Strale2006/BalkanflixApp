@@ -118,49 +118,61 @@ const DetailsScreen = () => {
         </View>
         <Text className="text-gray-400 my-4 text-base font-pregular leading-relaxed">{seriesData.description}</Text>
         <Text className="text-white text-xl font-psemibold my-4">Epizode:</Text>
-        <View className="flex-row flex-wrap gap-2 justify-center">
+        <View className="flex-row flex-wrap gap-3 justify-start">
           {visibleEpisodes.map((episode, index) => (
             <Link 
               key={index} 
               href={`/watch/${trimmedTitle}/${episode.ep}`}
-              className="bg-gray-900 w-12 h-12 flex items-center justify-center rounded-lg text-white text-lg font-pmedium shadow-md text-center"
+              asChild
             >
-              {episode.ep}
+              <TouchableOpacity className="w-12 h-12 bg-white/5 bg-gray-900 items-center justify-center rounded-lg active:bg-white/10">
+                <Text className="text-white font-medium">{episode.ep}</Text>
+              </TouchableOpacity>
             </Link>
           ))}
         </View>
-        {episodes.length > pageSize && (
-          <View className="flex-row justify-between mt-6">
-            <TouchableOpacity 
-              disabled={currentIndex === 0} 
-              onPress={() => setCurrentIndex(Math.max(0, currentIndex - pageSize))}
-              className="px-4 py-2 bg-gray-900 dark:bg-gray-800 rounded-lg disabled:opacity-50"
-            >
-              <Text className="text-white text-lg font-pbold">{'<'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              disabled={currentIndex + pageSize >= episodes.length} 
-              onPress={() => setCurrentIndex(currentIndex + pageSize)}
-              className="px-4 py-2 bg-gray-900 dark:bg-gray-800 rounded-lg disabled:opacity-50"
-            >
-              <Text className="text-white text-lg font-pbold">{'>'}</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        {(seriesData.previous || seriesData.next) && (
-          <View className="mt-6">
-            {seriesData.previous && (
-              <Link href={`/${seriesData.previous[1]}`} className="text-blue-500 text-lg font-psemibold">
-                ← {seriesData.previous[0]} (Prethodna sezona)
-              </Link>
+            {episodes.length > pageSize && (
+              <View className="flex-row justify-center items-center gap-4 mt-6">
+                <TouchableOpacity 
+                  disabled={currentIndex === 0}
+                  onPress={() => setCurrentIndex(Math.max(0, currentIndex - pageSize))}
+                className="p-2.5 bg-white/5 rounded-lg"
+                >
+                  <Feather 
+                    name="chevron-left" 
+                    size={20} 
+                    color={currentIndex === 0 ? "#FFFFFF40" : "white"} 
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  disabled={currentIndex + pageSize >= episodes.length}
+                  onPress={() => setCurrentIndex(currentIndex + pageSize)}
+                  className="p-2.5 bg-white/5 rounded-lg"
+                >
+                  <Feather 
+                    name="chevron-right" 
+                    size={20} 
+                    color={currentIndex + pageSize >= episodes.length ? "#FFFFFF40" : "white"} 
+                  />
+                </TouchableOpacity>
+              </View>
             )}
-            {seriesData.next && (
-              <Link href={`/${seriesData.next[1]}`} className="text-blue-500 text-lg font-psemibold mt-3">
-                {seriesData.next[0]} (Sledeća sezona) →
-              </Link>
+            <View className="mt-8 space-y-4">
+            {(seriesData.previous || seriesData.next) && (
+              <View className="mt-6">
+                {seriesData.previous && (
+                  <Link href={`/${seriesData.previous[1]}`} className="text-blue-500 text-lg font-psemibold">
+                    ← {seriesData.previous[0]} (Prethodna sezona)
+                  </Link>
+                )}
+                {seriesData.next && (
+                  <Link href={`/${seriesData.next[1]}`} className="text-blue-500 text-lg font-psemibold mt-3">
+                    {seriesData.next[0]} (Sledeća sezona) →
+                  </Link>
+                )}
+              </View>
             )}
           </View>
-        )}
       </View>
     </ScrollView>
   );
