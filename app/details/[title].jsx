@@ -106,61 +106,92 @@ const DetailsScreen = () => {
             <Feather name={isSaved ? "bookmark" : "bookmark-outline"} size={24} color="white" />
           </TouchableOpacity>
         </View>
-        <View className="flex-row flex-wrap my-4">
+        <View className="flex-row flex-wrap gap-2 mb-2 mt-1">
           {seriesData.genre?.map((genre) => (
-            <Text 
-              key={genre} 
-              className="text-gray-300 bg-gray-900 dark:bg-gray-800 px-3 py-1 font-pmedium rounded-lg mr-2 mb-2 text-sm tracking-wide"
+            <View
+              key={genre}
+              className="px-3 py-1.5 border border-white/10 rounded-full"
             >
-              {genre}
-            </Text>
+              <Text className="text-white/80 text-xs font-medium">
+                {genre}
+              </Text>
+            </View>
           ))}
         </View>
         <Text className="text-gray-400 my-4 text-base font-pregular leading-relaxed">{seriesData.description}</Text>
-        <Text className="text-white text-xl font-psemibold my-4">Epizode:</Text>
-        <View className="flex-row flex-wrap gap-2 justify-center">
+        <Text className="text-white text-xl font-bold mb-5">Epizode</Text>
+        <View className="flex-row flex-wrap gap-3 justify-start">
           {visibleEpisodes.map((episode, index) => (
             <Link 
               key={index} 
               href={`/watch/${trimmedTitle}/${episode.ep}`}
-              className="bg-gray-900 w-12 h-12 flex items-center justify-center rounded-lg text-white text-lg font-pmedium shadow-md text-center"
+              asChild
             >
-              {episode.ep}
+              <TouchableOpacity className="w-12 h-12 bg-white/5 items-center justify-center rounded-sm active:bg-white/10">
+                <Text className="text-white font-medium">{episode.ep}</Text>
+              </TouchableOpacity>
             </Link>
           ))}
         </View>
         {episodes.length > pageSize && (
-          <View className="flex-row justify-between mt-6">
+          <View className="flex-row justify-center items-center gap-4 mt-6">
             <TouchableOpacity 
-              disabled={currentIndex === 0} 
+              disabled={currentIndex === 0}
               onPress={() => setCurrentIndex(Math.max(0, currentIndex - pageSize))}
-              className="px-4 py-2 bg-gray-900 dark:bg-gray-800 rounded-lg disabled:opacity-50"
+            className="p-2.5 bg-white/5 rounded-lg"
             >
-              <Text className="text-white text-lg font-pbold">{'<'}</Text>
+              <Feather 
+                name="chevron-left" 
+                size={20} 
+                color={currentIndex === 0 ? "#FFFFFF40" : "white"} 
+              />
             </TouchableOpacity>
             <TouchableOpacity 
-              disabled={currentIndex + pageSize >= episodes.length} 
+              disabled={currentIndex + pageSize >= episodes.length}
               onPress={() => setCurrentIndex(currentIndex + pageSize)}
-              className="px-4 py-2 bg-gray-900 dark:bg-gray-800 rounded-lg disabled:opacity-50"
+              className="p-2.5 bg-white/5 rounded-lg"
             >
-              <Text className="text-white text-lg font-pbold">{'>'}</Text>
+              <Feather 
+                name="chevron-right" 
+                size={20} 
+                color={currentIndex + pageSize >= episodes.length ? "#FFFFFF40" : "white"} 
+              />
             </TouchableOpacity>
           </View>
         )}
-        {(seriesData.previous || seriesData.next) && (
-          <View className="mt-6">
-            {seriesData.previous && (
-              <Link href={`/${seriesData.previous[1]}`} className="text-blue-500 text-lg font-psemibold">
-                ← {seriesData.previous[0]} (Prethodna sezona)
-              </Link>
-            )}
-            {seriesData.next && (
-              <Link href={`/${seriesData.next[1]}`} className="text-blue-500 text-lg font-psemibold mt-3">
-                {seriesData.next[0]} (Sledeća sezona) →
-              </Link>
-            )}
-          </View>
-        )}
+        <View className="mt-8 space-y-4">
+                  {seriesData.previous && (
+                    <Link href={`/${seriesData.previous[1]}`} asChild>
+                      <TouchableOpacity className="flex-row items-center justify-between p-4 bg-white/5 rounded-lg">
+                        <View className="flex-row items-center">
+                          <Feather name="arrow-left" size={16} color="white" />
+                          <Text className="text-white ml-3 text-sm">
+                            Prethodna sezona
+                          </Text>
+                        </View>
+                        <Text className="text-white/60 text-sm">
+                          {seriesData.previous[0]}
+                        </Text>
+                      </TouchableOpacity>
+                    </Link>
+                  )}
+                  
+                  {seriesData.next && (
+                    <Link href={`/${seriesData.next[1]}`} asChild>
+                      <TouchableOpacity className="flex-row items-center justify-between p-4 bg-white/5 rounded-lg">
+                        <Text className="text-white/60 text-sm">
+                          {seriesData.next[0]}
+                        </Text>
+                        <View className="flex-row items-center">
+                          <Text className="text-white mr-3 text-sm">
+                            Sledeća sezona
+                          </Text>
+                          <Feather name="arrow-right" size={16} color="white" />
+                        </View>
+                      </TouchableOpacity>
+                    </Link>
+                  )}
+                </View>
       </View>
     </ScrollView>
   );
