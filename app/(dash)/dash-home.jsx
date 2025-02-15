@@ -2,10 +2,11 @@ import { View, Text, ScrollView } from 'react-native';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { router } from 'expo-router';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DashHome = () => {
-    const [users, setUsers] = useState(null);
+  const [users, setUsers] = useState(null);
     const [series, setSeries] = useState(null);
     const [viewsToday, setViewsToday] = useState(null);
     const [totalViews, setTotalViews] = useState(0);
@@ -29,34 +30,36 @@ const DashHome = () => {
     }, []);
 
     return (
+      <SafeAreaView className="bg-gray-900 h-full">
         <ScrollView className="bg-gray-900 h-full p-6">
-            <Text className="text-white text-2xl font-bold mb-6">Dashboard</Text>
+            <Text className="text-white text-2xl font-pbold mb-6">Dashboard</Text>
 
             <View className="bg-gray-800 p-4 rounded-xl mb-4">
-                <Text className="text-gray-400">Ukupno korisnika</Text>
-                <Text className="text-white text-3xl font-bold">{users !== null ? users : 'Loading...'}</Text>
+                <Text className="text-gray-400 font-psemibold">Ukupno korisnika</Text>
+                <Text className="text-white text-3xl font-pbold">{users !== null ? users : 'Loading...'}</Text>
                 <TouchableOpacity onPress={() => router.push('/dashboard/users')}>
-                    <Text className="text-blue-400 mt-2">Vidi više</Text>
+                    <Text className="text-blue-400 mt-2 font-psemibold">Vidi više</Text>
                 </TouchableOpacity>
             </View>
 
             <View className="bg-gray-800 p-4 rounded-xl mb-4">
-                <Text className="text-gray-400">Ukupno serijala</Text>
-                <Text className="text-white text-3xl font-bold">{series !== null ? series : 'Loading...'}</Text>
+                <Text className="text-gray-400 font-psemibold">Ukupno serijala</Text>
+                <Text className="text-white text-3xl font-pbold">{series !== null ? series : 'Loading...'}</Text>
                 <TouchableOpacity onPress={() => router.push('/dashboard/series')}>
-                    <Text className="text-blue-400 mt-2">Vidi više</Text>
+                    <Text className="text-blue-400 mt-2 font-psemibold">Vidi više</Text>
                 </TouchableOpacity>
             </View>
 
             <View className="bg-gray-800 p-4 rounded-xl mb-4">
-                <Text className="text-gray-400">Pregleda Danas / Mesec</Text>
-                <Text className="text-white text-3xl font-bold">{viewsToday !== null && totalViews !== null ? `${viewsToday} / ${totalViews}` : 'Loading...'}</Text>
+                <Text className="text-gray-400 font-psemibold">Pregleda Danas / Mesec</Text>
+                <Text className="text-white text-3xl font-pbold">{viewsToday !== null && totalViews !== null ? `${viewsToday} / ${totalViews}` : 'Loading...'}</Text>
                 <TouchableOpacity onPress={() => router.push('https://filemoon.sx/reports')}>
-                    <Text className="text-blue-400 mt-2">Vidi više</Text>
+                    <Text className="text-blue-400 mt-2 font-psemibold">Vidi više</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
+      </SafeAreaView>
     );
-};
+}
 
-export default DashHome;
+export default DashHome

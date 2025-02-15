@@ -23,8 +23,8 @@ const Profile = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0B0F19]">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+    // <SafeAreaView className="flex-1 bg-[#0B0F19]">
+      <ScrollView className="flex-1 bg-[#0B0F19]" contentContainerStyle={{ flexGrow: 1 }}>
         {/* Banner Section */}
         <View className="w-full h-40 relative mb-8 border-b-2 border-gray-800">
           <Image 
@@ -120,7 +120,7 @@ const Profile = () => {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    // </SafeAreaView>
   );
 };
 

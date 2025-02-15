@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, View, Text, Alert } from 'react-native';
+import {ScrollView, View, Text, Alert } from 'react-native';
 import axios from 'axios';
 import FormCard from '../../components/FormCard';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const newSeries = () => {
   // State for "Notifikacija" card (if needed later)
@@ -96,7 +97,7 @@ const newSeries = () => {
       </View>
 
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="relative">
-        <Text className="text-3xl font-bold text-center mb-8 text-cyan-400">
+        <Text className="text-3xl font-pbold text-center mb-8 text-cyan-400">
           Admin Dashboard
         </Text>
         <View className="space-y-6">
