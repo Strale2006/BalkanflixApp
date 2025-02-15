@@ -18,60 +18,61 @@ const ScheduleItem = ({ item }) => {
 
   return (
     <TouchableOpacity
-      className="mx-3 shadow-lg"
+      className="w-[80vw] mx-3 shadow-lg"
       activeOpacity={0.9}
       onPress={() => navigation.navigate("AnimeDetail", { animeId: item._id })}
     >
-      <View className="w-80 bg-slate-800 rounded-2xl overflow-hidden p-4 h-96">
+      <View className="bg-[#1a1c2b] rounded-2xl overflow-hidden p-4 h-96">
         {/* Slika sa overlayem */}
-        <View className="relative mb-4">
+        <View className="relative mb-4 rounded-xl overflow-hidden">
           <Image
             source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}` }}
-            className="w-full h-40 rounded-xl"
+            className="w-full h-40"
+            resizeMode="cover"
           />
-          <View className="absolute inset-0 bg-black/40" />
+          <View className="absolute inset-0 bg-black/40 opacity-40" />
           
-          <View className="absolute bottom-2 left-2 flex-row items-center bg-black/60 px-2 py-1 rounded-full">
+          <View className="absolute bottom-2 left-2 flex-row items-center bg-black/70 px-2 py-1 rounded-2xl">
             <MaterialIcons name="play-circle-outline" size={16} color="white" />
             <Text className="text-white text-sm ml-1">Ep {item.ep}</Text>
           </View>
         </View>
 
         {/* Naslov i vreme */}
-        <Text className="text-white text-base font-bold mb-2 leading-tight" numberOfLines={2}>
+        <Text className="text-white text-lg font-bold mb-3 leading-6" numberOfLines={2}>
           {item.title}
         </Text>
         
         <View className="flex-row items-center mb-4">
           <MaterialIcons name="access-time" size={16} color="#818cf8" />
-          <Text className="text-slate-400 text-sm ml-2">{beogradskoVreme}</Text>
+          <Text className="text-gray-400 text-xs ml-2">{beogradskoVreme}</Text>
         </View>
 
         {/* Progress bar */}
-        <View className="h-1 bg-slate-700 mb-6 rounded-full">
+        <View className="h-1 bg-[#2d3250] rounded-full mb-5">
           <View 
             className="h-full bg-indigo-500 rounded-full" 
-            style={{ width: `${item.progress}%` }}
+            style={{ width: `${item.progress}%` }} className="h-full bg-indigo-500 rounded-full"
           />
         </View>
 
         {/* Countdown */}
         {item.countdown !== "USKORO" ? (
-          <View className="flex-row justify-between">
+          <View className="flex-row justify-between mt-auto">
             {Object.entries({
               Dan: item.days,
               Sat: item.hours,
               Min: item.minutes
             }).map(([label, value]) => (
-              <View key={label} className="items-center bg-slate-700/50 p-2 rounded-lg flex-1 mx-1">
-                <Text className="text-white text-xl font-bold">{value}</Text>
-                <Text className="text-slate-400 text-xs uppercase">{label}</Text>
+              <View key={label} className="items-center bg-[#25293c] p-2 rounded-lg flex-1 mx-1">
+                <Text className="text-white text-xl font-psemibold">{value}</Text>
+                <Text className="text-gray-400 text-[10px] font-semibold uppercase">{label}</Text>
               </View>
             ))}
           </View>
         ) : (
-          <View className="bg-rose-500/20 py-3 rounded-lg">
-            <Text className="text-rose-400 text-center font-bold">USKORO</Text>
+          <View className="bg-red-500/20 p-3 rounded-lg mt-auto">
+            <Text className="text-red-400 text-center font-bold text-sm">USKORO</Text>
           </View>
         )}
       </View>
@@ -131,7 +132,7 @@ const Schedule = () => {
   };
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 py-4">
       {loading ? (
         <View className="flex-1 items-center justify-center">
           <MaterialIcons name="loop" size={24} color="white" />
