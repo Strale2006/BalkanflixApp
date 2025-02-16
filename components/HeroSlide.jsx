@@ -3,6 +3,8 @@ import { View, Text, ImageBackground, TouchableOpacity, FlatList, Dimensions } f
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+
 const { width } = Dimensions.get('window');
 
 const SliderItem = ({ item }) => (
@@ -12,21 +14,25 @@ const SliderItem = ({ item }) => (
       className="flex-1 justify-end p-4"
       imageStyle={{ opacity: 0.9 }}
     >
-      <View className="bg-black/40 absolute inset-0" />
-      
+      {/* <View className="bg-black/40 absolute inset-0" /> */}
+      {/* <LinearGradient
+        // Background Linear Gradient
+        colors={['rgba(0,0,0,0.8)', 'transparent']}
+      /> */}
+
       <View className="z-10">
-        <Text className="text-white text-xl font-pextrabold" numberOfLines={2}>{item.title}</Text>
+        <Text className="text-white text-2xl font-pextrabold" numberOfLines={2}>{item.title}</Text>
         <View className="flex-row gap-2 mt-1">
           {item.genre?.map((genre, key) => (
-            <Text key={key} className="text-gray-200 text-xs font-bold mb-2">{genre}</Text>
+            <Text key={key} className="text-gray-200 text-xs font-pbold mb-2">{genre}</Text>
           ))}
         </View>
         <TouchableOpacity 
-        className="bg-red-600 py-1.5 px-3 rounded-full self-start flex-row items-center"
+        className="bg-red-600 py-1.5 px-3 rounded-full self-start flex flex-row items-center justify-center"
         onPress={() => router.push(`/details/${encodeURIComponent(item.title_params)}`)}
         >
-          <MaterialIcons name="play-circle" size={15} color="white" />
-          <Text className="text-white font-bold"> Gledaj</Text>
+          <MaterialIcons name="play-circle" size={18} color="white" />
+          <Text className="text-white font-pbold"> Gledaj</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>

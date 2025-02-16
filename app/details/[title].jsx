@@ -16,19 +16,23 @@ const DetailsScreen = () => {
   const [isSaved, setIsSaved] = useState(false);
 
   // Remove spaces (or any undesired characters) for API consistency
-  const trimmedTitle = title ? title.replace(/\s/g, '') : '';
+  const trimmedTitle = seriesData?.title_params || title?.replace(/\s/g, '') || '';
+
 
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const pageSize = 40;
   const visibleEpisodes = episodes.slice(currentIndex, currentIndex + pageSize);
 
+  const encodedTitle = encodeURIComponent(title || '');
+
+
   useEffect(() => {
     if (!title) return;
 
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/content/seriesDetail/${title}`);
+        const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/content/seriesDetail/${encodedTitle}`);
         setSeriesData(data.series[0]);
         fetchUserData(data.series[0]);
       } catch (error) {
@@ -84,7 +88,7 @@ const DetailsScreen = () => {
 
   if (!seriesData) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#121212' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
         <ActivityIndicator size="large" color="#1d284b" />
       </View>
     );
@@ -162,12 +166,12 @@ const DetailsScreen = () => {
             {(seriesData.previous || seriesData.next) && (
               <View className="mt-6">
                 {seriesData.previous && (
-                  <Link href={`/${seriesData.previous[1]}`} className="text-blue-500 text-lg font-psemibold">
+                  <Link href={`/details/${seriesData.previous[1]}`} className="text-blue-500 text-lg font-psemibold">
                     ← {seriesData.previous[0]} (Prethodna sezona)
                   </Link>
                 )}
                 {seriesData.next && (
-                  <Link href={`/${seriesData.next[1]}`} className="text-blue-500 text-lg font-psemibold mt-3">
+                  <Link href={`/details/${seriesData.next[1]}`} className="text-blue-500 text-lg font-psemibold mt-3">
                     {seriesData.next[0]} (Sledeća sezona) →
                   </Link>
                 )}

@@ -71,12 +71,14 @@ const Episode = () => {
       try {
         const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/content/series/${title}`);
         setSeriesData(data.series);
-        const foundEp = data.series.episodes.find((episode) => episode.ep.toString() === ep);
-        if (foundEp) {
-          await recordEpisodeWatch(foundEp.ep, title);
-        } else {
-          console.log('Episode not found.');
-        }
+        console.log('API RESPONSE:', data.series);
+        
+        // const foundEp = data.series.episodes.find((episode) => episode.ep.toString() === ep);
+        // if (foundEp) {
+        //   await recordEpisodeWatch(foundEp.ep, title);
+        // } else {
+        //   console.log('Episode not found.');
+        // }
       } catch (error) {
         console.error('Error fetching series data:', error);
       }
