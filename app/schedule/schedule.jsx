@@ -52,7 +52,7 @@ const ScheduleItem = ({ item }) => {
         <View className="h-1 bg-[#2d3250] rounded-full mb-5">
           <View 
             className="h-full bg-indigo-500 rounded-full" 
-            style={{ width: `${item.progress}%` }} className="h-full bg-indigo-500 rounded-full"
+            style={{ width: `${item.progress}%` }}
           />
         </View>
 
