@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image, FlatList, Dimensions, TouchableOpacity } from "react-native";
 import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
 import moment from "moment-timezone";
+import { router } from "expo-router";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.8;
 
 const ScheduleItem = ({ item }) => {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   // Formatiranje vremena za Beogradsku zonu
   const beogradskoVreme = moment(item.time)
@@ -20,7 +21,7 @@ const ScheduleItem = ({ item }) => {
     <TouchableOpacity
       className="w-[80vw] mx-3 shadow-lg"
       activeOpacity={0.9}
-      onPress={() => navigation.navigate("AnimeDetail", { animeId: item._id })}
+      onPress={() => router.push(`/details/${item.title_params}`)}
     >
       <View className="bg-[#1a1c2b] rounded-2xl overflow-hidden p-4 h-96">
         {/* Slika sa overlayem */}

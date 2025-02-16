@@ -65,7 +65,7 @@ const MainHome = () => {
       >
         <TouchableOpacity
           onPress={() => {
-            router.push(`/details/${encodeURIComponent(item.title_params)}`);
+            router.push(`/${encodeURIComponent(item.title_params)}/${item.ep}`);
           }}
           activeOpacity={0.9}
         >

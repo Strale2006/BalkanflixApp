@@ -166,12 +166,12 @@ const DetailsScreen = () => {
             {(seriesData.previous || seriesData.next) && (
               <View className="mt-6">
                 {seriesData.previous && (
-                  <Link href={`/${seriesData.previous[1]}`} className="text-blue-500 text-lg font-psemibold">
+                  <Link href={`/details/${seriesData.previous[1]}`} className="text-blue-500 text-lg font-psemibold">
                     ← {seriesData.previous[0]} (Prethodna sezona)
                   </Link>
                 )}
                 {seriesData.next && (
-                  <Link href={`/${seriesData.next[1]}`} className="text-blue-500 text-lg font-psemibold mt-3">
+                  <Link href={`/details/${seriesData.next[1]}`} className="text-blue-500 text-lg font-psemibold mt-3">
                     {seriesData.next[0]} (Sledeća sezona) →
                   </Link>
                 )}
