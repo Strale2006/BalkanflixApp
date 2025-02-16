@@ -12,15 +12,12 @@ const SliderItem = ({ item }) => (
     {/* <LinearGradient 
       colors={['#00000000', '#000000']} 
       style={{height : '100%', width : '100%'}}
-    /> */}
-    <ImageBackground
-      source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.poster}` }}
-      className="flex-1 justify-end p-4"
-      imageStyle={{ opacity: 0.9 }}
-    >
-      {/* <View className="bg-black/40 absolute inset-0" /> */}
-      
-
+    > */}
+      <ImageBackground
+        source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.poster}` }}
+        className="flex-1 justify-end p-4"
+        imageStyle={{ opacity: 0.9 }}
+      >
       <View className="z-10">
         <Text className="text-white text-2xl font-pextrabold" numberOfLines={2}>{item.title}</Text>
         <View className="flex-row gap-2 mt-1">
@@ -33,10 +30,13 @@ const SliderItem = ({ item }) => (
         onPress={() => router.push(`/details/${encodeURIComponent(item.title_params)}`)}
         >
           <MaterialIcons name="play-circle" size={18} color="white" />
-          <Text className="text-white font-pbold"> Gledaj</Text>
+          <Text className="text-white font-psemibold"> Gledaj</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
+
+    {/* </LinearGradient> */}
+    
   </View>
 );
 

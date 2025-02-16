@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, ScrollView, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, ScrollView, Image, TextInput, TouchableOpacity, Alert, Platform } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
 import { WebView } from 'react-native-webview';
@@ -11,7 +11,6 @@ const Episode = () => {
   const { token, user } = useGlobalContext();
   const { ep, title } = useLocalSearchParams();
 
-  
   const [seriesData, setSeriesData] = useState(null);
   const [episodeTitle, setEpisodeTitle] = useState('');
   const [episodeSrc, setEpisodeSrc] = useState('');
@@ -180,109 +179,173 @@ const Episode = () => {
   };
 
   return (
-    <SafeAreaView className='bg-black h-full'>
-      <ScrollView className="bg-black flex-1 p-4">
-          {/* Episode Header & Video */}
-          <View className="mb-4">
-            <Link href={linkToTitle}>
-              <Text className="text-xl font-pbold text-white mb-2">
-                {episodeTitle} - Epizoda {ep} Online sa prevodom
+    <SafeAreaView className="bg-gray-950 flex-1">
+      <ScrollView 
+        className="flex-1 px-4"
+        contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? 48 : 24 }}
+      >
+        {/* Title Header */}
+        <View className="mb-4 mt-6">
+          <Link href={linkToTitle} asChild>
+            <TouchableOpacity>
+              <Text className="text-2xl font-pbold text-gray-100 mb-1">
+                {seriesData?.title}
               </Text>
-            </Link>
-            <View className="h-64 bg-gray-800 rounded overflow-hidden">
-              {currentSrc ? (
-                <WebView   allowsFullscreenVideo={true} source={{ uri: currentSrc }} style={{ flex: 1 }} />
-              ) : (
-                <Text className="text-white text-center">No video available</Text>
-              )}
-            </View>
+              <Text className="text-lg font-pmedium text-blue-400">
+                Epizoda {ep}
+              </Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+        {/* Video Player Section */}
+        <View className="mb-6">
+          <View className="aspect-video bg-gray-900 rounded-2xl overflow-hidden border border-gray-800">
+            {currentSrc ? (
+              <WebView 
+                allowsFullscreenVideo 
+                source={{ uri: currentSrc }} 
+                className="flex-1 bg-gray-900"
+              />
+            ) : (
+              <View className="flex-1 justify-center items-center bg-gray-900">
+                <Text className="text-gray-500 font-pmedium">Video not available</Text>
+              </View>
+            )}
+          </View>
+        </View>
+
+        {/* Server Selection
+        <View className="flex-row gap-3 mb-6">
+          <TouchableOpacity
+            className={`flex-1 py-3 rounded-xl ${
+              selectedServer === 'Filemoon' 
+                ? 'bg-blue-600 border border-blue-400' 
+                : 'bg-gray-900 border border-gray-800'
+            }`}
+            onPress={() => setSelectedServer('Filemoon')}
+          >
+            <Text className="text-center font-psemibold text-blue-400">Filemoon</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className={`flex-1 py-3 rounded-xl ${
+              selectedServer === 'Balkanflix' 
+                ? 'bg-blue-600 border border-blue-400' 
+                : 'bg-gray-900 border border-gray-800'
+            }`}
+            onPress={() => setSelectedServer('Balkanflix')}
+          >
+            <Text className="text-center font-psemibold text-blue-400">Balkanflix</Text>
+          </TouchableOpacity>
+        </View> */}
+
+        {/* Episode Navigation */}
+        <View className="mb-6">
+          <View className="flex-row justify-between gap-4 mb-4">
+            <TouchableOpacity
+              className={`flex-row items-center flex-1 justify-center py-3 rounded-xl ${
+                parseInt(ep) > 1 
+                  ? 'bg-blue-600 active:bg-blue-700' 
+                  : 'bg-gray-900 border border-gray-800 opacity-60'
+              }`}
+              disabled={parseInt(ep) <= 1}
+              onPress={() => router.push(`/${encodeURIComponent(seriesData.title_params)}/${episodeMinus}`)}
+            >
+              <FontAwesome5 name="step-backward" size={24} color="#93c5fd" />
+              <Text className="text-blue-100 font-psemibold"> Prethodno</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className={`flex-row items-center flex-1 justify-center py-3 rounded-xl ${
+                parseInt(ep) < episodes.length 
+                  ? 'bg-blue-600 active:bg-blue-700' 
+                  : 'bg-gray-900 border border-gray-800 opacity-60'
+              }`}
+              disabled={parseInt(ep) >= episodes.length}
+              onPress={() => router.push(`/${encodeURIComponent(seriesData.title_params)}/${episodePlus}`)}
+            >
+              <Text className="text-blue-100 font-psemibold">Sledeće </Text>
+              <FontAwesome5 name="step-forward" size={24} color="#93c5fd" />
+            </TouchableOpacity>
           </View>
 
-          {/* Episode Navigation & Input */}
+          {/* Episode Grid */}
           <View className="mb-4">
-            <View className="flex-row justify-between items-center mb-2">
-              {parseInt(ep) > 1 ? (
-                <TouchableOpacity onPress={() => router.push(`/${encodeURIComponent(seriesData.title_params)}/${episodeMinus}`)} className="flex-row items-center">
-                  <FontAwesome5 name="fast-backward" size={20} color="white" />
-                  <Text className="text-white ml-2 font-psemibold">Prošla epizoda</Text>
-                </TouchableOpacity>
-              ) : (
-                <View className="flex-row items-center opacity-50">
-                  <FontAwesome5 name="fast-backward" size={20} color="white" />
-                  <Text className="text-white ml-2 font-psemibold">Prošla epizoda</Text>
-                </View>
-              )}
-              {parseInt(ep) < episodes.length ? (
-                <TouchableOpacity onPress={() => router.push(`/${encodeURIComponent(seriesData.title_params)}/${episodePlus}`)} className="flex-row items-center">
-                  <Text className="text-white mr-2 font-psemibold">Sledeća epizoda</Text>
-                  <FontAwesome5 name="fast-forward" size={20} color="white" />
-                </TouchableOpacity>
-              ) : (
-                <View className="flex-row items-center opacity-50">
-                  <Text className="text-white mr-2 font-psemibold">Sledeća epizoda</Text>
-                  <FontAwesome5 name="fast-forward" size={20} color="white" />
-                </View>
-              )}
-            </View>
-            {/* <TouchableOpacity onPress={() => Alert.alert('Prijavi problem')} className="flex-row items-center mb-2">
-              <FontAwesome5 name="exclamation-triangle" size={20} color="white" />
-              <Text className="text-white ml-2 font-psemibold">Prijavi problem</Text>
-            </TouchableOpacity> */}
             <TextInput
-              className="border border-gray-500 p-2 rounded-md text-white font-psemibold"
-              placeholder="Broj epizode"
-              placeholderTextColor="#888"
+              className="bg-gray-900 text-gray-100 font-pregular rounded-lg px-4 py-3 mb-4 border border-gray-800"
+              placeholder="Enter episode number..."
+              placeholderTextColor="#64748b"
+              keyboardType="numeric"
               value={inputEpisode}
               onChangeText={setInputEpisode}
               onSubmitEditing={handleGoToEpisode}
-              keyboardType="numeric"
             />
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-2">
-              {episodes.map((episode, index) => (
-                <Link key={index} href={`/${encodeURIComponent(seriesData.title_params)}/${episode.ep}`} asChild>
-                  <TouchableOpacity style={episode.isFiller ? fillerEpisodeStyle : {}} className="p-2 bg-gray-800 rounded mx-1">
-                    <Text className="text-white font-psemibold">{episode.ep}</Text>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 8 }}
+            >
+              {episodes.map((episode) => (
+                <Link
+                  key={episode.ep}
+                  href={`/${encodeURIComponent(seriesData.title_params)}/${episode.ep}`}
+                  asChild
+                >
+                  <TouchableOpacity
+                    className={`w-12 aspect-square justify-center items-center rounded-lg ${
+                      episode.ep.toString() === ep 
+                        ? 'bg-blue-600 border border-blue-400' 
+                        : episode.isFiller 
+                          ? 'bg-purple-600 border border-purple-400' 
+                          : 'bg-gray-900 border border-gray-800'
+                    } active:opacity-80`}
+                  >
+                    <Text className="text-gray-100 font-psemibold">{episode.ep}</Text>
                   </TouchableOpacity>
                 </Link>
               ))}
             </ScrollView>
           </View>
+        </View>
 
-          {/* Series Description */}
-          <View className="flex-row mb-4">
+        {/* Series Info */}
+        <View className="bg-gray-900 rounded-2xl p-4 mb-6 border border-gray-800">
+          <View className="flex-row gap-4 mb-4">
             <Image
               source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${seriesData?.img}` }}
-              className="w-24 h-36 mr-4 rounded"
+              className="w-24 h-36 rounded-lg border border-gray-800"
             />
-            <View className="flex-1">
-              <Link href={linkToTitle}>
-                <Text className="text-lg font-pbold text-white">{seriesData?.title}</Text>
-              </Link>
-              <View className="flex-row flex-wrap mt-1">
-                {seriesData?.genre.map((item, key) => (
-                  <Link key={key} href={linkToTitle} asChild>
-                    <TouchableOpacity className="mr-2 mb-1">
-                      <Text className="text-blue-300 font-pmedium">{item}</Text>
-                    </TouchableOpacity>
-                  </Link>
+            <View className="flex-1 gap-1">
+              <Text className="text-gray-100 font-pbold text-lg">{seriesData?.title}</Text>
+              <View className="flex-row flex-wrap gap-2">
+                {seriesData?.genre.map((genre, index) => (
+                  <Text 
+                    key={index} 
+                    className="text-blue-400 font-pmedium text-sm bg-blue-900/30 px-2 py-1 rounded-md"
+                  >
+                    {genre}
+                  </Text>
                 ))}
               </View>
-              <View className="mt-2">
-                <Text className="text-white font-pregular">Epizoda: {seriesData?.ep}</Text>
-                <Text className="text-white font-pregular">Datum: {seriesData?.date}</Text>
-                <Text className="text-white font-pregular">Status: {seriesData?.status}</Text>
+              <View className="mt-2 gap-1">
+                <Text className="text-gray-400 font-pregular">
+                  Episodes: {seriesData?.ep} • {seriesData?.status}
+                </Text>
+                <Text className="text-gray-400 font-pregular">
+                  Studio: {seriesData?.studio}
+                </Text>
+                <Text className="text-gray-400 font-pregular">
+                  Rating: ⭐ {seriesData?.MAL_ocena}/10
+                </Text>
               </View>
-              <View className="mt-2">
-                <Text className="text-white font-pregular">Studio: {seriesData?.studio}</Text>
-                <Text className="text-white font-pregular">Ocena: {seriesData?.MAL_ocena}</Text>
-                <Text className="text-white font-pregular">Pregledi: {seriesData?.totalViews}</Text>
-              </View>
-              <Text className="mt-2 text-gray-300 font-pregular text-sm mb-16">{seriesData?.description}</Text>
             </View>
-          </View>          
-        </ScrollView>
+          </View>
+          
+          <Text className="text-gray-400 font-pregular leading-5">
+            {seriesData?.description}
+          </Text>
+        </View>
+      </ScrollView>
     </SafeAreaView>
-    
   );
 };
 
