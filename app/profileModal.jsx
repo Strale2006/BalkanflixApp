@@ -235,93 +235,158 @@ export const ChangeInfoForm = () => {
   return (
     <>
       {pfpModalOpen && (
-        <View className="absolute inset-0 bg-black/50 w-full h-full items-center justify-center z-50">
-            <View className="bg-white p-4 rounded-lg w-11/12">
-                <Text className="text-xl font-pbold mb-4 text-black">Izaberite novu profilnu sliku</Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                    {Object.keys(imageLists.pfp).map((category) => (
-                    <TouchableOpacity
-                        key={category}
-                        onPress={() => selectPfpCategory(category)}
-                        className="bg-gray-200 p-2 m-1 rounded"
-                    >
-                        <Text className="text-black font-psemibold">{category}</Text>
-                    </TouchableOpacity>
-                    ))}
-                </ScrollView>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
-                    {renderPfpOptions()}
-                </ScrollView>
-                <TouchableOpacity onPress={togglePfpModal} className="bg-red-500 p-2 rounded mt-4">
-                    <Text className="text-white text-center text-base font-pbold">Odustani</Text>
+        <View className="absolute inset-0 bg-black/90 w-full h-full items-center justify-center z-50">
+          <View className="bg-gray-800 p-4 rounded-2xl w-11/12 max-w-md">
+            <Text className="text-xl font-pbold mb-4 text-white">Izaberi profilnu sliku</Text>
+            
+            {/* Category Chips */}
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              className="mb-4"
+            >
+              {Object.keys(imageLists.pfp).map((category) => (
+                <TouchableOpacity
+                  key={category}
+                  onPress={() => selectPfpCategory(category)}
+                  className={`px-4 py-2 mr-2 rounded-full ${
+                    selectedPfpCategory === category 
+                      ? 'bg-blue-500' 
+                      : 'bg-gray-700'
+                  }`}
+                >
+                  <Text className={`font-psemibold ${
+                    selectedPfpCategory === category 
+                      ? 'text-white' 
+                      : 'text-gray-300'
+                  }`}>
+                    {category}
+                  </Text>
                 </TouchableOpacity>
-            </View>
-        </View>
-        )}
+              ))}
+            </ScrollView>
 
-            {/* Main Modal Content */}
-            <SafeAreaView className='bg-[#0B0F19] h-full'>
-                <View className="bg-[#0B0F19] p-6 flex-1 w-full">
-                    <View className='flex flex-row w-full justify-between items-center '>
-                        <Text className="text-3xl text-white font-pbold mb-4">Uredi nalog</Text>
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => router.back()} className='border border-white p-2 rounded-md bg-red-700'>
-                            <Text className='text-white font-psemibold text-base'>Odustani</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <Text className="text-white mb-2 font-psemibold">Prilagodite informacije</Text>
-                    {/* Banner Carousel */}
-                    <View className="flex-row items-center justify-center mb-4">
-                    <TouchableOpacity onPress={prevBanner}>
-                    <MaterialCommunityIcons name='arrow-left-bold' color="#fff" size={30} />
-                    </TouchableOpacity>
-                    <Image
-                        source={{ uri: imageLists.banner[bannerIndex] }}
-                        className="w-64 h-32 mx-4 rounded"
-                    />
-                    <TouchableOpacity onPress={nextBanner}>
-                        <MaterialCommunityIcons name='arrow-right-bold' color="#fff" size={30} />
-                    </TouchableOpacity>
-                    </View>
-                    {/* Profile Picture with Edit */}
-                    <TouchableOpacity onPress={togglePfpModal} className="mb-4">
-                        <View className="relative">
-                            <Image
-                            source={{ uri: pfp }}
-                            className="w-24 h-24 rounded-full"
-                            />
-                            <View className="absolute inset-0 items-center justify-center">
-                            <FontAwesome5 name="pen" size={16} color="white" />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                    {/* Username Input */}
-                    <View className="mb-4">
-                    <Text className="text-white mb-1 font-psemibold">Korisničko ime</Text>
-                    <TextInput
-                        placeholder="Unesi novo korisničko ime"
-                        placeholderTextColor="#888"
-                        value={newUsername}
-                        onChangeText={setNewUsername}
-                        className="bg-white/10 text-white p-3 rounded-lg font-pregular"
-                    />
-                    </View>
-                    {/* Email Input */}
-                    <View className="mb-4">
-                    <Text className="text-white mb-1 font-psemibold">Email</Text>
-                    <TextInput
-                        placeholder="Unesi novi email"
-                        placeholderTextColor="#888"
-                        value={newEmail}
-                        onChangeText={setNewEmail}
-                        className="bg-white/10 text-white p-3 rounded-lg font-pregular"
-                    />
-                    </View>
-                    {/* Save Button */}
-                    <TouchableOpacity onPress={changeInfo} className="bg-blue-500 p-3 rounded">
-                    <Text className="text-white text-center text-lg font-pbold">Izmeni</Text>
-                    </TouchableOpacity>
-                </View>
-            </SafeAreaView>
+            {/* Image Grid */}
+            <ScrollView 
+              contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }}
+              className="max-h-96"
+            >
+              {imageLists.pfp[selectedPfpCategory].map((imageUrl, index) => (
+                <TouchableOpacity 
+                  key={index} 
+                  onPress={() => previewPfp(imageUrl)}
+                  className="p-1 w-1/4"
+                >
+                  <Image
+                    source={{ uri: imageUrl }}
+                    className="w-full aspect-square rounded-lg"
+                  />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
+            <TouchableOpacity 
+              onPress={togglePfpModal} 
+              className="mt-4 bg-gray-700 py-3 rounded-xl"
+            >
+              <Text className="text-white text-center text-base font-pbold">Izađi</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+
+      {/* Main Content */}
+      <SafeAreaView className="bg-slate-950 h-full">
+        <View className="p-6 flex-1">
+          {/* Header */}
+          <View className="flex-row justify-between items-center mb-8">
+            <Text className="text-3xl text-white font-pbold">Uredi Profil</Text>
+            <TouchableOpacity 
+              onPress={() => router.back()}
+              className="p-2 rounded-full bg-gray-800"
+            >
+              <Ionicons name="close" size={24} color="#fff" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Banner Section */}
+          <View className="mb-8">
+            <View className="relative h-48 rounded-2xl overflow-hidden">
+              <Image
+                source={{ uri: imageLists.banner[bannerIndex] }}
+                className="w-full h-full"
+              />
+              
+              <View className="absolute inset-0 flex-row justify-evenly items-center px-4 py-20 gap-56">	
+                <TouchableOpacity 
+                  onPress={prevBanner}
+                  className="p-2 rounded-full bg-white/20"
+                >
+                  <Ionicons name="chevron-back" size={24} color="white" />
+                </TouchableOpacity>
+                
+                <TouchableOpacity 
+                  onPress={nextBanner}
+                  className="p-2 rounded-full bg-white/20"
+                >
+                  <Ionicons name="chevron-forward" size={24} color="white" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+          {/* Profile Picture Section */}
+          <View className="items-center -mt-20 mb-8">
+            <TouchableOpacity 
+              onPress={togglePfpModal}
+              className="relative"
+            >
+              <Image
+                source={{ uri: pfp }}
+                className="w-32 h-32 rounded-full border-4 border-slate-900"
+              />
+              <View className="absolute bottom-0 right-0 bg-blue-500 p-2 rounded-full border-2 border-slate-900">
+                <FontAwesome5 name="pen" size={16} color="white" />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          {/* Form Section */}
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {/* Username Input */}
+            <View className="mb-6">
+              <Text className="text-gray-300 mb-2 font-psemibold">Korisničko ime</Text>
+              <TextInput
+                placeholder="Novo korisničko ime"
+                placeholderTextColor="#94a3b8"
+                value={newUsername}
+                onChangeText={setNewUsername}
+                className="bg-gray-800 text-white p-4 rounded-xl font-pregular focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
+            </View>
+
+            {/* Email Input */}
+            <View className="mb-8">
+              <Text className="text-gray-300 mb-2 font-psemibold">Email</Text>
+              <TextInput
+                placeholder="Novi email"
+                placeholderTextColor="#94a3b8"
+                value={newEmail}
+                onChangeText={setNewEmail}
+                className="bg-gray-800 text-white p-4 rounded-xl font-pregular focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
+            </View>
+
+            {/* Save Button */}
+            <TouchableOpacity 
+              onPress={changeInfo} 
+              className="bg-blue-500 py-4 rounded-xl active:bg-blue-600"
+            >
+              <Text className="text-white text-center text-lg font-pbold">Sačuvaj Promene</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+      </SafeAreaView>
     </>
   );
 };
