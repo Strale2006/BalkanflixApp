@@ -12,7 +12,7 @@ const SliderItem = ({ item }) => (
     {/* <LinearGradient 
       colors={['#00000000', '#000000']} 
       style={{height : '100%', width : '100%'}}
-    > */}
+    /> */}
       <ImageBackground
         source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.poster}` }}
         className="flex-1 justify-end p-4"
@@ -33,10 +33,7 @@ const SliderItem = ({ item }) => (
           <Text className="text-white font-psemibold"> Gledaj</Text>
         </TouchableOpacity>
       </View>
-    </ImageBackground>
-
-    {/* </LinearGradient> */}
-    
+    </ImageBackground>    
   </View>
 );
 

@@ -47,7 +47,9 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-vector-icons": "^10.2.0",
-    "react-native-webview": "^13.13.1"
+    "react-native-webview": "^13.13.1",
+    "expo-system-ui": "~4.0.8",
+    "expo-modules-core": "~2.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
