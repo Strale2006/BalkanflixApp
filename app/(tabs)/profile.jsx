@@ -109,12 +109,14 @@ const Profile = () => {
             <View className="flex-row flex-wrap gap-2">
               {user?.favorites?.length > 0 ? (
                 user.favorites.map((title, index) => (
-                  <View 
+                  <TouchableOpacity 
                     key={index}
                     className="px-3 py-2 bg-gray-800 rounded-lg border border-gray-700"
+                    onPress={() => router.push(`/details/${title.replace(/\s+/g, '')}`)}
+                    activeOpacity={0.7}
                   >
                     <Text className="text-white text-sm font-pmedium">{title}</Text>
-                  </View>
+                  </TouchableOpacity>
                 ))
               ) : (
                 <View className="w-full py-4 bg-gray-800 rounded-lg border border-gray-700">
