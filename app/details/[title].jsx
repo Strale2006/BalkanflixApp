@@ -136,48 +136,75 @@ const DetailsScreen = () => {
             </Link>
           ))}
         </View>
-            {episodes.length > pageSize && (
-              <View className="flex-row justify-center items-center gap-4 mt-6">
-                <TouchableOpacity 
-                  disabled={currentIndex === 0}
-                  onPress={() => setCurrentIndex(Math.max(0, currentIndex - pageSize))}
-                className="p-2.5 bg-white/5 rounded-lg"
-                >
-                  <Feather 
-                    name="chevron-left" 
-                    size={20} 
-                    color={currentIndex === 0 ? "#FFFFFF40" : "white"} 
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity 
-                  disabled={currentIndex + pageSize >= episodes.length}
-                  onPress={() => setCurrentIndex(currentIndex + pageSize)}
-                  className="p-2.5 bg-white/5 rounded-lg"
-                >
-                  <Feather 
-                    name="chevron-right" 
-                    size={20} 
-                    color={currentIndex + pageSize >= episodes.length ? "#FFFFFF40" : "white"} 
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-            <View className="mt-8 space-y-4">
-            {(seriesData.previous || seriesData.next) && (
-              <View className="mt-6">
-                {seriesData.previous && (
-                  <Link href={`/details/${seriesData.previous[1]}`} className="text-blue-500 text-lg font-psemibold">
-                    ← {seriesData.previous[0]} (Prethodna sezona)
-                  </Link>
-                )}
-                {seriesData.next && (
-                  <Link href={`/details/${seriesData.next[1]}`} className="text-blue-500 text-lg font-psemibold mt-3">
-                    {seriesData.next[0]} (Sledeća sezona) →
-                  </Link>
-                )}
-              </View>
-            )}
+        {episodes.length > pageSize && (
+          <View className="flex-row justify-center items-center gap-5 mt-8">
+            <TouchableOpacity 
+              disabled={currentIndex === 0}
+              onPress={() => setCurrentIndex(Math.max(0, currentIndex - pageSize))}
+              className={`p-3 rounded-full bg-zinc-800 active:bg-zinc-700 ${currentIndex === 0 ? "opacity-50" : ""}`}
+              style={{ elevation: 2 }}
+            >
+              <Feather 
+                name="chevron-left" 
+                size={24} 
+                color={currentIndex === 0 ? "#a1a1aa" : "white"} 
+              />
+            </TouchableOpacity>
+
+            <Text className="text-zinc-300 font-medium text-sm">
+              Page {Math.ceil(currentIndex/pageSize) + 1} of {Math.ceil(episodes.length/pageSize)}
+            </Text>
+
+            <TouchableOpacity 
+              disabled={currentIndex + pageSize >= episodes.length}
+              onPress={() => setCurrentIndex(currentIndex + pageSize)}
+              className={`p-3 rounded-full bg-zinc-800 active:bg-zinc-700 ${currentIndex + pageSize >= episodes.length ? "opacity-50" : ""}`}
+              style={{ elevation: 2 }}
+            >
+              <Feather 
+                name="chevron-right" 
+                size={24} 
+                color={currentIndex + pageSize >= episodes.length ? "#a1a1aa" : "white"} 
+              />
+            </TouchableOpacity>
           </View>
+        )}
+
+        {(seriesData.previous || seriesData.next) && (
+          <View className="mt-8 bg-zinc-800 rounded-xl p-4">
+            <View className="flex-row justify-between items-center">
+              {seriesData.previous && (
+                <TouchableOpacity 
+                  className="flex-row items-center bg-zinc-700 px-4 py-2 rounded-lg active:bg-zinc-600"
+                  onPress={() => router.push(`/details/${seriesData.previous[1]}`)}
+                >
+                  <Feather name="chevron-left" size={18} color="#60a5fa" />
+                  <Text className="text-blue-400 ml-2 font-medium">
+                    {seriesData.previous[0]}
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              {seriesData.next && (
+                <TouchableOpacity 
+                  className="flex-row items-center bg-zinc-700 px-4 py-2 rounded-lg active:bg-zinc-600"
+                  onPress={() => router.push(`/details/${seriesData.next[1]}`)}
+                >
+                  <Text className="text-blue-400 mr-2 font-medium">
+                    {seriesData.next[0]}
+                  </Text>
+                  <Feather name="chevron-right" size={18} color="#60a5fa" />
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <Text className="text-zinc-400 text-center mt-3 text-sm">
+              {seriesData.previous ? 'Previous Season' : ''} 
+              {seriesData.previous && seriesData.next ? ' • ' : ''}
+              {seriesData.next ? 'Next Season' : ''}
+            </Text>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
