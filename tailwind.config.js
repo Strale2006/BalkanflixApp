@@ -6,7 +6,7 @@ module.exports = {
       colors: {
         background: '#0a0a0a',
         card: '#171717',
-        primary: '#2563eb',
+        primary: '#080808', 
         secondary: {
           DEFAULT: "#13161A",
           100: "#13161A",

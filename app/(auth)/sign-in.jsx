@@ -89,11 +89,11 @@ const SignIn = () => {
             otherStyles='mt-7'
           />
 
-          <View className="flex-row justify-end mt-3">
+          {/* <View className="flex-row justify-end mt-3">
             <Link href='/forgot-password' className='text-secondary text-base font-psemibold'>
               Zaboravili ste lozinku?
             </Link>
-          </View>
+          </View> */}
 
           <CustomButton
             title='Prijavi se'
