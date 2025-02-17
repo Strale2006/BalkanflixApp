@@ -33,7 +33,7 @@ const Search = () => {
               Rezultati Pretrage
             </Text>
             <Text className="text-2xl font-psemibold text-white">
-              {submittedQuery ? submittedQuery : "Svi Serijali"} 
+              {submittedQuery ? submittedQuery : "Pretražite nešto..."} 
             </Text>
 
             <View className="mt-6 mb-8">

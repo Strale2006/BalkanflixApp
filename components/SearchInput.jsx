@@ -11,12 +11,12 @@ const SearchInput = ({ initialQuery, onSearch }) => {
   }, [initialQuery]);
 
   const handleSearch = () => {
-    if (!query.trim()) {
-      Alert.alert('Ništa nije uneto', 
-        "Molimo vas unesite ključne reči"
-      );
-      return;
-    }
+    // if (!query.trim()) {
+    //   Alert.alert('Ništa nije uneto', 
+    //     "Molimo vas unesite ključne reči"
+    //   );
+    //   return;
+    // }
     onSearch(query);
   };
 

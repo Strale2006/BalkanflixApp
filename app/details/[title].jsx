@@ -15,10 +15,11 @@ const DetailsScreen = () => {
   const [episodes, setEpisodes] = useState([]);
   const [isSaved, setIsSaved] = useState(false);
 
-  // Remove spaces (or any undesired characters) for API consistency
-  const trimmedTitle = seriesData?.title_params || title?.replace(/\s/g, '') || '';
-
-
+  const trimmedTitle = seriesData?.title_params 
+  ? encodeURIComponent(seriesData.title_params)
+  : title 
+    ? encodeURIComponent(title.toString().replace(/\s/g, '')) 
+    : '';
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const pageSize = 40;
@@ -33,8 +34,11 @@ const DetailsScreen = () => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/content/seriesDetail/${encodedTitle}`);
-        setSeriesData(data.series[0]);
-        fetchUserData(data.series[0]);
+        // Add null check for series data
+        if (data?.series?.[0]) {
+          setSeriesData(data.series[0]);
+          fetchUserData(data.series[0]);
+        }
       } catch (error) {
         console.error("Error fetching series:", error);
       }
@@ -42,16 +46,20 @@ const DetailsScreen = () => {
 
     const fetchEpisodes = async () => {
       try {
-        const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/episode/episodeCount/${trimmedTitle}`);
-        setEpisodes(data.episode);
+        const seriesTitle = seriesData?.title_params || encodedTitle;
+        const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/episode/episodeCount/${seriesTitle}`);
+        setEpisodes(data?.episode || []);
       } catch (error) {
         console.error("Error fetching episodes:", error);
       }
     };
 
     fetchData();
-    fetchEpisodes();
-  }, [title]);
+    // Only fetch episodes after series data is loaded
+    if (seriesData) {
+      fetchEpisodes();
+    }  
+  }, [title, seriesData]);
 
   const fetchUserData = async (series) => {
     if (!token) return;
@@ -117,7 +125,7 @@ const DetailsScreen = () => {
               {genre}
             </Text>
           ))}
-          <TouchableOpacity onPress={toggleSaved} className="p-2 rounded-full bg-gray-900 dark:bg-gray-700">
+          <TouchableOpacity onPress={toggleSaved} className="p-2 rounded-full">
             <Icon name={isSaved ? "bookmark" : "bookmark-o"} size={24} color="white" />
           </TouchableOpacity>
         </View>
@@ -127,11 +135,11 @@ const DetailsScreen = () => {
           {visibleEpisodes.map((episode, index) => (
             <Link 
               key={index} 
-              href={`/${encodeURIComponent(seriesData?.title_params ?? `/${seriesData?.title.replace(/\s+/g, '')}`)}/${episode?.ep ?? 1}`}
+              href={`/${encodeURIComponent(seriesData?.title_params)}/${episode?.ep ?? 1}`}
               asChild
             >
               <TouchableOpacity className="w-12 h-12 bg-white/5 bg-gray-900 items-center justify-center rounded-lg active:bg-white/10">
-                <Text className="text-white font-medium">{episode.ep}</Text>
+                <Text className="text-white font-medium">{episode?.ep}</Text>
               </TouchableOpacity>
             </Link>
           ))}

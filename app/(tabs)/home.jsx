@@ -32,18 +32,26 @@ const MainHome = () => {
 
   const fetchData = async () => {
     try {
-      const topUsersRes = await axios.get(
-        'https://balkanflix-server.vercel.app/api/auth/getTopUsersByEpisodesWatchedFull'
-      );
-      setTopUsers(topUsersRes.data.topUsers.slice(0, 5));
+      const [topUsersRes, episodesRes] = await Promise.all([
+        axios.get('https://balkanflix-server.vercel.app/api/auth/getTopUsersByEpisodesWatchedFull'),
+        axios.get('https://balkanflix-server.vercel.app/api/episode/newest')
+      ]);
 
-      const episodesRes = await axios.get('https://balkanflix-server.vercel.app/api/episode/newest');
-      setNewEpisodes(episodesRes.data);
-
+      console.log('Fetched Episodes:', episodesRes.data);
+  
+      // Validate and transform data
+      setTopUsers((topUsersRes.data?.topUsers || []).slice(0, 5));
+      setNewEpisodes(Array.isArray(episodesRes.data) ? episodesRes.data.map(episode => ({
+        ...episode,
+        title_params: episode.title_params || episode.title?.replace(/\s+/g, '')
+      })) : []);
     } catch (error) {
       console.error('Error fetching data:', error);
+      if (error.response) {
+          console.error('Error Response:', error.response.data);
+      }
       Alert.alert('Error', 'Failed to fetch data');
-    } finally {
+  } finally {
       setLoading(false);
     }
   };
@@ -70,7 +78,7 @@ const MainHome = () => {
           >
             <TouchableOpacity
               onPress={() => {
-                router.push(`/${encodeURIComponent(item?.title_params)}/${item?.ep}` || `/${encodeURIComponent(item?.title.replace(/\s+/g, ''))}/${item?.ep}`);
+                router.push(`/${encodeURIComponent(item.title_params)}/${item.ep}`);
               }}
               activeOpacity={0.9}
             >

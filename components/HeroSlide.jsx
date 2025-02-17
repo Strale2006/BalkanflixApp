@@ -3,7 +3,7 @@ import { View, Text, ImageBackground, TouchableOpacity, FlatList, Dimensions } f
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
+// import { LinearGradient } from 'expo-linear-gradient';
 
 const { width } = Dimensions.get('window');
 

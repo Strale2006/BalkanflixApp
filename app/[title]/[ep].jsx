@@ -248,7 +248,7 @@ const Episode = () => {
                   : 'bg-gray-900 border border-gray-800 opacity-60'
               }`}
               disabled={parseInt(ep) <= 1}
-              onPress={() => router.push(`/${encodeURIComponent(seriesData.title_params)}/${episodeMinus}`)}
+              onPress={() => router.push(`/${encodeURIComponent(seriesData?.title_params)}/${episodeMinus}`)}
             >
               <FontAwesome5 name="step-backward" size={24} color="#93c5fd" />
               <Text className="text-blue-100 font-psemibold"> Prethodno</Text>
@@ -261,7 +261,7 @@ const Episode = () => {
                   : 'bg-gray-900 border border-gray-800 opacity-60'
               }`}
               disabled={parseInt(ep) >= episodes.length}
-              onPress={() => router.push(`/${encodeURIComponent(seriesData.title_params)}/${episodePlus}`)}
+              onPress={() => router.push(`/${encodeURIComponent(seriesData?.title_params)}/${episodePlus}`)}
             >
               <Text className="text-blue-100 font-psemibold">Sledeće </Text>
               <FontAwesome5 name="step-forward" size={24} color="#93c5fd" />
@@ -287,7 +287,7 @@ const Episode = () => {
               {episodes.map((episode) => (
                 <Link
                   key={episode.ep}
-                  href={`/${encodeURIComponent(seriesData.title_params)}/${episode.ep}`}
+                  href={`/${encodeURIComponent(seriesData?.title_params)}/${episode.ep}`}
                   asChild
                 >
                   <TouchableOpacity
