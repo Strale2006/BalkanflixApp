@@ -5,6 +5,7 @@ import { useLocalSearchParams, Link, router } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const DetailsScreen = () => {
   // Extract the dynamic parameter “title” from the URL.
@@ -136,75 +137,58 @@ const DetailsScreen = () => {
             </Link>
           ))}
         </View>
-        {episodes.length > pageSize && (
-          <View className="flex-row justify-center items-center gap-5 mt-8">
-            <TouchableOpacity 
-              disabled={currentIndex === 0}
-              onPress={() => setCurrentIndex(Math.max(0, currentIndex - pageSize))}
-              className={`p-3 rounded-full bg-zinc-800 active:bg-zinc-700 ${currentIndex === 0 ? "opacity-50" : ""}`}
-              style={{ elevation: 2 }}
-            >
-              <Feather 
-                name="chevron-left" 
-                size={24} 
-                color={currentIndex === 0 ? "#a1a1aa" : "white"} 
-              />
-            </TouchableOpacity>
-
-            <Text className="text-zinc-300 font-medium text-sm">
-              Page {Math.ceil(currentIndex/pageSize) + 1} of {Math.ceil(episodes.length/pageSize)}
-            </Text>
-
-            <TouchableOpacity 
-              disabled={currentIndex + pageSize >= episodes.length}
-              onPress={() => setCurrentIndex(currentIndex + pageSize)}
-              className={`p-3 rounded-full bg-zinc-800 active:bg-zinc-700 ${currentIndex + pageSize >= episodes.length ? "opacity-50" : ""}`}
-              style={{ elevation: 2 }}
-            >
-              <Feather 
-                name="chevron-right" 
-                size={24} 
-                color={currentIndex + pageSize >= episodes.length ? "#a1a1aa" : "white"} 
-              />
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {(seriesData.previous || seriesData.next) && (
-          <View className="mt-8 bg-zinc-800 rounded-xl p-4">
-            <View className="flex-row justify-between items-center">
-              {seriesData.previous && (
+            {episodes.length > pageSize && (
+              <View className="flex-row justify-center items-center gap-4 mt-6">
                 <TouchableOpacity 
-                  className="flex-row items-center bg-zinc-700 px-4 py-2 rounded-lg active:bg-zinc-600"
-                  onPress={() => router.push(`/details/${seriesData.previous[1]}`)}
+                  disabled={currentIndex === 0}
+                  onPress={() => setCurrentIndex(Math.max(0, currentIndex - pageSize))}
+                className="p-2.5 bg-white/5 rounded-lg"
                 >
-                  <Feather name="chevron-left" size={18} color="#60a5fa" />
-                  <Text className="text-blue-400 ml-2 font-medium">
-                    {seriesData.previous[0]}
-                  </Text>
+                  <Feather 
+                    name="chevron-left" 
+                    size={20} 
+                    color={currentIndex === 0 ? "#FFFFFF40" : "white"} 
+                  />
                 </TouchableOpacity>
-              )}
-
-              {seriesData.next && (
                 <TouchableOpacity 
-                  className="flex-row items-center bg-zinc-700 px-4 py-2 rounded-lg active:bg-zinc-600"
-                  onPress={() => router.push(`/details/${seriesData.next[1]}`)}
+                  disabled={currentIndex + pageSize >= episodes.length}
+                  onPress={() => setCurrentIndex(currentIndex + pageSize)}
+                  className="p-2.5 bg-white/5 rounded-lg"
                 >
-                  <Text className="text-blue-400 mr-2 font-medium">
-                    {seriesData.next[0]}
-                  </Text>
-                  <Feather name="chevron-right" size={18} color="#60a5fa" />
+                  <Feather 
+                    name="chevron-right" 
+                    size={20} 
+                    color={currentIndex + pageSize >= episodes.length ? "#FFFFFF40" : "white"} 
+                  />
                 </TouchableOpacity>
+              </View>
+            )}
+            <View className="mt-8 space-y-4">
+              {(seriesData.previous || seriesData.next) && (
+                <View className="mt-6 space-y-3">
+                  {seriesData.previous && (
+                    <TouchableOpacity className="bg-neutral-900 border border-neutral-800 px-4 py-3 rounded-lg active:opacity-75">
+                      <Link
+                        href={`/details/${seriesData.previous[1]}`}
+                        className="text-neutral-200 text-lg font-medium text-center"
+                      >
+                        ← {seriesData.previous[0]} (Prethodna sezona)
+                      </Link>
+                    </TouchableOpacity>
+                  )}
+                  {seriesData.next && (
+                    <TouchableOpacity className="bg-neutral-900 border border-neutral-800 px-4 py-3 rounded-lg active:opacity-75">
+                      <Link
+                        href={`/details/${seriesData.next[1]}`}
+                        className="text-neutral-200 text-lg font-medium text-center"
+                      >
+                        {seriesData.next[0]} (Sledeća sezona) →
+                      </Link>
+                    </TouchableOpacity>
+                  )}
+                </View>
               )}
             </View>
-
-            <Text className="text-zinc-400 text-center mt-3 text-sm">
-              {seriesData.previous ? 'Previous Season' : ''} 
-              {seriesData.previous && seriesData.next ? ' • ' : ''}
-              {seriesData.next ? 'Next Season' : ''}
-            </Text>
-          </View>
-        )}
       </View>
     </ScrollView>
   );
