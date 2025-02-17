@@ -208,7 +208,7 @@ const Episode = () => {
               />
             ) : (
               <View className="flex-1 justify-center items-center bg-gray-900">
-                <Text className="text-gray-500 font-pmedium">Video not available</Text>
+                <Text className="text-gray-500 font-pmedium">Video se učitava...</Text>
               </View>
             )}
           </View>
@@ -272,7 +272,7 @@ const Episode = () => {
           <View className="mb-4">
             <TextInput
               className="bg-gray-900 text-gray-100 font-pregular rounded-lg px-4 py-3 mb-4 border border-gray-800"
-              placeholder="Enter episode number..."
+              placeholder="Unesite broj epizode..."
               placeholderTextColor="#64748b"
               keyboardType="numeric"
               value={inputEpisode}
