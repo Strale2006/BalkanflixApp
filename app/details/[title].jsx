@@ -5,6 +5,7 @@ import { useLocalSearchParams, Link, router } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const DetailsScreen = () => {
   // Extract the dynamic parameter “title” from the URL.
@@ -171,21 +172,31 @@ const DetailsScreen = () => {
               </View>
             )}
             <View className="mt-8 space-y-4">
-            {(seriesData.previous || seriesData.next) && (
-              <View className="mt-6">
-                {seriesData.previous && (
-                  <Link href={`/details/${seriesData.previous[1]}`} className="text-blue-500 text-lg font-psemibold">
-                    ← {seriesData.previous[0]} (Prethodna sezona)
-                  </Link>
-                )}
-                {seriesData.next && (
-                  <Link href={`/details/${seriesData.next[1]}`} className="text-blue-500 text-lg font-psemibold mt-3">
-                    {seriesData.next[0]} (Sledeća sezona) →
-                  </Link>
-                )}
-              </View>
-            )}
-          </View>
+              {(seriesData.previous || seriesData.next) && (
+                <View className="mt-6 space-y-3">
+                  {seriesData.previous && (
+                    <TouchableOpacity className="bg-neutral-900 border border-neutral-800 px-4 py-3 rounded-lg active:opacity-75">
+                      <Link
+                        href={`/details/${seriesData.previous[1]}`}
+                        className="text-neutral-200 text-lg font-medium text-center"
+                      >
+                        ← {seriesData.previous[0]} (Prethodna sezona)
+                      </Link>
+                    </TouchableOpacity>
+                  )}
+                  {seriesData.next && (
+                    <TouchableOpacity className="bg-neutral-900 border border-neutral-800 px-4 py-3 rounded-lg active:opacity-75">
+                      <Link
+                        href={`/details/${seriesData.next[1]}`}
+                        className="text-neutral-200 text-lg font-medium text-center"
+                      >
+                        {seriesData.next[0]} (Sledeća sezona) →
+                      </Link>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
+            </View>
       </View>
     </ScrollView>
   );
