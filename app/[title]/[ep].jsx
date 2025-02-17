@@ -192,7 +192,7 @@ const Episode = () => {
                 {seriesData?.title}
               </Text>
               <Text className="text-lg font-pmedium text-blue-400">
-                Episode {ep}
+                Epizoda {ep}
               </Text>
             </TouchableOpacity>
           </Link>
@@ -215,7 +215,7 @@ const Episode = () => {
         </View>
 
         {/* Server Selection */}
-        <View className="flex-row gap-3 mb-6">
+        {/* <View className="flex-row gap-3 mb-6">
           <TouchableOpacity
             className={`flex-1 py-3 rounded-xl ${
               selectedServer === 'Filemoon' 
@@ -236,7 +236,7 @@ const Episode = () => {
           >
             <Text className="text-center font-psemibold text-blue-400">Balkanflix</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         {/* Episode Navigation */}
         <View className="mb-6">

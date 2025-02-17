@@ -14,12 +14,12 @@ const SliderItem = ({ item }) => (
       style={{height : '100%', width : '100%'}}
     /> */}
       <ImageBackground
-        source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.poster}` }}
+        source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item?.poster}` }}
         className="flex-1 justify-end p-4"
         imageStyle={{ opacity: 0.9 }}
       >
       <View className="z-10">
-        <Text className="text-white text-2xl font-pextrabold" numberOfLines={2}>{item.title}</Text>
+        <Text className="text-white text-2xl font-pextrabold" numberOfLines={2}>{item?.title}</Text>
         <View className="flex-row gap-2 mt-1">
           {item.genre?.map((genre, key) => (
             <Text key={key} className="text-gray-200 text-xs font-pbold mb-2">{genre}</Text>
@@ -27,7 +27,7 @@ const SliderItem = ({ item }) => (
         </View>
         <TouchableOpacity 
         className="bg-red-600 py-1.5 px-3 rounded-full self-start flex flex-row items-center justify-center"
-        onPress={() => router.push(`/details/${encodeURIComponent(item.title_params)}`)}
+        onPress={() => router.push(`/details/${encodeURIComponent(item?.title_params)}`)}
         >
           <MaterialIcons name="play-circle" size={18} color="white" />
           <Text className="text-white font-psemibold"> Gledaj</Text>
