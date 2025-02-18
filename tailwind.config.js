@@ -8,8 +8,8 @@ module.exports = {
         card: '#171717',
         primary: '#161622', 
         secondary: {
-          DEFAULT: "#13161A",
-          100: "#13161A",
+          DEFAULT: "#FF0000",
+          100: "#FF0000",
           200: "#C20202",
         },
         black: {
