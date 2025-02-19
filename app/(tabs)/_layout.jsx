@@ -13,8 +13,12 @@ const TabIcon = ({icon, color, name, focused}) => {
         className="w-5 h-5"
       />
       <Text
-        className={`${focused ? "font-psemibold" : "font-pregular"} text-xs w-16 text-center`}
+        className={`${focused ? "font-pmedium" : "font-pregular"} text-xs w-16 text-center`}
         style={{ color: color }}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.8}
+        ellipsizeMode="tail"
       >
         {name}
       </Text>
