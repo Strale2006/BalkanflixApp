@@ -9,13 +9,13 @@ const GoogleButton = ({title, handlePress, containerStyles, textStyles, isLoadin
       className={` bg-blue-400 rounded-xl p-5 ${containerStyles} ${isLoading ? 'opacity-50' : ''}`}
       disabled={isLoading}
     >
-      <Text className='flex-row justify-center items-center text-center'>
-        <View className="flex-row justify-center items-center text-center">
-          {/* <Icon name="google" size={36} color="#ff00e0"/> */}
-          <Text className={`${textStyles}`} >{title}</Text>
-        </View>
-      </Text>
-    </TouchableOpacity>
+      <View className="flex-row justify-center items-center">
+        {/* <Icon name="google" size={24} color="#fff" /> */}
+        <Text className={`${textStyles} ml-2`} numberOfLines={1} ellipsizeMode="tail">
+          {title}
+        </Text>
+      </View>
+  </TouchableOpacity>
   )
 }
 
