@@ -6,7 +6,7 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 import axios from 'axios';
 
 GoogleSignin.configure({
-  webClientId: '140537177807-1tkrju2cp5dqmpkg7mhfkbhc4pntbka5.apps.googleusercontent.com',
+  webClientId: '213162142911-3mmlgpbh3k37h29mtoi2h2f95v5m1qjf.apps.googleusercontent.com',
   scopes: ['https://www.googleapis.com/auth/drive.readonly'],
   offlineAccess: true,
   forceCodeForRefreshToken: false,
