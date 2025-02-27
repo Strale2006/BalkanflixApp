@@ -103,9 +103,6 @@ const DetailsScreen = () => {
     );
   }
 
-
-
-
   return (
     <ScrollView className="flex-1 bg-black dark:bg-[#121212]">
       <Image 
@@ -139,7 +136,7 @@ const DetailsScreen = () => {
               href={`/${encodeURIComponent(seriesData?.title_params)}/${episode?.ep ?? 1}`}
               asChild
             >
-              <TouchableOpacity className="w-12 h-12 bg-white/5 bg-gray-900 items-center justify-center rounded-lg active:bg-white/10">
+              <TouchableOpacity className={`w-12 h-12 bg-white/5 bg-gray-900 items-center justify-center rounded-lg active:bg-white/10 ${episode.isFiller ? "bg-purple-900 border border-purple-600" : ""}`}>
                 <Text className="text-white font-medium">{episode?.ep}</Text>
               </TouchableOpacity>
             </Link>

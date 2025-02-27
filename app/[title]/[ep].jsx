@@ -328,13 +328,16 @@ const Episode = () => {
               </View>
               <View className="mt-2 gap-1">
                 <Text className="text-gray-400 font-pregular">
-                  Episodes: {seriesData?.ep} • {seriesData?.status}
+                  Epizode: {seriesData?.ep} • {seriesData?.status}
                 </Text>
                 <Text className="text-gray-400 font-pregular">
                   Studio: {seriesData?.studio}
                 </Text>
                 <Text className="text-gray-400 font-pregular">
-                  Rating: ⭐ {seriesData?.MAL_ocena}/10
+                  Ocena: ⭐ {seriesData?.MAL_ocena}/10
+                </Text>
+                <Text className="text-gray-400 font-pregular">
+                  Pregleda:  {seriesData?.totalViews} 👀
                 </Text>
               </View>
             </View>
