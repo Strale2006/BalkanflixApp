@@ -99,7 +99,7 @@ async function sendTokenToBackend(token) {
 
 export async function registerForPushNotificationsAsync() {
   let token;
-  // [Your existing code for permissions and channel setup]
+  // [Your existing code for permissions and channel setup] gdgdgdg
 
   if (Device.isDevice) {
     // ... Request permissions and get token logic ...
