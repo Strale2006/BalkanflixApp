@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "546589943978",
+    "project_id": "balkanflixapp-51894",
+    "storage_bucket": "balkanflixapp-51894.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546589943978:android:d59438de2d460453d808d3",
+        "android_client_info": {
+          "package_name": "com.balkanflix.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCljVc-3wUb67OhkkzsT9D8vpGWWNtBQnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

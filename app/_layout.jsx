@@ -4,6 +4,8 @@ import "react-native-url-polyfill/auto";
 import { useEffect } from 'react';
 import GlobalProvider from '../context/GlobalProvider';
 import useNotificationObserver from '../notifications/useNotificationObserver';
+import {registerForPushNotificationsAsync} from "../notifications/PushNotificationService";
+
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,6 +30,13 @@ const RootLayout = () => {
     }, [fontsLoaded, error]);
 
     if (!fontsLoaded && !error) return null;
+
+    useEffect(() => {
+        async function setupPushNotifications() {
+            await registerForPushNotificationsAsync();
+        }
+        setupPushNotifications();
+    }, []);
 
     return (
         <GlobalProvider>

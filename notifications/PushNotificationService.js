@@ -84,11 +84,13 @@ async function schedulePushNotification() {
 }
 
 async function sendTokenToBackend(token) {
+  const deviceInfo = Platform.OS;
+
   try {
     const response = await fetch('https://balkanflix-server.vercel.app/api/push-tokens/add', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, userId: null /* or set the user id if available */, deviceInfo: 'Android' }),
+      body: JSON.stringify({ token, userId: null, deviceInfo }),
     });
     const data = await response.json();
     console.log('Token sent to backend:', data);
@@ -98,28 +100,40 @@ async function sendTokenToBackend(token) {
 }
 
 export async function registerForPushNotificationsAsync() {
-  let token;
-  // [Your existing code for permissions and channel setup] gdgdgdg
+    let token;
 
-  if (Device.isDevice) {
-    // ... Request permissions and get token logic ...
-    try {
-      const projectId =
-        Constants?.expoConfig?.extra?.eas?.projectId ??
-        Constants?.easConfig?.projectId;
-      if (!projectId) {
-        throw new Error('Project ID not found');
-      }
-      token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
-      console.log('FCM/Expo push token:', token);
-
-      // Send the token to your backend
-      await sendTokenToBackend(token);
-    } catch (e) {
-      token = `${e}`;
-    }
-  } else {
+  if (!Device.isDevice) {
     alert('Must use physical device for Push Notifications');
+    return null;
+  }
+
+  const { status: existingStatus } = await Notifications.getPermissionsAsync();
+  let finalStatus = existingStatus;
+
+  if (existingStatus !== 'granted') {
+    const { status } = await Notifications.requestPermissionsAsync();
+    finalStatus = status;
+  }
+
+  if (finalStatus !== 'granted') {
+    console.warn('Push notification permissions denied');
+    return null;
+  }
+
+  try {
+    const projectId =
+      Constants?.expoConfig?.extra?.eas?.projectId ??
+      Constants?.easConfig?.projectId;
+    if (!projectId) {
+      throw new Error('Project ID not found');
+    }
+
+    token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+    console.log('FCM/Expo push token:', token);
+
+    await sendTokenToBackend(token);
+  } catch (e) {
+    console.error('Error fetching push token:', e);
   }
 
   return token;
