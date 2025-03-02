@@ -26,7 +26,7 @@ function useNotificationObserver() {
     });
 
     return () => {
-//      isMounted = false;
+      //isMounted = false;
       subscription.remove();
     };
   }, []);

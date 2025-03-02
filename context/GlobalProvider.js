@@ -103,7 +103,6 @@ const GlobalProvider = ({ children }) => {
     try {
       await GoogleSignin.hasPlayServices();
       const response = await GoogleSignin.signIn();
-      console.log("User Infooooooooooooo: ", response.data.user)
 
       const user = response.data.user;
       const { id, name, email, photo } = user;
@@ -124,20 +123,21 @@ const GlobalProvider = ({ children }) => {
         console.log("User authenticated and saved/updated in DB");   
         
         const { token, userGoogle } = result.data;
-        // console.log("TOKENNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN", token)
         await AsyncStorage.setItem('authToken', token);
         setToken(token);
         setUser(userGoogle);
         setIsLoggedIn(true)
       }
     } catch (error) {
+        setIsLoading(false);
+
         if (error.code === statusCodes.IN_PROGRESS) {
           console.log("Google Sign-in already in progress");
         } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
           console.log("Google Play Services not available");
         } else {
           console.error("Google Sign-in error:", error);
-        }    
+        }
       }
   }
   

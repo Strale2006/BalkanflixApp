@@ -6,14 +6,6 @@ import {images} from '../../constants'
 import FormField from './../../components/FormField';
 import CustomButton from '../../components/CustomButton'
 import { useGlobalContext } from "../../context/GlobalProvider";
-
-// import {
-//   GoogleSignin,
-//   GoogleSigninButton,
-//   statusCodes,
-// } from '@react-native-google-signin/google-signin';
-
-// import { GoogleLogin } from '../../components/GoogleSignIn'
 import GoogleButton from '../../components/GoogleButton'
 
 
@@ -51,8 +43,12 @@ const SignIn = () => {
   const submitGoogle = async () => {
     setIsSubmitting(true);
     try {
-      await handleGoogleLogin();
-      router.replace('/home');
+      const success = await handleGoogleLogin();
+        if (success) {
+          router.replace('/home');
+        } else {
+          console.log("Google login was not successful, staying on SignIn page");
+        }
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {
