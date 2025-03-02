@@ -3,6 +3,7 @@ import { useFonts } from 'expo-font';
 import "react-native-url-polyfill/auto";
 import { useEffect } from 'react';
 import GlobalProvider from '../context/GlobalProvider';
+import useNotificationObserver from '../notifications/useNotificationObserver';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -18,6 +19,8 @@ const RootLayout = () => {
         "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
         "Poppins-Thin": require("../assets/fonts/Poppins-Thin.ttf"),
     });
+
+    useNotificationObserver();
 
     useEffect(() => {
         if (error) throw error;

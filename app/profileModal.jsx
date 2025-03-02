@@ -8,6 +8,8 @@ import axios from 'axios';
 import { useGlobalContext } from '../context/GlobalProvider'; // Adjust path if needed
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const imageLists = {
   banner: [
@@ -215,6 +217,7 @@ export const ChangeInfoForm = () => {
       // Optionally update global user info here if needed:
       if (response.data?.user) {
         setUser(response.data.user);
+        await AsyncStorage.setItem('userData', JSON.stringify(response.data.user));
       }
       // Reset local form state
       setNewUsername("");

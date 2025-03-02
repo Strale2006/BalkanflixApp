@@ -14,9 +14,16 @@ const Chat = () => {
   const [cooldown, setCooldown] = useState(false);
   const messagesEndRef = useRef(null);
   const [shouldReconnect, setShouldReconnect] = useState(true);
+  // Add a new state to track if user is manually scrolling
+  const [isUserScrolling, setIsUserScrolling] = useState(false);
+  // Track if we should auto-scroll on new messages
+  const [shouldAutoScrollToBottom, setShouldAutoScrollToBottom] = useState(true);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollToEnd({ animated: true });
+  const scrollToBottom = (force = false) => {
+    // Only scroll to bottom if we're not currently user-scrolling or if force is true
+    if ((shouldAutoScrollToBottom && !isUserScrolling) || force) {
+      messagesEndRef.current?.scrollToEnd({ animated: true });
+    }
   };
 
   useEffect(() => {
@@ -29,7 +36,16 @@ const Chat = () => {
         `databases.${appwriteConfig.databaseId}.collections.${appwriteConfig.collectionId}.documents`,
         (response) => {
           if (response.events.includes("databases.*.collections.*.documents.*.create")) {
-            setMessages((prevState) => [...prevState, response.payload]);
+            setMessages((prevState) => {
+              const newMessages = [...prevState, response.payload];
+              // Auto-scroll only if the new message is from the current user
+              // or if we're already at the bottom of the chat
+              if (response.payload.userId === user?.$id) {
+                // If it's our own message, always scroll to bottom
+                setTimeout(() => scrollToBottom(true), 100);
+              }
+              return newMessages;
+            });
           }
         },
         (error) => {
@@ -48,6 +64,13 @@ const Chat = () => {
       if (unsubscribe) unsubscribe();
     };
   }, []);
+
+  // When messages load initially, scroll to bottom
+    useEffect(() => {
+      if (messages.length > 0) {
+        setTimeout(() => scrollToBottom(true), 300);
+      }
+    }, [messages.length === 0]);
 
   const getMessages = async () => {
     try {
@@ -68,21 +91,21 @@ const Chat = () => {
   };
 
   const handleSubmit = async () => {
-    if (cooldown) return;
+    if (cooldown || !messageBody.trim()) return;
     if (!user) {
       Alert.alert('Authentication Required', 'Please login to send messages');
       return;
     }
-  
+
     setCooldown(true);
-  
+
     const payload = {
       body: messageBody,
       userId: user.$id,
       username: user.username,
       pfp: user.pfp
     };
-  
+
     try {
       await databases.createDocument(
         appwriteConfig.databaseId,
@@ -91,18 +114,37 @@ const Chat = () => {
         payload
       );
       setMessageBody('');
+      // Set auto-scroll to true when sending a message
+      setShouldAutoScrollToBottom(true);
     } catch (error) {
       console.error('Error sending message:', error);
       Alert.alert('Error', 'Failed to send message');
     }
-  
+
     setTimeout(() => {
       setCooldown(false);
     }, 1000);
   };
 
-  // console.log(messages);
-  
+  // Function to detect when the user has scrolled up
+  const handleScroll = (event) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    const contentHeight = event.nativeEvent.contentSize.height;
+    const layoutHeight = event.nativeEvent.layoutMeasurement.height;
+
+    // If the user is near the bottom (within 20px), enable auto-scrolling
+    const isNearBottom = contentHeight - layoutHeight - offsetY < 20;
+    setShouldAutoScrollToBottom(isNearBottom);
+  };
+
+  // Functions to track when user starts and stops scrolling manually
+  const handleScrollBeginDrag = () => {
+    setIsUserScrolling(true);
+  };
+
+  const handleScrollEndDrag = () => {
+    setIsUserScrolling(false);
+  };
 
   return (
     <KeyboardAvoidingView
@@ -129,7 +171,12 @@ const Chat = () => {
             </View>
           )}
           ref={messagesEndRef}
-          onContentSizeChange={scrollToBottom}
+          onContentSizeChange={() => scrollToBottom()}
+          onScroll={handleScroll}
+          onScrollBeginDrag={handleScrollBeginDrag}
+          onScrollEndDrag={handleScrollEndDrag}
+          onMomentumScrollEnd={() => setIsUserScrolling(false)}
+          scrollEventThrottle={16}
         />
         <View className="flex-row items-center p-4 bg-[#101420]">
           <TextInput
@@ -142,6 +189,7 @@ const Chat = () => {
           <TouchableOpacity
             className="ml-4 bg-blue-500 p-3 rounded-full"
             onPress={handleSubmit}
+            disabled={cooldown || !messageBody.trim()}
           >
             <Text className="text-white font-pbold"><Icon name="send" size={18} color="#E4E5E6" /></Text>
           </TouchableOpacity>

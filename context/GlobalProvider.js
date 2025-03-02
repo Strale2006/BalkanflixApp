@@ -51,6 +51,20 @@ const GlobalProvider = ({ children }) => {
     }
   }, [token]);
 
+  useEffect(() => {
+    if (user) {
+      // Store the latest user data whenever it changes
+      const storeUserData = async () => {
+        try {
+          await AsyncStorage.setItem('userData', JSON.stringify(user));
+        } catch (error) {
+          console.error('Error storing user data:', error);
+        }
+      };
+      storeUserData();
+    }
+  }, [user]);
+
   const logout = async () => {
     try {
       await AsyncStorage.removeItem('authToken');
