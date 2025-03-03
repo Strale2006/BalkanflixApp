@@ -1,26 +1,51 @@
 {
   "project_info": {
-    "project_number": "546589943978",
-    "project_id": "balkanflixapp-51894",
-    "storage_bucket": "balkanflixapp-51894.firebasestorage.app"
+    "project_number": "213162142911",
+    "project_id": "balkanflixapp",
+    "storage_bucket": "balkanflixapp.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:546589943978:android:d59438de2d460453d808d3",
+        "mobilesdk_app_id": "1:213162142911:android:332d14ddb67aadc9b8aa0a",
         "android_client_info": {
           "package_name": "com.balkanflix.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "213162142911-s3d3v9ij1bnlq7pljm814m6aji60e42u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.balkanflix.app",
+            "certificate_hash": "9635ec27054ca1036de8158b6fa470630edc5534"
+          }
+        },
+        {
+          "client_id": "213162142911-3mmlgpbh3k37h29mtoi2h2f95v5m1qjf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCljVc-3wUb67OhkkzsT9D8vpGWWNtBQnE"
+          "current_key": "AIzaSyCz4I76ZtK4aEjQBfIrKHy9e-rXYdJTw3M"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213162142911-3mmlgpbh3k37h29mtoi2h2f95v5m1qjf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "213162142911-v3sjncor8t45el38n8g7vln39ms5dbji.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.balkanflix.app"
+              }
+            }
+          ]
         }
       }
     }
