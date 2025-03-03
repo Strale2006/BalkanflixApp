@@ -2,20 +2,17 @@ import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalContext } from './../../context/GlobalProvider';
 import { Link, router } from "expo-router";
-import { logoutUser } from '../../lib/apiControllers';
 import { Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import InfoBox from './../../components/InfoBox';
 
 const Profile = () => {
-  const { user, setUser, setIsLoggedIn } = useGlobalContext();
+  const { user, logout } = useGlobalContext();
 
   const dashboard = () => router.push('/dash-home');
 
-  const logout = async () => {
+  const handleLogout = async () => {
     try {
-      await logoutUser();
-      setIsLoggedIn(false);
-      setUser(null);
+      await logout();
       router.replace('/sign-in');
     } catch (error) {
       console.error('Error logging out:', error);
@@ -83,7 +80,7 @@ const Profile = () => {
             </TouchableOpacity>
 
             <TouchableOpacity 
-              onPress={logout}
+              onPress={handleLogout}
               className="p-4 rounded-full bg-gray-800 border border-gray-700"
             >
               <MaterialIcons name="logout" size={20} color="#e5e7eb" />

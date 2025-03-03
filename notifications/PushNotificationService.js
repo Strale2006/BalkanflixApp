@@ -3,13 +3,14 @@ import { Text, View, Button, Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Set the notification handler for when notifications are received while the app is in the foreground.
+// Configure how notifications should be handled when the app is in foreground
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
   }),
 });
 
@@ -22,17 +23,27 @@ export default function NotificationDemo() {
   const responseListener = useRef();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => token && setExpoPushToken(token));
+    registerForPushNotificationsAsync().then(token => {
+      if (token) {
+        setExpoPushToken(token);
+        console.log('Token in demo component:', token); // Debug token in component
+      }
+    });
 
     if (Platform.OS === 'android') {
-      Notifications.getNotificationChannelsAsync().then(value => setChannels(value || []));
+      Notifications.getNotificationChannelsAsync().then(value => {
+        setChannels(value || []);
+        console.log('Android notification channels:', value); // Debug channels
+      });
     }
+
     notificationListener.current = Notifications.addNotificationReceivedListener(notif => {
+      console.log('Received notification:', notif); // Debug received notification
       setNotification(notif);
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
+      console.log('User interacted with notification:', response); // Debug user interaction
     });
 
     return () => {
@@ -58,83 +69,169 @@ export default function NotificationDemo() {
             JSON.stringify(notification.request.content.data)}
         </Text>
       </View>
-      <Button
-        title="Press to schedule a notification"
-        onPress={async () => {
-          await schedulePushNotification();
-        }}
-      />
+      <View style={{ gap: 10 }}>
+        <Button
+          title="Test Local Notification"
+          onPress={async () => {
+            const success = await testPushNotification();
+            console.log('Local notification test:', success ? 'succeeded' : 'failed');
+          }}
+        />
+        <Button
+          title="Schedule Custom Notification"
+          onPress={async () => {
+            await schedulePushNotification(
+              "Test Notification",
+              "This is a test notification",
+              { url: '/home' }
+            );
+          }}
+        />
+      </View>
     </View>
   );
 }
 
-async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "You've got mail! 📬",
-      body: 'Here is the notification body',
-      data: { data: 'goes here', test: { test1: 'more data' } },
-    },
-    // Instead of using SchedulableTriggerInputTypes from TS, just provide the trigger as a plain object.
-    trigger: {
-      seconds: 2,
-      repeats: false,
-    },
-  });
-}
-
 async function sendTokenToBackend(token) {
-  const deviceInfo = Platform.OS;
+  if (!token) return;
 
   try {
+    const deviceInfo = Platform.OS;
     const response = await fetch('https://balkanflix-server.vercel.app/api/push-tokens/add', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, userId: null, deviceInfo }),
+      body: JSON.stringify({ 
+        token,
+        deviceInfo,
+        userId: null // This matches your backend expectation
+      }),
     });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
     const data = await response.json();
-    console.log('Token sent to backend:', data);
+    console.log('Push token successfully sent to backend');
+    return data;
   } catch (error) {
     console.error('Error sending token to backend:', error);
   }
 }
 
 export async function registerForPushNotificationsAsync() {
-    let token;
-
-  if (!Device.isDevice) {
-    alert('Must use physical device for Push Notifications');
-    return null;
-  }
-
-  const { status: existingStatus } = await Notifications.getPermissionsAsync();
-  let finalStatus = existingStatus;
-
-  if (existingStatus !== 'granted') {
-    const { status } = await Notifications.requestPermissionsAsync();
-    finalStatus = status;
-  }
-
-  if (finalStatus !== 'granted') {
-    console.warn('Push notification permissions denied');
-    return null;
-  }
-
   try {
-    const projectId =
-      Constants?.expoConfig?.extra?.eas?.projectId ??
-      Constants?.easConfig?.projectId;
-    if (!projectId) {
-      throw new Error('Project ID not found');
+    // Check if it's a physical device (notifications won't work in simulator)
+    if (!Device.isDevice) {
+      console.log('Must use physical device for Push Notifications');
+      return null;
     }
 
-    token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
-    console.log('FCM/Expo push token:', token);
+    // Check if we have permission already
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
 
-    await sendTokenToBackend(token);
-  } catch (e) {
-    console.error('Error fetching push token:', e);
+    // If we don't have permission, ask for it
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+
+    // If we still don't have permission, exit
+    if (finalStatus !== 'granted') {
+      console.log('Failed to get push token for push notification!');
+      return null;
+    }
+
+    // Get the project ID safely
+    const projectId = '9ba83abf-086c-461b-8613-9957ac12cb7b'; // Hardcoded from app.json
+    console.log('Using project ID:', projectId);
+
+    // Get the push token
+    try {
+      console.log('Requesting push token with project ID:', projectId);
+      const tokenData = await Notifications.getExpoPushTokenAsync({
+        projectId: projectId,
+        devicePushToken: undefined // Let Expo handle this
+      });
+      const token = tokenData.data;
+      
+      // Verify token format
+      if (!token.startsWith('ExponentPushToken[') && !token.startsWith('ExpoPushToken[')) {
+        console.error('Invalid token format. Got:', token);
+        console.error('Token must start with ExponentPushToken[ or ExpoPushToken[');
+        return null;
+      }
+
+      console.log('Successfully generated push token:', token);
+      console.log('Token type:', tokenData.type);
+      console.log('Full token data:', tokenData);
+      
+      // Send token to backend
+      const backendResponse = await sendTokenToBackend(token);
+      console.log('Backend response:', backendResponse);
+      
+      return token;
+    } catch (error) {
+      console.error('Error getting push token:', error);
+      if (error.code) {
+        console.error('Error code:', error.code);
+      }
+      if (error.message) {
+        console.error('Error message:', error.message);
+      }
+      return null;
+    }
+  } catch (error) {
+    console.error('Error in registerForPushNotificationsAsync:', error);
+    return null;
   }
+}
 
-  return token;
+// Helper function to schedule a local notification (for testing)
+export async function schedulePushNotification(title, body, data = {}) {
+  try {
+    const id = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: title || "Default notification",
+        body: body || "Something happened!",
+        data: data,
+      },
+      trigger: {
+        seconds: 1,
+      },
+    });
+    return id;
+  } catch (error) {
+    console.error('Error scheduling notification:', error);
+    return null;
+  }
+}
+
+// Add test function to verify notification setup
+export async function testPushNotification() {
+  try {
+    // Get the stored token
+    const token = await AsyncStorage.getItem('pushToken');
+    if (!token) {
+      console.error('No push token found in storage');
+      return false;
+    }
+
+    console.log('Testing notification with token:', token);
+
+    // Try to schedule a local notification
+    const localNotifId = await schedulePushNotification(
+      "Local Test Notification",
+      "This is a local test - if you see this, local notifications work!",
+      { test: true }
+    );
+
+    console.log('Local notification scheduled with ID:', localNotifId);
+    
+    return true;
+  } catch (error) {
+    console.error('Error testing push notification:', error);
+    return false;
+  }
 }

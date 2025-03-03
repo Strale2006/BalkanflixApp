@@ -4,8 +4,6 @@ import "react-native-url-polyfill/auto";
 import { useEffect } from 'react';
 import GlobalProvider from '../context/GlobalProvider';
 import useNotificationObserver from '../notifications/useNotificationObserver';
-// import { registerForPushNotificationsAsync } from "../notifications/PushNotificationService";
-
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,13 +29,6 @@ const RootLayout = () => {
 
     if (!fontsLoaded && !error) return null;
 
-    // useEffect(() => {
-    //     async function setupPushNotifications() {
-    //         await registerForPushNotificationsAsync();
-    //     }
-    //     setupPushNotifications();
-    // }, []);
-
     return (
         <GlobalProvider>
             <Stack>
@@ -48,8 +39,11 @@ const RootLayout = () => {
                 <Stack.Screen name="details/[title]" options={{ headerShown: false }} />
                 <Stack.Screen name="[title]/[ep]" options={{ headerShown: false }} />
                 <Stack.Screen name="profileModal" options={{ headerShown: false, presentation: 'modal' }} />
-
-                {/* <Stack.Screen name='search/[query]' options={{headerShown: false}} /> */}
+                <Stack.Screen name="notificationTest" options={{ 
+                    headerShown: true,
+                    title: 'Test Notifications',
+                    presentation: 'modal'
+                }} />
             </Stack>
         </GlobalProvider>
     );

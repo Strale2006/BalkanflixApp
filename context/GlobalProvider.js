@@ -4,6 +4,7 @@ import { registerUser, loginUser, getUser } from '../lib/apiControllers'; // Upd
 import { GoogleLogin } from '../components/GoogleSignIn';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import axios from 'axios';
+import { registerForPushNotificationsAsync } from '../notifications/PushNotificationService';
 
 GoogleSignin.configure({
   webClientId: '213162142911-3mmlgpbh3k37h29mtoi2h2f95v5m1qjf.apps.googleusercontent.com',
@@ -67,14 +68,102 @@ const GlobalProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await AsyncStorage.removeItem('authToken');
+      console.log('Starting logout process...'); // Debug log
+      
+      // Get the push token before clearing storage
+      const pushToken = await AsyncStorage.getItem('pushToken');
+      console.log('Push token found during logout:', pushToken); // Debug log
+      
+      // Remove token from backend if it exists
+      if (pushToken) {
+        try {
+          console.log('Attempting to remove token from backend:', pushToken); // Debug log
+          const response = await fetch('https://balkanflix-server.vercel.app/api/push-tokens/remove', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: pushToken }),
+          });
+
+          if (!response.ok) {
+            console.error('Failed to remove push token from backend. Status:', response.status);
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
+          } else {
+            console.log('Token successfully removed from backend'); // Debug log
+          }
+        } catch (error) {
+          console.error('Error removing push token from backend:', error);
+        }
+      } else {
+        console.log('No push token found to remove'); // Debug log
+      }
+
+      // Clear all relevant storage
+      console.log('Clearing AsyncStorage...'); // Debug log
+      await Promise.all([
+        AsyncStorage.removeItem('authToken'),
+        AsyncStorage.removeItem('pushToken'),
+        AsyncStorage.removeItem('notificationPermissionRequested'),
+        AsyncStorage.removeItem('userData')
+      ]);
+      console.log('AsyncStorage cleared'); // Debug log
+
+      // Reset state
       setUser(null);
       setToken(null);
       setIsLoggedIn(false);
+      console.log('State reset complete'); // Debug log
     } catch (error) {
       console.error('Error during logout:', error);
     }
   };
+
+  const requestNotificationPermission = async () => {
+    try {
+      console.log('Starting notification permission request...'); // Debug log
+      const hasRequestedBefore = await AsyncStorage.getItem('notificationPermissionRequested');
+      console.log('Has requested before:', hasRequestedBefore); // Debug log
+
+      if (!hasRequestedBefore) {
+        console.log('Requesting new token...'); // Debug log
+        const token = await registerForPushNotificationsAsync();
+        console.log('Received token:', token); // Debug log
+
+        if (token) {
+          try {
+            // Store both flags when we successfully get a token
+            await AsyncStorage.setItem('pushToken', token);
+            console.log('Push token stored in AsyncStorage'); // Debug log
+            
+            await AsyncStorage.setItem('notificationPermissionRequested', 'true');
+            console.log('Permission flag stored in AsyncStorage'); // Debug log
+
+            // Verify storage
+            const storedToken = await AsyncStorage.getItem('pushToken');
+            console.log('Verified stored token:', storedToken); // Debug log
+          } catch (storageError) {
+            console.error('Error storing token in AsyncStorage:', storageError);
+          }
+        }
+      } else {
+        // Check if we have a stored token even though we requested before
+        const existingToken = await AsyncStorage.getItem('pushToken');
+        console.log('Existing token found:', existingToken); // Debug log
+        
+        if (!existingToken) {
+          console.log('No token found, requesting new one despite previous request'); // Debug log
+          const token = await registerForPushNotificationsAsync();
+          if (token) {
+            await AsyncStorage.setItem('pushToken', token);
+            console.log('New token stored:', token); // Debug log
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error in requestNotificationPermission:', error);
+    }
+  };
+
   const handleRegister = async (username, email, password) => {
     try {
       const { token, user } = await registerUser(username, email, password);
@@ -82,6 +171,7 @@ const GlobalProvider = ({ children }) => {
       setToken(token);
       setUser(user);
       setIsLoggedIn(true);
+      requestNotificationPermission();
     } catch (error) {
       throw error;
     }
@@ -94,6 +184,7 @@ const GlobalProvider = ({ children }) => {
       setToken(token);
       setUser(user);
       setIsLoggedIn(true);
+      requestNotificationPermission();
     } catch (error) {
       throw error;
     }
@@ -104,42 +195,62 @@ const GlobalProvider = ({ children }) => {
       await GoogleSignin.hasPlayServices();
       const response = await GoogleSignin.signIn();
 
+      // Check if we have a valid response and user data
+      if (!response?.data?.user) {
+        console.log('Google Sign-in was cancelled or failed');
+        return;
+      }
+
       const user = response.data.user;
       const { id, name, email, photo } = user;
 
+      // Validate required fields
+      if (!id || !name || !email) {
+        console.error('Missing required user data from Google');
+        return;
+      }
+
       setIsLoading(true);
 
-      const result = await axios.post('https://balkanflix-server.vercel.app/api/auth/google', {
+      try {
+        const result = await axios.post('https://balkanflix-server.vercel.app/api/auth/google', {
           _id: id,
           username: name,
           email,
           pfp: photo,
           isVerified: true,
-      });
+        });
 
-      setIsLoading(false)
-    
-      if (result.status === 200) {
-        console.log("User authenticated and saved/updated in DB");   
-        
-        const { token, userGoogle } = result.data;
-        await AsyncStorage.setItem('authToken', token);
-        setToken(token);
-        setUser(userGoogle);
-        setIsLoggedIn(true)
+        if (result.status === 200) {
+          console.log("User authenticated and saved/updated in DB");   
+          
+          const { token, userGoogle } = result.data;
+          await AsyncStorage.setItem('authToken', token);
+          setToken(token);
+          setUser(userGoogle);
+          setIsLoggedIn(true);
+          requestNotificationPermission();
+        }
+      } catch (error) {
+        console.error('Error during Google authentication:', error);
+        throw error;
+      } finally {
+        setIsLoading(false);
       }
     } catch (error) {
-        setIsLoading(false);
+      setIsLoading(false);
 
-        if (error.code === statusCodes.IN_PROGRESS) {
-          console.log("Google Sign-in already in progress");
-        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-          console.log("Google Play Services not available");
-        } else {
-          console.error("Google Sign-in error:", error);
-        }
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log("User cancelled the login flow");
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log("Google Sign-in already in progress");
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log("Google Play Services not available");
+      } else {
+        console.error("Google Sign-in error:", error);
       }
-  }
+    }
+  };
   
   return (
     <GlobalContext.Provider
