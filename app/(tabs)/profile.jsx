@@ -2,6 +2,7 @@ import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalContext } from './../../context/GlobalProvider';
 import { Link, router } from "expo-router";
+import { logoutUser } from '../../lib/apiControllers';
 import { Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import InfoBox from './../../components/InfoBox';
 

@@ -136,7 +136,7 @@ export default function NotificationDemo() {
   );
 }
 
-async function sendTokenToBackend(token) {
+export async function sendTokenToBackend(token, userId = null) {
   if (!token) return;
 
   try {
@@ -147,7 +147,7 @@ async function sendTokenToBackend(token) {
       body: JSON.stringify({ 
         token,
         deviceInfo,
-        userId: null // This matches your backend expectation
+        userId
       }),
     });
 
@@ -163,7 +163,7 @@ async function sendTokenToBackend(token) {
   }
 }
 
-export async function registerForPushNotificationsAsync() {
+export async function registerForPushNotificationsAsync(userId = null) {
   try {
     // Check if it's a physical device (notifications won't work in simulator)
     if (!Device.isDevice) {
@@ -187,17 +187,27 @@ export async function registerForPushNotificationsAsync() {
       return null;
     }
 
-    // Get the project ID safely
+    // Get the project ID from app.json
     const projectId = '9ba83abf-086c-461b-8613-9957ac12cb7b'; // Hardcoded from app.json
     console.log('Using project ID:', projectId);
 
     // Get the push token
     try {
       console.log('Requesting push token with project ID:', projectId);
-      const tokenData = await Notifications.getExpoPushTokenAsync({
-        projectId: projectId,
-        devicePushToken: undefined // Let Expo handle this
-      });
+      
+      // Try to get the token with different methods
+      let tokenData;
+      try {
+        // First try with the recommended method
+        tokenData = await Notifications.getExpoPushTokenAsync({
+          projectId: projectId,
+        });
+      } catch (error) {
+        console.log('Error with first token method, trying fallback:', error.message);
+        // Fallback to the older method
+        tokenData = await Notifications.getExpoPushTokenAsync();
+      }
+      
       const token = tokenData.data;
       
       // Verify token format
@@ -209,10 +219,13 @@ export async function registerForPushNotificationsAsync() {
 
       console.log('Successfully generated push token:', token);
       console.log('Token type:', tokenData.type);
-      console.log('Full token data:', tokenData);
       
-      // Send token to backend
-      const backendResponse = await sendTokenToBackend(token);
+      // Store the token in AsyncStorage
+      await AsyncStorage.setItem('pushToken', token);
+      console.log('Token stored in AsyncStorage');
+      
+      // Send token to backend with userId if available
+      const backendResponse = await sendTokenToBackend(token, userId);
       console.log('Backend response:', backendResponse);
       
       return token;

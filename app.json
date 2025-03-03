@@ -47,7 +47,8 @@
         {
           "iosUrlScheme": "com.googleusercontent.apps.140537177807-vc2dto6ikkvj69rvkpv1t3a47oijhn7o"
         }
-      ]
+      ],
+      "expo-notifications"
     ],
     "extra": {
       "eas": {
