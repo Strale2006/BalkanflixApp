@@ -39,11 +39,6 @@ const RootLayout = () => {
                 <Stack.Screen name="details/[title]" options={{ headerShown: false }} />
                 <Stack.Screen name="[title]/[ep]" options={{ headerShown: false }} />
                 <Stack.Screen name="profileModal" options={{ headerShown: false, presentation: 'modal' }} />
-                <Stack.Screen name="notificationTest" options={{ 
-                    headerShown: true,
-                    title: 'Test Notifications',
-                    presentation: 'modal'
-                }} />
             </Stack>
         </GlobalProvider>
     );
