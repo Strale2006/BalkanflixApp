@@ -11,8 +11,31 @@ Notifications.setNotificationHandler({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
+    priority: 'high',
   }),
 });
+
+// Set up background handler
+Notifications.setNotificationChannelAsync('default', {
+  name: 'default',
+  importance: Notifications.AndroidImportance.MAX,
+  vibrationPattern: [0, 250, 250, 250],
+  lightColor: '#FF231F7C',
+});
+
+// Handle background notifications
+const backgroundNotificationHandler = async () => {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      priority: 'high',
+    }),
+  });
+};
+
+Notifications.registerTaskAsync('BACKGROUND_NOTIFICATION_TASK', backgroundNotificationHandler);
 
 // This is an example component to demonstrate push notifications
 export default function NotificationDemo() {
@@ -26,24 +49,44 @@ export default function NotificationDemo() {
     registerForPushNotificationsAsync().then(token => {
       if (token) {
         setExpoPushToken(token);
-        console.log('Token in demo component:', token); // Debug token in component
+        console.log('Token in demo component:', token);
       }
     });
 
+    // Set up notification channel for Android
     if (Platform.OS === 'android') {
-      Notifications.getNotificationChannelsAsync().then(value => {
-        setChannels(value || []);
-        console.log('Android notification channels:', value); // Debug channels
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      }).then(() => {
+        Notifications.getNotificationChannelsAsync().then(value => {
+          setChannels(value || []);
+          console.log('Android notification channels:', value);
+        });
       });
     }
 
-    notificationListener.current = Notifications.addNotificationReceivedListener(notif => {
-      console.log('Received notification:', notif); // Debug received notification
-      setNotification(notif);
+    // Listen for incoming notifications
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      console.log('Received notification:', notification);
+      setNotification(notification);
     });
 
+    // Listen for notification interactions
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log('User interacted with notification:', response); // Debug user interaction
+      console.log('User interacted with notification:', response);
+      const url = response.notification.request.content.data?.url;
+      if (url) {
+        // Handle navigation if needed
+        console.log('Navigation URL:', url);
+      }
+    });
+
+    // Set up background notification handler
+    const backgroundSubscription = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log('Background notification response:', response);
     });
 
     return () => {
@@ -53,6 +96,7 @@ export default function NotificationDemo() {
       if (responseListener.current) {
         Notifications.removeNotificationSubscription(responseListener.current);
       }
+      Notifications.removeNotificationSubscription(backgroundSubscription);
     };
   }, []);
 

@@ -32,7 +32,12 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.balkanflix.app",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true,
+      "googleSignIn": {
+        "apiKey": "YOUR_API_KEY_FROM_GOOGLE_SERVICES",
+        "certificateHash": "YOUR_SHA1_FROM_GOOGLE_SERVICES"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -45,6 +50,17 @@
         "@react-native-google-signin/google-signin",
         {
           "iosUrlScheme": "com.googleusercontent.apps.140537177807-vc2dto6ikkvj69rvkpv1t3a47oijhn7o"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#ffffff",
+          "sounds": ["./assets/notification-sound.wav"],
+          "androidMode": "default",
+          "androidCollapsedTitle": "#{unread_notifications} new messages",
+          "iosDisplayInForeground": true
         }
       ]
     ],
