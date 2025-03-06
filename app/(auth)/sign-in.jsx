@@ -43,8 +43,10 @@ const SignIn = () => {
   const submitGoogle = async () => {
     setIsSubmitting(true);
     try {
-      await handleGoogleLogin();
-      router.replace('/home');
+      const success = await handleGoogleLogin();
+      if (success) {
+        router.replace('/home');
+      }
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {

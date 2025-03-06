@@ -10,6 +10,13 @@ const SearchInput = ({ initialQuery, onSearch }) => {
     setQuery(initialQuery || '');
   }, [initialQuery]);
 
+  // // Trigger search for every second letter
+  // useEffect(() => {
+  //   if (query.length > 0 && query.length % 2 === 0) {
+  //     onSearch(query);
+  //   }
+  // }, [query]);
+
   const handleSearch = () => {
     // if (!query.trim()) {
     //   Alert.alert('Ništa nije uneto', 

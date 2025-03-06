@@ -233,7 +233,7 @@ const GlobalProvider = ({ children }) => {
       // Check if we have a valid response and user data
       if (!response?.data?.user) {
         console.log('Google Sign-in was cancelled or failed');
-        return;
+        return false; // Return false to indicate login failed
       }
 
       const user = response.data.user;
@@ -242,7 +242,7 @@ const GlobalProvider = ({ children }) => {
       // Validate required fields
       if (!id || !name || !email) {
         console.error('Missing required user data from Google');
-        return;
+        return false; // Return false to indicate login failed
       }
 
       setIsLoading(true);
@@ -274,7 +274,9 @@ const GlobalProvider = ({ children }) => {
             console.log('Updating push token with user ID after Google login');
             await sendTokenToBackend(existingToken, userGoogle._id);
           }
+          return true; // Return true to indicate successful login
         }
+        return false; // Return false if status is not 200
       } catch (error) {
         console.error('Error during Google authentication:', error);
         throw error;
@@ -293,6 +295,7 @@ const GlobalProvider = ({ children }) => {
       } else {
         console.error("Google Sign-in error:", error);
       }
+      return false; // Return false for any error case
     }
   };
   

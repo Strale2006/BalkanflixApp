@@ -37,7 +37,7 @@ const MainHome = () => {
         axios.get('https://balkanflix-server.vercel.app/api/episode/newest')
       ]);
 
-      console.log('Fetched Episodes:', episodesRes.data);
+      // console.log('Fetched Episodes:', episodesRes.data);
   
       // Validate and transform data
       setTopUsers((topUsersRes.data?.topUsers || []).slice(0, 5));

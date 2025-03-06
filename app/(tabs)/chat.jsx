@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Image, Alert, KeyboardAvoidingView, Platform  } from 'react-native';
 import { client, databases, appwriteConfig } from '../../lib/appwrite';
@@ -146,6 +145,47 @@ const Chat = () => {
     setIsUserScrolling(false);
   };
 
+  // Add this new function to process message text and detect mentions
+  const processMessageText = (text) => {
+    if (!text) return null;
+    
+    const mentionRegex = /@(\w+)/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = mentionRegex.exec(text)) !== null) {
+      // Add text before the mention
+      if (match.index > lastIndex) {
+        parts.push(
+          <Text key={`text-${lastIndex}`} className="text-white">
+            {text.slice(lastIndex, match.index)}
+          </Text>
+        );
+      }
+
+      // Add the mention with special styling
+      parts.push(
+        <Text key={`mention-${match.index}`} className="text-blue-400 font-pbold">
+          {match[0]}
+        </Text>
+      );
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    // Add any remaining text
+    if (lastIndex < text.length) {
+      parts.push(
+        <Text key={`text-${lastIndex}`} className="text-white">
+          {text.slice(lastIndex)}
+        </Text>
+      );
+    }
+
+    return parts;
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -165,9 +205,13 @@ const Chat = () => {
                 <Text className="text-lg text-white font-pbold mr-2">{item.username}</Text>
                 <Text className="text-sm text-gray-300 font-psemibold mr-2">{formatTime(item.$createdAt)}</Text>
               </View>
-              <Text className={`p-3 ${
+              <View className={`p-3 ${
                 item.username === user?.username ? 'self-end bg-blue-500' : 'self-start bg-[#22293E]'
-              } rounded-3xl ml-2 mr-2 mt-1 mb-3 text-white font-psemibold`}>{item.body}</Text>
+              } rounded-3xl ml-2 mr-2 mt-1 mb-3`}>
+                <Text className="text-white font-psemibold">
+                  {processMessageText(item.body)}
+                </Text>
+              </View>
             </View>
           )}
           ref={messagesEndRef}

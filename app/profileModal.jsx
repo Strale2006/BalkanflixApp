@@ -134,6 +134,13 @@ export const ChangeInfoForm = () => {
   // Global context to obtain auth token and optionally update user info
   const { token, setUser, user } = useGlobalContext();
 
+  // Initialize pfp state with user's current profile picture
+  useEffect(() => {
+    if (user?.pfp) {
+      setPfp(user.pfp);
+    }
+  }, [user?.pfp]);
+
   // Toggle profile picture selection modal
   const togglePfpModal = () => {
     setPfpModalOpen(!pfpModalOpen);
@@ -190,11 +197,14 @@ export const ChangeInfoForm = () => {
   const fetchUser = useCallback(async () => {
     try {
       const { data } = await axios.get("https://balkanflix-server.vercel.app/api/private", config);
-      setPfp(data.pfp);
+      // Only set pfp if it hasn't been changed by the user
+      if (!newPfp) {
+        setPfp(data.pfp);
+      }
     } catch (error) {
       console.error("Server error", error);
     }
-  }, [config]);
+  }, [config, newPfp]);
 
   useEffect(() => {
     fetchUser();
@@ -214,17 +224,20 @@ export const ChangeInfoForm = () => {
         updateData,
         config
       );
-      // Optionally update global user info here if needed:
+      
+      // Update global user state and AsyncStorage
       if (response.data?.user) {
         setUser(response.data.user);
         await AsyncStorage.setItem('userData', JSON.stringify(response.data.user));
       }
+      
       // Reset local form state
       setNewUsername("");
       setNewEmail("");
       setNewPfp(null);
-      // Instead of reloading the window, navigate back
-      router.replace("/profile");
+      
+      // Navigate back to profile page
+      router.back();
       return response;
     } catch (error) {
       console.error("Error updating profile:", error);
