@@ -266,14 +266,20 @@ const GlobalProvider = ({ children }) => {
           setIsLoggedIn(true);
           
           // Request notification permission and update token with user ID
-          await requestNotificationPermission();
-          
-          // Also update any existing token with the user ID
-          const existingToken = await AsyncStorage.getItem('pushToken');
-          if (existingToken && userGoogle?._id) {
-            console.log('Updating push token with user ID after Google login');
-            await sendTokenToBackend(existingToken, userGoogle._id);
+          if (userGoogle?._id) {
+            console.log('Registering push token with user ID:', userGoogle._id);
+            await requestNotificationPermission();
+            
+            // Also update any existing token with the user ID
+            const existingToken = await AsyncStorage.getItem('pushToken');
+            if (existingToken) {
+              console.log('Updating existing push token with user ID after Google login');
+              await sendTokenToBackend(existingToken, userGoogle._id);
+            }
+          } else {
+            console.error('No user ID available after Google login');
           }
+          
           return true; // Return true to indicate successful login
         }
         return false; // Return false if status is not 200

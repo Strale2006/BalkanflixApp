@@ -141,22 +141,26 @@ export async function sendTokenToBackend(token, userId = null) {
 
   try {
     const deviceInfo = Platform.OS;
+    console.log('Sending token to backend with userId:', userId); // Debug log
+    
     const response = await fetch('https://balkanflix-server.vercel.app/api/push-tokens/add', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         token,
         deviceInfo,
-        userId
+        user: userId // Changed from userId to user to match backend schema
       }),
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Failed to send token to backend:', errorText);
       throw new Error('Network response was not ok');
     }
 
     const data = await response.json();
-    console.log('Push token successfully sent to backend');
+    console.log('Push token successfully sent to backend with response:', data);
     return data;
   } catch (error) {
     console.error('Error sending token to backend:', error);
@@ -225,10 +229,22 @@ export async function registerForPushNotificationsAsync(userId = null) {
       console.log('Token stored in AsyncStorage');
       
       // Send token to backend with userId if available
-      const backendResponse = await sendTokenToBackend(token, userId);
-      console.log('Backend response:', backendResponse);
-      
-      return token;
+      if (userId) {
+        console.log('Sending token to backend with userId:', userId);
+        const backendResponse = await sendTokenToBackend(token, userId);
+        console.log('Backend response for token registration:', backendResponse);
+        
+        // Only return the token if backend registration was successful
+        if (backendResponse) {
+          return token;
+        } else {
+          console.error('Failed to register token with backend');
+          return null;
+        }
+      } else {
+        // If no userId, just return the token
+        return token;
+      }
     } catch (error) {
       console.error('Error getting push token:', error);
       if (error.code) {
