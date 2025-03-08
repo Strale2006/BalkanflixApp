@@ -194,6 +194,7 @@ const GlobalProvider = ({ children }) => {
       const pushToken = await registerForPushNotificationsAsync(user._id);
       if (pushToken) {
         await AsyncStorage.setItem('pushToken', pushToken);
+        await AsyncStorage.setItem('pushTokenTimestamp', Date.now().toString());
         console.log('Push token stored for new user');
       }
     } catch (error) {
@@ -214,6 +215,7 @@ const GlobalProvider = ({ children }) => {
       const pushToken = await registerForPushNotificationsAsync(user._id);
       if (pushToken) {
         await AsyncStorage.setItem('pushToken', pushToken);
+        await AsyncStorage.setItem('pushTokenTimestamp', Date.now().toString());
         console.log('Push token stored for logged in user');
       }
     } catch (error) {
@@ -255,18 +257,19 @@ const GlobalProvider = ({ children }) => {
         if (result.status === 200) {
           console.log("User authenticated and saved/updated in DB");   
           
-          const { token, userGoogle } = result.data;
+          const { token, user } = result.data;
           await AsyncStorage.setItem('authToken', token);
           setToken(token);
-          setUser(userGoogle);
+          setUser(user);
           setIsLoggedIn(true);
           
           // Get push notification token with the Google user ID
-          if (userGoogle?._id) {
-            console.log('Requesting push notification token for Google user:', userGoogle._id);
-            const pushToken = await registerForPushNotificationsAsync(userGoogle._id);
+          if (user?._id) {
+            console.log('Requesting push notification token for Google user:', user._id);
+            const pushToken = await registerForPushNotificationsAsync(user._id);
             if (pushToken) {
               await AsyncStorage.setItem('pushToken', pushToken);
+              await AsyncStorage.setItem('pushTokenTimestamp', Date.now().toString());
               console.log('Push token stored for Google user');
             }
           } else {

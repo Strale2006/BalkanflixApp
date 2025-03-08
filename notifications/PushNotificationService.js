@@ -136,35 +136,32 @@ export default function NotificationDemo() {
   );
 }
 
-export async function sendTokenToBackend(token, userId = null, retryCount = 3) {
+export async function sendTokenToBackend(token, userId = null) {
   if (!token) return;
 
   try {
     const deviceInfo = Platform.OS;
     console.log('Sending token to backend with userId:', userId); // Debug log
     
+    // Ensure we're sending the correct format
+    const payload = {
+      token,
+      deviceInfo,
+      user: userId  // This should be the MongoDB _id
+    };
+    
+    console.log('Sending payload to backend:', payload); // Debug log
+    
     const response = await fetch('https://balkanflix-server.vercel.app/api/push-tokens/add', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        token,
-        deviceInfo,
-        user: userId
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Failed to send token to backend:', errorText);
-      
-      // Retry logic
-      if (retryCount > 0) {
-        console.log(`Retrying token registration. Attempts remaining: ${retryCount - 1}`);
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retry
-        return sendTokenToBackend(token, userId, retryCount - 1);
-      }
-      
-      throw new Error('Network response was not ok');
+      return null;
     }
 
     const data = await response.json();
@@ -172,14 +169,6 @@ export async function sendTokenToBackend(token, userId = null, retryCount = 3) {
     return data;
   } catch (error) {
     console.error('Error sending token to backend:', error);
-    
-    // Retry on network errors
-    if (retryCount > 0 && (error.message.includes('Network') || error.message.includes('Failed to fetch'))) {
-      console.log(`Retrying after network error. Attempts remaining: ${retryCount - 1}`);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return sendTokenToBackend(token, userId, retryCount - 1);
-    }
-    
     return null;
   }
 }
