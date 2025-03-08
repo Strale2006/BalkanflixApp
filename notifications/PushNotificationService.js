@@ -137,20 +137,23 @@ export default function NotificationDemo() {
 }
 
 export async function sendTokenToBackend(token, userId = null) {
-  if (!token) return;
+  if (!token) return null;
+  if (!userId) {
+    console.error('No user ID provided for token registration');
+    return null;
+  }
 
   try {
     const deviceInfo = Platform.OS;
-    console.log('Sending token to backend with userId:', userId); // Debug log
+    console.log('Sending token to backend with userId:', userId);
     
-    // Ensure we're sending the correct format
     const payload = {
       token,
       deviceInfo,
-      user: userId  // This should be the MongoDB _id
+      userId
     };
     
-    console.log('Sending payload to backend:', payload); // Debug log
+    console.log('Sending payload to backend:', payload);
     
     const response = await fetch('https://balkanflix-server.vercel.app/api/push-tokens/add', {
       method: 'POST',
@@ -166,6 +169,13 @@ export async function sendTokenToBackend(token, userId = null) {
 
     const data = await response.json();
     console.log('Push token successfully sent to backend with response:', data);
+    
+    // Verify the response contains the user ID
+    if (!data.pushToken?.user) {
+      console.error('Backend response missing user ID');
+      return null;
+    }
+    
     return data;
   } catch (error) {
     console.error('Error sending token to backend:', error);
@@ -234,9 +244,24 @@ export async function registerForPushNotificationsAsync(userId = null) {
       await AsyncStorage.setItem('pushToken', token);
       console.log('Token stored in AsyncStorage');
       
-      // Send token to backend with userId if available
-      const backendResponse = await sendTokenToBackend(token, userId);
-      console.log('Backend response:', backendResponse);
+      // Only proceed with backend registration if we have a userId
+      if (userId) {
+        console.log('Registering token with userId:', userId);
+        const backendResponse = await sendTokenToBackend(token, userId);
+        
+        if (!backendResponse) {
+          console.error('Failed to register token with backend');
+          return null;
+        }
+        
+        // Verify the backend response has the correct user ID
+        if (backendResponse.pushToken?.user !== userId) {
+          console.error('Backend response user ID mismatch:', backendResponse.pushToken?.user, 'expected:', userId);
+          return null;
+        }
+        
+        console.log('Token successfully registered with user:', userId);
+      }
       
       return token;
     } catch (error) {
