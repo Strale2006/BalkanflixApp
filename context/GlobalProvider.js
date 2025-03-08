@@ -67,8 +67,23 @@ const GlobalProvider = ({ children }) => {
       const storeUserData = async () => {
         try {
           await AsyncStorage.setItem('userData', JSON.stringify(user));
+          
+          // Check if we need to refresh the push token
+          const tokenTimestamp = await AsyncStorage.getItem('pushTokenTimestamp');
+          const now = Date.now();
+          
+          // Refresh token if it's older than 7 days or doesn't have a timestamp
+          if (!tokenTimestamp || (now - parseInt(tokenTimestamp)) > 7 * 24 * 60 * 60 * 1000) {
+            console.log('Push token expired or missing timestamp, requesting new one');
+            const pushToken = await registerForPushNotificationsAsync(user._id);
+            if (pushToken) {
+              await AsyncStorage.setItem('pushToken', pushToken);
+              await AsyncStorage.setItem('pushTokenTimestamp', now.toString());
+              console.log('Push token refreshed and timestamp updated');
+            }
+          }
         } catch (error) {
-          console.error('Error storing user data:', error);
+          console.error('Error in user effect:', error);
         }
       };
       storeUserData();
@@ -113,7 +128,8 @@ const GlobalProvider = ({ children }) => {
         AsyncStorage.removeItem('authToken'),
         AsyncStorage.removeItem('pushToken'),
         AsyncStorage.removeItem('notificationPermissionRequested'),
-        AsyncStorage.removeItem('userData')
+        AsyncStorage.removeItem('userData'),
+        AsyncStorage.removeItem('pushTokenTimestamp')
       ]);
       console.log('AsyncStorage cleared'); // Debug log
 
@@ -130,51 +146,35 @@ const GlobalProvider = ({ children }) => {
   const requestNotificationPermission = async () => {
     try {
       console.log('Starting notification permission request...'); // Debug log
-      const hasRequestedBefore = await AsyncStorage.getItem('notificationPermissionRequested');
-      console.log('Has requested before:', hasRequestedBefore); // Debug log
-
+      
       // Get the current user ID if available
       const userId = user?._id;
       console.log('Current user ID for push notification:', userId); // Debug log
 
-      if (!hasRequestedBefore) {
-        console.log('Requesting new token...'); // Debug log
-        const token = await registerForPushNotificationsAsync(userId);
-        console.log('Received token:', token); // Debug log
+      // Always try to get a token
+      console.log('Requesting new token...'); // Debug log
+      const token = await registerForPushNotificationsAsync(userId);
+      console.log('Received token:', token); // Debug log
 
-        if (token) {
-          try {
-            // Store both flags when we successfully get a token
-            await AsyncStorage.setItem('pushToken', token);
-            console.log('Push token stored in AsyncStorage'); // Debug log
-            
-            await AsyncStorage.setItem('notificationPermissionRequested', 'true');
-            console.log('Permission flag stored in AsyncStorage'); // Debug log
+      if (token) {
+        try {
+          await AsyncStorage.setItem('pushToken', token);
+          console.log('Push token stored in AsyncStorage'); // Debug log
+          
+          // Verify storage
+          const storedToken = await AsyncStorage.getItem('pushToken');
+          console.log('Verified stored token:', storedToken); // Debug log
 
-            // Verify storage
-            const storedToken = await AsyncStorage.getItem('pushToken');
-            console.log('Verified stored token:', storedToken); // Debug log
-          } catch (storageError) {
-            console.error('Error storing token in AsyncStorage:', storageError);
+          // If we have a user ID, ensure the token is registered with the user
+          if (userId) {
+            console.log('Registering token with user ID:', userId);
+            await sendTokenToBackend(token, userId);
           }
+        } catch (storageError) {
+          console.error('Error storing token in AsyncStorage:', storageError);
         }
       } else {
-        // Check if we have a stored token even though we requested before
-        const existingToken = await AsyncStorage.getItem('pushToken');
-        console.log('Existing token found:', existingToken); // Debug log
-        
-        if (!existingToken) {
-          console.log('No token found, requesting new one despite previous request'); // Debug log
-          const token = await registerForPushNotificationsAsync(userId);
-          if (token) {
-            await AsyncStorage.setItem('pushToken', token);
-            console.log('New token stored:', token); // Debug log
-          }
-        } else if (userId) {
-          // If we have a token and a user ID, update the token with the user ID
-          console.log('Updating existing token with user ID:', userId);
-          await sendTokenToBackend(existingToken, userId);
-        }
+        console.error('Failed to get push token');
       }
     } catch (error) {
       console.error('Error in requestNotificationPermission:', error);
@@ -189,14 +189,12 @@ const GlobalProvider = ({ children }) => {
       setUser(user);
       setIsLoggedIn(true);
       
-      // Request notification permission and update token with user ID
-      await requestNotificationPermission();
-      
-      // Also update any existing token with the user ID
-      const existingToken = await AsyncStorage.getItem('pushToken');
-      if (existingToken && user?._id) {
-        console.log('Updating push token with new user ID after registration');
-        await sendTokenToBackend(existingToken, user._id);
+      // Get push notification token with the new user ID
+      console.log('Requesting push notification token for new user:', user._id);
+      const pushToken = await registerForPushNotificationsAsync(user._id);
+      if (pushToken) {
+        await AsyncStorage.setItem('pushToken', pushToken);
+        console.log('Push token stored for new user');
       }
     } catch (error) {
       throw error;
@@ -211,14 +209,12 @@ const GlobalProvider = ({ children }) => {
       setUser(user);
       setIsLoggedIn(true);
       
-      // Request notification permission and update token with user ID
-      await requestNotificationPermission();
-      
-      // Also update any existing token with the user ID
-      const existingToken = await AsyncStorage.getItem('pushToken');
-      if (existingToken && user?._id) {
-        console.log('Updating push token with user ID after login');
-        await sendTokenToBackend(existingToken, user._id);
+      // Get push notification token with the user ID
+      console.log('Requesting push notification token for logged in user:', user._id);
+      const pushToken = await registerForPushNotificationsAsync(user._id);
+      if (pushToken) {
+        await AsyncStorage.setItem('pushToken', pushToken);
+        console.log('Push token stored for logged in user');
       }
     } catch (error) {
       throw error;
@@ -233,7 +229,7 @@ const GlobalProvider = ({ children }) => {
       // Check if we have a valid response and user data
       if (!response?.data?.user) {
         console.log('Google Sign-in was cancelled or failed');
-        return false; // Return false to indicate login failed
+        return false;
       }
 
       const user = response.data.user;
@@ -242,7 +238,7 @@ const GlobalProvider = ({ children }) => {
       // Validate required fields
       if (!id || !name || !email) {
         console.error('Missing required user data from Google');
-        return false; // Return false to indicate login failed
+        return false;
       }
 
       setIsLoading(true);
@@ -265,24 +261,21 @@ const GlobalProvider = ({ children }) => {
           setUser(userGoogle);
           setIsLoggedIn(true);
           
-          // Request notification permission and update token with user ID
+          // Get push notification token with the Google user ID
           if (userGoogle?._id) {
-            console.log('Registering push token with user ID:', userGoogle._id);
-            await requestNotificationPermission();
-            
-            // Also update any existing token with the user ID
-            const existingToken = await AsyncStorage.getItem('pushToken');
-            if (existingToken) {
-              console.log('Updating existing push token with user ID after Google login');
-              await sendTokenToBackend(existingToken, userGoogle._id);
+            console.log('Requesting push notification token for Google user:', userGoogle._id);
+            const pushToken = await registerForPushNotificationsAsync(userGoogle._id);
+            if (pushToken) {
+              await AsyncStorage.setItem('pushToken', pushToken);
+              console.log('Push token stored for Google user');
             }
           } else {
             console.error('No user ID available after Google login');
           }
           
-          return true; // Return true to indicate successful login
+          return true;
         }
-        return false; // Return false if status is not 200
+        return false;
       } catch (error) {
         console.error('Error during Google authentication:', error);
         throw error;
@@ -301,7 +294,7 @@ const GlobalProvider = ({ children }) => {
       } else {
         console.error("Google Sign-in error:", error);
       }
-      return false; // Return false for any error case
+      return false;
     }
   };
   

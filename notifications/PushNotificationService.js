@@ -136,7 +136,7 @@ export default function NotificationDemo() {
   );
 }
 
-export async function sendTokenToBackend(token, userId = null) {
+export async function sendTokenToBackend(token, userId = null, retryCount = 3) {
   if (!token) return;
 
   try {
@@ -149,13 +149,21 @@ export async function sendTokenToBackend(token, userId = null) {
       body: JSON.stringify({ 
         token,
         deviceInfo,
-        user: userId // Changed from userId to user to match backend schema
+        user: userId
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Failed to send token to backend:', errorText);
+      
+      // Retry logic
+      if (retryCount > 0) {
+        console.log(`Retrying token registration. Attempts remaining: ${retryCount - 1}`);
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retry
+        return sendTokenToBackend(token, userId, retryCount - 1);
+      }
+      
       throw new Error('Network response was not ok');
     }
 
@@ -164,6 +172,15 @@ export async function sendTokenToBackend(token, userId = null) {
     return data;
   } catch (error) {
     console.error('Error sending token to backend:', error);
+    
+    // Retry on network errors
+    if (retryCount > 0 && (error.message.includes('Network') || error.message.includes('Failed to fetch'))) {
+      console.log(`Retrying after network error. Attempts remaining: ${retryCount - 1}`);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return sendTokenToBackend(token, userId, retryCount - 1);
+    }
+    
+    return null;
   }
 }
 
@@ -229,22 +246,10 @@ export async function registerForPushNotificationsAsync(userId = null) {
       console.log('Token stored in AsyncStorage');
       
       // Send token to backend with userId if available
-      if (userId) {
-        console.log('Sending token to backend with userId:', userId);
-        const backendResponse = await sendTokenToBackend(token, userId);
-        console.log('Backend response for token registration:', backendResponse);
-        
-        // Only return the token if backend registration was successful
-        if (backendResponse) {
-          return token;
-        } else {
-          console.error('Failed to register token with backend');
-          return null;
-        }
-      } else {
-        // If no userId, just return the token
-        return token;
-      }
+      const backendResponse = await sendTokenToBackend(token, userId);
+      console.log('Backend response:', backendResponse);
+      
+      return token;
     } catch (error) {
       console.error('Error getting push token:', error);
       if (error.code) {
