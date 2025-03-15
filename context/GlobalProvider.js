@@ -8,7 +8,7 @@ import { registerForPushNotificationsAsync, sendTokenToBackend } from '../notifi
 
 GoogleSignin.configure({
   webClientId: '213162142911-3mmlgpbh3k37h29mtoi2h2f95v5m1qjf.apps.googleusercontent.com',
-  scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+  // scopes: ['https://www.googleapis.com/auth/drive.readonly'],
   offlineAccess: true,
   forceCodeForRefreshToken: false,
   iosClientId: '140537177807-vc2dto6ikkvj69rvkpv1t3a47oijhn7o.apps.googleusercontent.com'
