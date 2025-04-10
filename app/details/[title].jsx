@@ -31,37 +31,37 @@ const DetailsScreen = () => {
 
   useEffect(() => {
     if (!title) return;
-
+  
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`https://balkanflix-server.up.railway.app/api/content/seriesDetail/${encodedTitle}`);
-        // Add null check for series data
         if (data?.series?.[0]) {
           setSeriesData(data.series[0]);
-          fetchUserData(data.series[0]);
+          fetchUserData(data.series[0]); // Call user data once
         }
       } catch (error) {
         console.error("Error fetching series:", error);
       }
     };
-
+  
+    fetchData();
+  }, [title]);
+  
+  useEffect(() => {
+    if (!seriesData) return;
+  
     const fetchEpisodes = async () => {
       try {
-        const seriesTitle = seriesData?.title_params || encodedTitle;
-        const { data } = await axios.get(`https://balkanflix-server.up.railway.app/api/episode/episodeCount/${seriesTitle}`);
+        const { data } = await axios.get(`https://balkanflix-server.up.railway.app/api/episode/episodeCount/${seriesData.title_params}`);
         setEpisodes(data?.episode || []);
       } catch (error) {
         console.error("Error fetching episodes:", error);
       }
     };
-
-    fetchData();
-    // Only fetch episodes after series data is loaded
-    if (seriesData) {
-      fetchEpisodes();
-    }  
-  }, [title, seriesData]);
-
+  
+    fetchEpisodes();
+  }, [seriesData]);
+  
   const fetchUserData = async (series) => {
     if (!token) return;
     try {
