@@ -196,7 +196,7 @@ export const ChangeInfoForm = () => {
   // Optionally fetch the current user info to update PFP (if needed)
   const fetchUser = useCallback(async () => {
     try {
-      const { data } = await axios.get("https://balkanflix-server.vercel.app/api/private", config);
+      const { data } = await axios.get("https://balkanflix-server.up.railway.app/api/private", config);
       // Only set pfp if it hasn't been changed by the user
       if (!newPfp) {
         setPfp(data.pfp);
@@ -220,7 +220,7 @@ export const ChangeInfoForm = () => {
 
     try {
       const response = await axios.put(
-        "https://balkanflix-server.vercel.app/api/auth/updateProfile",
+        "https://balkanflix-server.up.railway.app/api/auth/updateProfile",
         updateData,
         config
       );

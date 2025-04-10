@@ -15,7 +15,7 @@ const Calendar = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get('https://balkanflix-server.vercel.app/api/schedule/animeCalendar');
+        const { data } = await axios.get('https://balkanflix-server.up.railway.app/api/schedule/animeCalendar');
         const convertedData = data.map(item => {
           return {
             ...item,

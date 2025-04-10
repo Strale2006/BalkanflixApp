@@ -56,7 +56,7 @@ const Episode = () => {
     try {
       const username = user.username;
       await axios.post(
-        'https://balkanflix-server.vercel.app/api/auth/watchedEpisodeFull',
+        'https://balkanflix-server.up.railway.app/api/auth/watchedEpisodeFull',
         { user: username, seriesTitle, episodeNumber, startTime, endTime },
         config
       );
@@ -69,7 +69,7 @@ const Episode = () => {
   useEffect(() => {
     const fetchSeriesData = async () => {
       try {
-        const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/content/series/${title}`);
+        const { data } = await axios.get(`https://balkanflix-server.up.railway.app/api/content/series/${title}`);
         setSeriesData(data.series);
         console.log('API RESPONSE:', data.series);
         
@@ -89,7 +89,7 @@ const Episode = () => {
   useEffect(() => {
     const fetchEpisodeData = async () => {
       try {
-        const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/episode/episodesInfo/${title}`);
+        const { data } = await axios.get(`https://balkanflix-server.up.railway.app/api/episode/episodesInfo/${title}`);
         const series = data.data;
         if (series) {
           const foundEp = series.episodes.find((episode) => episode.ep.toString() === ep);
@@ -121,7 +121,7 @@ const Episode = () => {
   useEffect(() => {
     const fetchEpCount = async () => {
       try {
-        const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/episode/episodeCount/${title}`);
+        const { data } = await axios.get(`https://balkanflix-server.up.railway.app/api/episode/episodeCount/${title}`);
         setEpisodes(data.episode);
       } catch (e) {
         console.log(e);
@@ -144,7 +144,7 @@ const Episode = () => {
     try {
       const username = user.username;
       await axios.post(
-        'https://balkanflix-server.vercel.app/api/auth/watchedEpisode',
+        'https://balkanflix-server.up.railway.app/api/auth/watchedEpisode',
         { user: username, seriesTitle, episodeNumber },
         config
       );
@@ -172,7 +172,7 @@ const Episode = () => {
 
   const updateEpisodeViews = async (titleParam, episodeNumber) => {
     try {
-      await axios.patch(`https://balkanflix-server.vercel.app/api/episode/episodeViews/${titleParam}/${episodeNumber}`);
+      await axios.patch(`https://balkanflix-server.up.railway.app/api/episode/episodeViews/${titleParam}/${episodeNumber}`);
     } catch (error) {
       console.error('Error updating episode views:', error);
     }

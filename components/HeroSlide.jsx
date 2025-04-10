@@ -44,7 +44,7 @@ const TopSlider = () => {
   useEffect(() => {
     const fetchSeries = async () => {
       try {
-        const { data } = await axios.get("https://balkanflix-server.vercel.app/api/content/seriesHeroMobile");
+        const { data } = await axios.get("https://balkanflix-server.up.railway.app/api/content/seriesHeroMobile");
         setSeries(data.series);
       } catch (error) {
         console.error("Greška pri učitavanju:", error);

@@ -15,7 +15,7 @@ const MovieList = ({ type }) => {
     const fetchSeries = async () => {
       setLoading(true);
       try {
-        const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/content/seriesList?sort=${type}`);
+        const { data } = await axios.get(`https://balkanflix-server.up.railway.app/api/content/seriesList?sort=${type}`);
         setItems(data.series);
       } catch (error) {
         console.error("Error fetching data: ", error);

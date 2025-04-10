@@ -33,8 +33,8 @@ const MainHome = () => {
   const fetchData = async () => {
     try {
       const [topUsersRes, episodesRes] = await Promise.all([
-        axios.get('https://balkanflix-server.vercel.app/api/auth/getTopUsersByEpisodesWatchedFull'),
-        axios.get('https://balkanflix-server.vercel.app/api/episode/newest')
+        axios.get('https://balkanflix-server.up.railway.app/api/auth/getTopUsersByEpisodesWatchedFull'),
+        axios.get('https://balkanflix-server.up.railway.app/api/episode/newest')
       ]);
 
       // console.log('Fetched Episodes:', episodesRes.data);

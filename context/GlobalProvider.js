@@ -102,7 +102,7 @@ const GlobalProvider = ({ children }) => {
       if (pushToken) {
         try {
           console.log('Attempting to remove token from backend:', pushToken); // Debug log
-          const response = await fetch('https://balkanflix-server.vercel.app/api/push-tokens/remove', {
+          const response = await fetch('https://balkanflix-server.up.railway.app/api/push-tokens/remove', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token: pushToken }),
@@ -246,7 +246,7 @@ const GlobalProvider = ({ children }) => {
       setIsLoading(true);
 
       try {
-        const result = await axios.post('https://balkanflix-server.vercel.app/api/auth/google', {
+        const result = await axios.post('https://balkanflix-server.up.railway.app/api/auth/google', {
           _id: id,
           username: name,
           email,

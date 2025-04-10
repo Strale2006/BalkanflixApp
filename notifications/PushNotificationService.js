@@ -155,7 +155,7 @@ export async function sendTokenToBackend(token, userId = null) {
     
     console.log('Sending payload to backend:', payload);
     
-    const response = await fetch('https://balkanflix-server.vercel.app/api/push-tokens/add', {
+    const response = await fetch('https://balkanflix-server.up.railway.app/api/push-tokens/add', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

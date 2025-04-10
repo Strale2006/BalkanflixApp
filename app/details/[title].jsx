@@ -34,7 +34,7 @@ const DetailsScreen = () => {
 
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/content/seriesDetail/${encodedTitle}`);
+        const { data } = await axios.get(`https://balkanflix-server.up.railway.app/api/content/seriesDetail/${encodedTitle}`);
         // Add null check for series data
         if (data?.series?.[0]) {
           setSeriesData(data.series[0]);
@@ -48,7 +48,7 @@ const DetailsScreen = () => {
     const fetchEpisodes = async () => {
       try {
         const seriesTitle = seriesData?.title_params || encodedTitle;
-        const { data } = await axios.get(`https://balkanflix-server.vercel.app/api/episode/episodeCount/${seriesTitle}`);
+        const { data } = await axios.get(`https://balkanflix-server.up.railway.app/api/episode/episodeCount/${seriesTitle}`);
         setEpisodes(data?.episode || []);
       } catch (error) {
         console.error("Error fetching episodes:", error);
@@ -65,7 +65,7 @@ const DetailsScreen = () => {
   const fetchUserData = async (series) => {
     if (!token) return;
     try {
-      const { data } = await axios.get('https://balkanflix-server.vercel.app/api/private', {
+      const { data } = await axios.get('https://balkanflix-server.up.railway.app/api/private', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setIsSaved(data.favorites.includes(series.title));
@@ -82,8 +82,8 @@ const DetailsScreen = () => {
     }
 
     const apiUrl = isSaved
-      ? 'https://balkanflix-server.vercel.app/api/auth/removeFavorite'
-      : 'https://balkanflix-server.vercel.app/api/auth/addFavorite';
+      ? 'https://balkanflix-server.up.railway.app/api/auth/removeFavorite'
+      : 'https://balkanflix-server.up.railway.app/api/auth/addFavorite';
 
     try {
       await axios.post(apiUrl, { title: seriesData?.title }, {

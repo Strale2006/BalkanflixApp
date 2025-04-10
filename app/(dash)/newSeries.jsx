@@ -43,7 +43,7 @@ const newSeries = () => {
 
     try {
       await axios.post(
-        'https://balkanflix-server.vercel.app/api/content/create',
+        'https://balkanflix-server.up.railway.app/api/content/create',
         { seriesCode: seriesMal, tmdbSeriesId: seriesTmdb }
       );
       showAlert('Anime successfully created!', 'success');
@@ -61,7 +61,7 @@ const newSeries = () => {
 
     try {
       await axios.post(
-        'https://balkanflix-server.vercel.app/api/content/createNoTMDB',
+        'https://balkanflix-server.up.railway.app/api/content/createNoTMDB',
         { seriesCode: seriesNoTmdb }
       );
       showAlert('Anime successfully created!', 'success');
@@ -79,7 +79,7 @@ const newSeries = () => {
 
     try {
       await axios.post(
-        'https://balkanflix-server.vercel.app/api/content/createMovies',
+        'https://balkanflix-server.up.railway.app/api/content/createMovies',
         { seriesCode: movieMal, tmdbSeriesId: movieTmdb }
       );
       showAlert('Movie successfully created!', 'success');

@@ -34,7 +34,7 @@ const Profile = () => {
             },
           };
 
-          const { data } = await axios.get("https://balkanflix-server.vercel.app/api/private", config);
+          const { data } = await axios.get("https://balkanflix-server.up.railway.app/api/private", config);
           setUser(data);
         } catch (error) {
           console.error("Error refreshing user data:", error);
@@ -62,7 +62,7 @@ const Profile = () => {
           },
         };
 
-        const { data } = await axios.get('https://balkanflix-server.vercel.app/api/auth/getProfileCards', config);
+        const { data } = await axios.get('https://balkanflix-server.up.railway.app/api/auth/getProfileCards', config);
         setAnimeCards(data.animeCards);
       } catch (error) {
         console.error("Error fetching anime cards:", error);

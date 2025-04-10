@@ -16,7 +16,7 @@ const DashHome = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const usersResponse = await axios.get('https://balkanflix-server.vercel.app/api/auth/countAllUsers');
+        const usersResponse = await axios.get('https://balkanflix-server.up.railway.app/api/auth/countAllUsers');
         setUsers(usersResponse.data.totalUsers);
         setSeries(usersResponse.data.totalSeries);
 

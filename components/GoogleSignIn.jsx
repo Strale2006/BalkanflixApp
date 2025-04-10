@@ -16,7 +16,7 @@ try {
     const { id, name, email, photo } = user;
 
     // Send the user info to your backend
-    const result = await axios.post('https://balkanflix-server.vercel.app/api/auth/google', {
+    const result = await axios.post('https://balkanflix-server.up.railway.app/api/auth/google', {
         _id: id,
         username: name,
         email,

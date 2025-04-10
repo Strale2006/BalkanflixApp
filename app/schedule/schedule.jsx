@@ -88,7 +88,7 @@ const Schedule = () => {
   useEffect(() => {
     const fetchSchedule = async () => {
       try {
-        const { data } = await axios.get("https://balkanflix-server.vercel.app/api/schedule/animeSchedule");
+        const { data } = await axios.get("https://balkanflix-server.up.railway.app/api/schedule/animeSchedule");
         const formattedData = data.map((item) => {
           const { days, hours, minutes, progress, countdown } = calculateCountdown(item.time);
           return {
