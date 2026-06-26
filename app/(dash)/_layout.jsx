@@ -47,13 +47,13 @@ const TabsLayout = () => {
             )
           }} />
 
-          <Tabs.Screen name='dev-chat' options={{
-            title: 'Chat',
-            headerShown: false,
-            tabBarIcon: ({ color, focused}) => (
-              <TabIcon icon={icons.play} color={color} name="DevChat" focused={focused} />
-            )
-          }} />
+          {/*<Tabs.Screen name='dev-chat' options={{*/}
+          {/*  title: 'Chat',*/}
+          {/*  headerShown: false,*/}
+          {/*  tabBarIcon: ({ color, focused}) => (*/}
+          {/*    <TabIcon icon={icons.play} color={color} name="DevChat" focused={focused} />*/}
+          {/*  )*/}
+          {/*}} />*/}
 
           <Tabs.Screen name='calendar' options={{
             title: 'Calendar',

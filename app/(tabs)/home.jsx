@@ -120,7 +120,8 @@ const MainHome = () => {
     return (
       <SafeAreaView className="flex-1 bg-[#101420]">
         <FlatList
-          data={[]}
+          data={[1]}
+          renderItem={() => null}
           ListHeaderComponent={
             <View className="pb-5">
               <TopSlider />

@@ -3,7 +3,7 @@ import {Stack} from 'expo-router'
 import { StatusBar } from 'expo-status-bar';
 const AuthLayout = () => {
   return (
-    <>
+      <View className="flex-1">
       <Stack>
         <Stack.Screen
           name='sign-in'
@@ -20,7 +20,7 @@ const AuthLayout = () => {
       </Stack>
 
       <StatusBar backgroundColor='#161622'  style='light'/>
-    </>
+    </View>
   )
 }
 
