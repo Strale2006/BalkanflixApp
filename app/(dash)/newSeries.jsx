@@ -1,145 +1,278 @@
 import React, { useState } from 'react';
-import {ScrollView, View, Text, Alert } from 'react-native';
-import axios from 'axios';
-import FormCard from '../../components/FormCard';
+import {
+  ScrollView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import axios from 'axios';
 
-const newSeries = () => {
-  // State for "Notifikacija" card (if needed later)
-  const [notifMal, setNotifMal] = useState('');
-  const [notifTmdb, setNotifTmdb] = useState('');
-
-  // State for "Napravi Serijal" card
+const AdminDashboard = () => {
+  // State for "Napravi Serijal"
   const [seriesMal, setSeriesMal] = useState('');
   const [seriesTmdb, setSeriesTmdb] = useState('');
+  const [seriesLoading, setSeriesLoading] = useState(false);
 
-  // State for "Napravi Serijal (Bez Postera)" card (only MAL ID)
-  const [seriesNoTmdb, setSeriesNoTmdb] = useState('');
+  // State for "Napravi Serijal (Bez Postera)"
+  const [noPosterMal, setNoPosterMal] = useState('');
+  const [noPosterLoading, setNoPosterLoading] = useState(false);
 
-  // State for "Napravi Film" card
+  // State for "Napravi Film"
   const [movieMal, setMovieMal] = useState('');
   const [movieTmdb, setMovieTmdb] = useState('');
+  const [movieLoading, setMovieLoading] = useState(false);
 
-  const showAlert = (message, type) => {
-    Alert.alert(type === 'success' ? 'Success' : 'Error', message);
+  const showAlert = (title, message) => {
+    Alert.alert(title, message);
   };
 
-  const handleNotificationSubmit = () => {
-    // Check required fields
-    if (!notifMal.trim() || !notifTmdb.trim()) {
-      showAlert('Both MAL and TMDB fields are required for notifications.', 'error');
-      return;
-    }
-    // For demo purposes, just alert the values.
-    showAlert(`Notification submitted: ${notifMal} & ${notifTmdb}`, 'success');
-  };
-
+  // Create Series (with TMDB)
   const handleSeriesSubmit = async () => {
-    // Validate input fields
     if (!seriesMal.trim() || !seriesTmdb.trim()) {
-      showAlert('Both MAL and TMDB fields are required for creating a series.', 'error');
+      showAlert('Greška', 'Unesite MAL ID i TMDB ID.');
       return;
     }
-
+    setSeriesLoading(true);
     try {
-      await axios.post(
-        'https://balkanflix-server.up.railway.app/api/content/create',
-        { seriesCode: seriesMal, tmdbSeriesId: seriesTmdb }
-      );
-      showAlert('Anime successfully created!', 'success');
+      await axios.post('https://balkanflix-server.up.railway.app/api/content/create', {
+        seriesCode: seriesMal,
+        tmdbSeriesId: seriesTmdb,
+      });
+      showAlert('Uspeh', 'Serijal je uspešno kreiran!');
+      setSeriesMal('');
+      setSeriesTmdb('');
     } catch (err) {
-      showAlert('Failed to create anime!', 'error');
+      showAlert('Greška', 'Kreiranje serijala nije uspelo.');
+      console.error(err);
+    } finally {
+      setSeriesLoading(false);
     }
   };
 
-  const handleSeriesNoTmdbSubmit = async () => {
-    // Validate input field
-    if (!seriesNoTmdb.trim()) {
-      showAlert('MAL field is required for creating a series (Bez Postera).', 'error');
+  // Create Series without TMDB (only MAL)
+  const handleNoPosterSubmit = async () => {
+    if (!noPosterMal.trim()) {
+      showAlert('Greška', 'Unesite MAL ID.');
       return;
     }
-
+    setNoPosterLoading(true);
     try {
-      await axios.post(
-        'https://balkanflix-server.up.railway.app/api/content/createNoTMDB',
-        { seriesCode: seriesNoTmdb }
-      );
-      showAlert('Anime successfully created!', 'success');
+      await axios.post('https://balkanflix-server.up.railway.app/api/content/createNoTMDB', {
+        seriesCode: noPosterMal,
+      });
+      showAlert('Uspeh', 'Serijal (bez postera) je kreiran!');
+      setNoPosterMal('');
     } catch (err) {
-      showAlert('Failed to create anime!', 'error');
+      showAlert('Greška', 'Kreiranje nije uspelo.');
+      console.error(err);
+    } finally {
+      setNoPosterLoading(false);
     }
   };
 
+  // Create Movie
   const handleMovieSubmit = async () => {
-    // Validate input fields
     if (!movieMal.trim() || !movieTmdb.trim()) {
-      showAlert('Both MAL and TMDB fields are required for creating a movie.', 'error');
+      showAlert('Greška', 'Unesite MAL ID i TMDB ID.');
       return;
     }
-
+    setMovieLoading(true);
     try {
-      await axios.post(
-        'https://balkanflix-server.up.railway.app/api/content/createMovies',
-        { seriesCode: movieMal, tmdbSeriesId: movieTmdb }
-      );
-      showAlert('Movie successfully created!', 'success');
+      await axios.post('https://balkanflix-server.up.railway.app/api/content/createMovies', {
+        seriesCode: movieMal,
+        tmdbSeriesId: movieTmdb,
+      });
+      showAlert('Uspeh', 'Film je uspešno kreiran!');
+      setMovieMal('');
+      setMovieTmdb('');
     } catch (err) {
-      showAlert('Failed to create movie!', 'error');
+      showAlert('Greška', 'Kreiranje filma nije uspelo.');
+      console.error(err);
+    } finally {
+      setMovieLoading(false);
     }
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-950 p-6 relative">
-      {/* Animated background elements */}
-      <View className="absolute inset-0">
-        <View className="absolute -top-1/2 -left-1/2 w-full h-full bg-cyan-500/20 rounded-full blur-3xl" />
-        <View className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-blue-500/20 rounded-full blur-3xl" />
-      </View>
-
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="relative">
-        <Text className="text-3xl font-pbold text-center mb-8 text-cyan-400">
-          Admin Dashboard
-        </Text>
-        <View className="space-y-6">
-          <FormCard
-            index={1}
-            title="Napravi Serijal"
-            subtitle="Enter the anime IDs to get details"
-            buttonText="Kreiraj Serijal"
-            onSubmit={handleSeriesSubmit}
-            malValue={seriesMal}
-            tmdbValue={seriesTmdb}
-            onChangeMal={setSeriesMal}
-            onChangeTmdb={setSeriesTmdb}
-          />
-          <FormCard
-            index={2}
-            title="Napravi Serijal (Bez Postera)"
-            subtitle="Enter the anime ID to get details"
-            buttonText="Kreiraj Serijal"
-            onSubmit={handleSeriesNoTmdbSubmit}
-            malValue={seriesNoTmdb}
-            hasTmdb={false}
-            // For this card, we do not require a TMDB input so we pass empty string and a no-op function
-            tmdbValue={''}
-            onChangeMal={setSeriesNoTmdb}
-            onChangeTmdb={() => {}}
-          />
-          <FormCard
-            index={3}
-            title="Napravi Film"
-            subtitle="Enter the anime IDs to get details"
-            buttonText="Kreiraj Film"
-            onSubmit={handleMovieSubmit}
-            malValue={movieMal}
-            tmdbValue={movieTmdb}
-            onChangeMal={setMovieMal}
-            onChangeTmdb={setMovieTmdb}
-          />
+      <SafeAreaView className="flex-1 bg-gray-950">
+        {/* Background gradients */}
+        <View className="absolute inset-0">
+          <View className="absolute -top-32 -right-32 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl" />
+          <View className="absolute -bottom-32 -left-32 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl" />
         </View>
-      </ScrollView>
-    </SafeAreaView>
+
+        <ScrollView
+            contentContainerStyle={{ paddingBottom: 40 }}
+            className="flex-1 px-5 pt-8"
+        >
+          {/* Header */}
+          <View className="items-center mb-8">
+            <MaterialCommunityIcons name="shield-account" size={48} color="#06b6d4" />
+            <Text className="text-white text-3xl font-pbold mt-2">Anime Serijali</Text>
+            <Text className="text-gray-400 font-pregular text-center mt-1">
+              Kreirajte nove serijale i filmove
+            </Text>
+          </View>
+
+          {/* 1. Napravi Serijal */}
+          <View className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-5 border border-gray-700 mb-6">
+            <View className="flex-row items-center mb-4">
+              <View className="bg-cyan-500/20 p-2 rounded-full">
+                <MaterialCommunityIcons name="television" size={24} color="#06b6d4" />
+              </View>
+              <View className="ml-3">
+                <Text className="text-white font-psemibold text-lg">Napravi Serijal</Text>
+                <Text className="text-gray-400 font-pregular text-xs">Unesite MAL i TMDB ID</Text>
+              </View>
+            </View>
+
+            <View className="space-y-4">
+              <View>
+                <Text className="text-gray-300 font-pmedium text-sm mb-1">MAL ID</Text>
+                <TextInput
+                    className="bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white font-pregular"
+                    placeholder="npr. 9253"
+                    placeholderTextColor="#6b7280"
+                    value={seriesMal}
+                    onChangeText={setSeriesMal}
+                    keyboardType="numeric"
+                />
+              </View>
+              <View>
+                <Text className="text-gray-300 font-pmedium text-sm mb-1">TMDB ID</Text>
+                <TextInput
+                    className="bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white font-pregular"
+                    placeholder="npr. 1399"
+                    placeholderTextColor="#6b7280"
+                    value={seriesTmdb}
+                    onChangeText={setSeriesTmdb}
+                    keyboardType="numeric"
+                />
+              </View>
+            </View>
+
+            <TouchableOpacity
+                onPress={handleSeriesSubmit}
+                disabled={seriesLoading}
+                className={`mt-5 py-3 rounded-xl flex-row items-center justify-center ${
+                    seriesLoading ? 'bg-gray-600' : 'bg-cyan-600'
+                }`}
+            >
+              {seriesLoading ? (
+                  <ActivityIndicator color="white" size="small" />
+              ) : (
+                  <>
+                    <MaterialCommunityIcons name="plus-circle" size={20} color="white" />
+                    <Text className="text-white font-psemibold ml-2">Kreiraj Serijal</Text>
+                  </>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {/* 2. Napravi Serijal (Bez Postera) */}
+          <View className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-5 border border-gray-700 mb-6">
+            <View className="flex-row items-center mb-4">
+              <View className="bg-orange-500/20 p-2 rounded-full">
+                <MaterialCommunityIcons name="image-off" size={24} color="#f97316" />
+              </View>
+              <View className="ml-3">
+                <Text className="text-white font-psemibold text-lg">Napravi Serijal (Bez Postera)</Text>
+                <Text className="text-gray-400 font-pregular text-xs">Unesite samo MAL ID</Text>
+              </View>
+            </View>
+
+            <View>
+              <Text className="text-gray-300 font-pmedium text-sm mb-1">MAL ID</Text>
+              <TextInput
+                  className="bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white font-pregular"
+                  placeholder="npr. 9253"
+                  placeholderTextColor="#6b7280"
+                  value={noPosterMal}
+                  onChangeText={setNoPosterMal}
+                  keyboardType="numeric"
+              />
+            </View>
+
+            <TouchableOpacity
+                onPress={handleNoPosterSubmit}
+                disabled={noPosterLoading}
+                className={`mt-5 py-3 rounded-xl flex-row items-center justify-center ${
+                    noPosterLoading ? 'bg-gray-600' : 'bg-orange-600'
+                }`}
+            >
+              {noPosterLoading ? (
+                  <ActivityIndicator color="white" size="small" />
+              ) : (
+                  <>
+                    <MaterialCommunityIcons name="plus-circle" size={20} color="white" />
+                    <Text className="text-white font-psemibold ml-2">Kreiraj Serijal</Text>
+                  </>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {/* 3. Napravi Film */}
+          <View className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-5 border border-gray-700 mb-6">
+            <View className="flex-row items-center mb-4">
+              <View className="bg-red-500/20 p-2 rounded-full">
+                <MaterialCommunityIcons name="filmstrip" size={24} color="#ef4444" />
+              </View>
+              <View className="ml-3">
+                <Text className="text-white font-psemibold text-lg">Napravi Film</Text>
+                <Text className="text-gray-400 font-pregular text-xs">Unesite MAL i TMDB ID</Text>
+              </View>
+            </View>
+
+            <View className="space-y-4">
+              <View>
+                <Text className="text-gray-300 font-pmedium text-sm mb-1">MAL ID</Text>
+                <TextInput
+                    className="bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white font-pregular"
+                    placeholder="npr. 9253"
+                    placeholderTextColor="#6b7280"
+                    value={movieMal}
+                    onChangeText={setMovieMal}
+                    keyboardType="numeric"
+                />
+              </View>
+              <View>
+                <Text className="text-gray-300 font-pmedium text-sm mb-1">TMDB ID</Text>
+                <TextInput
+                    className="bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white font-pregular"
+                    placeholder="npr. 1399"
+                    placeholderTextColor="#6b7280"
+                    value={movieTmdb}
+                    onChangeText={setMovieTmdb}
+                    keyboardType="numeric"
+                />
+              </View>
+            </View>
+
+            <TouchableOpacity
+                onPress={handleMovieSubmit}
+                disabled={movieLoading}
+                className={`mt-5 py-3 rounded-xl flex-row items-center justify-center ${
+                    movieLoading ? 'bg-gray-600' : 'bg-red-600'
+                }`}
+            >
+              {movieLoading ? (
+                  <ActivityIndicator color="white" size="small" />
+              ) : (
+                  <>
+                    <MaterialCommunityIcons name="plus-circle" size={20} color="white" />
+                    <Text className="text-white font-psemibold ml-2">Kreiraj Film</Text>
+                  </>
+              )}
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
   );
 };
 
-export default newSeries;
+export default AdminDashboard;

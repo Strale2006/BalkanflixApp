@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, FlatList, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, Image, FlatList, Dimensions, TouchableOpacity, ActivityIndicator } from "react-native";
 import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
-// import { useNavigation } from "@react-navigation/native";
 import moment from "moment-timezone";
 import { router } from "expo-router";
 
@@ -84,30 +83,30 @@ const ScheduleItem = ({ item }) => {
 const Schedule = () => {
   const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchSchedule = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await axios.get(
+          "https://balkanflix-server.up.railway.app/api/schedule/animeSchedule"
+      );
+      const formattedData = data.map((item) => {
+        const { days, hours, minutes, progress, countdown } =
+            calculateCountdown(item.time);
+        return { ...item, days, hours, minutes, progress, countdown };
+      });
+      setSchedule(formattedData);
+    } catch (error) {
+      console.error("Error:", error);
+      setError("Nije moguće učitati raspored");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchSchedule = async () => {
-      try {
-        const { data } = await axios.get("https://balkanflix-server.up.railway.app/api/schedule/animeSchedule");
-        const formattedData = data.map((item) => {
-          const { days, hours, minutes, progress, countdown } = calculateCountdown(item.time);
-          return {
-            ...item,
-            days,
-            hours,
-            minutes,
-            progress,
-            countdown
-          };
-        });
-        setSchedule(formattedData);
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchSchedule();
   }, []);
 
@@ -131,6 +130,39 @@ const Schedule = () => {
     }
     return { countdown: "USKORO", progress: 100 };
   };
+
+  if (loading) {
+    return (
+        <View className="h-32 items-center justify-center">
+          <ActivityIndicator size="large" color="#818cf8" />
+          <Text className="text-gray-400 mt-2">Učitavanje...</Text>
+        </View>
+    );
+  }
+
+  if (error) {
+    return (
+        <View className="h-32 items-center justify-center bg-gray-800/50 rounded-xl">
+          <MaterialIcons name="error-outline" size={32} color="#f87171" />
+          <Text className="text-red-400 mt-2">{error}</Text>
+          <TouchableOpacity
+              onPress={fetchSchedule}
+              className="mt-2 bg-indigo-600 px-4 py-1.5 rounded-full"
+          >
+            <Text className="text-white font-psemibold">Pokušaj ponovo</Text>
+          </TouchableOpacity>
+        </View>
+    );
+  }
+
+  if (schedule.length === 0) {
+    return (
+        <View className="h-32 items-center justify-center bg-gray-800/50 rounded-xl">
+          <MaterialIcons name="event-busy" size={32} color="#9ca3af" />
+          <Text className="text-gray-400 mt-2">Trenutno nema zakazanih epizoda</Text>
+        </View>
+    );
+  }
 
   return (
     <View className="flex-1 py-4">

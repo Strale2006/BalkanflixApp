@@ -2,6 +2,8 @@ import { View, Text, Image } from 'react-native'
 import { Tabs } from 'expo-router'
 
 import {icons} from '../../constants'
+import search from "../../assets/icons/search.png";
+import menu from "../../assets/icons/menu.png";
 
 const TabIcon = ({icon, color, name, focused}) => {
   return (
@@ -39,11 +41,19 @@ const TabsLayout = () => {
           }
         }}
       >
+          <Tabs.Screen name='dev-profil' options={{
+              title: 'Profil',
+              headerShown: false,
+              tabBarIcon: ({ color, focused}) => (
+                  <TabIcon icon={icons.profile} color={color} name="Profil" focused={focused} />
+              )
+          }} />
+
           <Tabs.Screen name='dash-home' options={{
-            title: 'Home',
+            title: 'Glavna',
             headerShown: false,
             tabBarIcon: ({ color, focused}) => (
-              <TabIcon icon={icons.home} color={color} name="Home" focused={focused} />
+              <TabIcon icon={icons.home} color={color} name="Glavna" focused={focused} />
             )
           }} />
 
@@ -56,18 +66,34 @@ const TabsLayout = () => {
           {/*}} />*/}
 
           <Tabs.Screen name='calendar' options={{
-            title: 'Calendar',
+            title: 'Kalendar',
             headerShown: false,
             tabBarIcon: ({ color, focused}) => (
-              <TabIcon icon={icons.upload} color={color} name="Calendar" focused={focused} />
+              <TabIcon icon={icons.bookmark} color={color} name="Kalendar" focused={focused} />
             )
           }} />
 
+          <Tabs.Screen name='poll' options={{
+              title: 'Ankete',
+              headerShown: false,
+              tabBarIcon: ({ color, focused}) => (
+                  <TabIcon icon={icons.search} color={color} name="Ankete" focused={focused} />
+              )
+          }} />
+
+          <Tabs.Screen name='story' options={{
+              title: 'Objave',
+              headerShown: false,
+              tabBarIcon: ({ color, focused}) => (
+                  <TabIcon icon={icons.upload} color={color} name="Objave" focused={focused} />
+              )
+          }} />
+
           <Tabs.Screen name='newSeries' options={{
-            title: 'Series',
+            title: 'Serijali',
             headerShown: false,
             tabBarIcon: ({ color, focused}) => (
-              <TabIcon icon={icons.profile} color={color} name="Series" focused={focused} />
+              <TabIcon icon={icons.menu} color={color} name="Serijali" focused={focused} />
             )
           }} />
       </Tabs>

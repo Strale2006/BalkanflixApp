@@ -17,7 +17,7 @@ const Profile = () => {
 
   // console.log(user.favorites);
   
-  const dashboard = () => router.push('/dash-home');
+  const dashboard = () => router.push('/dev-profil');
 
   // Refresh user data when screen comes into focus
   useFocusEffect(
@@ -149,9 +149,11 @@ const Profile = () => {
         </View>
 
         {/* Stats Section */}
-        <View className="w-full flex-row justify-around gap-4 mb-4 mt-2">
+        <View className="w-full flex-row flex-wrap justify-around gap-4 mb-4 mt-2">
           <InfoBox title={user?.full_ep?.length || 0} subtitle="Odgledanih Epizoda" titleStyles={"text-lg"} />
+          <InfoBox title={user?.streak+"🔥" || 0} subtitle="Streak" titleStyles={"text-lg"} />
           {user?.isTranslator && <InfoBox title={user?.brojPrevoda || 0} subtitle="Prevedeno Epizoda" titleStyles={"text-lg"} />}
+          {user?.isTranslator && <InfoBox title={user?.balance+"$" || 0} subtitle="Balans" titleStyles={"text-lg mt-4"} />}
         </View>
 
         {user?.isTranslator && (
