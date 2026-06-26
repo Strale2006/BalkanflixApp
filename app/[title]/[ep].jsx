@@ -311,7 +311,7 @@ const Episode = () => {
         <View className="bg-gray-900 rounded-2xl p-4 mb-6 border border-gray-800">
           <View className="flex-row gap-4 mb-4">
             <Image
-              source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${seriesData?.img}` }}
+              source={{ uri: `https://images.balkanflix.com/${seriesData?.img}` }}
               className="w-24 h-36 rounded-lg border border-gray-800"
             />
             <View className="flex-1 gap-1">

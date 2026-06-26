@@ -182,7 +182,7 @@ const Profile = () => {
               }}
             >
               <Image 
-                source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}` }}
+                source={{ uri: `https://images.balkanflix.com/${item.img}` }}
                 style={{ width: '100%', height: width * 0.6, borderRadius: 8 }}
                 resizeMode="cover"
               />

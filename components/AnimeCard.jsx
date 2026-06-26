@@ -10,7 +10,7 @@ const MovieCard = ({ item }) => {
       }}
       >
       <ImageBackground
-        source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}` }}
+        source={{ uri: `https://images.balkanflix.com/${item.img}` }}
         className="overflow-hidden rounded-lg"
         style={{ aspectRatio: 0.7 }}
         imageStyle={{ resizeMode: 'cover' }}

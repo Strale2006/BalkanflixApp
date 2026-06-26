@@ -11,7 +11,7 @@ const VideoCard = ({ item }) => {
       }}
       >
       <Image
-        source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}` }}
+        source={{ uri: `https://images.balkanflix.com/${item.img}` }}
         className="w-40 h-56 rounded-xl"
         resizeMode="cover"
       />

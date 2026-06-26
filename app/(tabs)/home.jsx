@@ -84,7 +84,7 @@ const MainHome = () => {
             >
               <ImageBackground
                 source={{
-                  uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}`,
+                  uri: `https://images.balkanflix.com/${item.img}`,
                 }}
                 className="rounded-lg overflow-hidden justify-end"
                 style={{ height: width * 0.45 }}

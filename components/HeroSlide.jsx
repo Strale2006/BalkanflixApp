@@ -14,7 +14,7 @@ const SliderItem = ({ item }) => (
       style={{height : '100%', width : '100%'}}
     /> */}
       <ImageBackground
-        source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item?.poster}` }}
+        source={{ uri: `https://images.balkanflix.com/${item?.poster}` }}
         className="flex-1 justify-end p-4"
         imageStyle={{ opacity: 0.9 }}
       >
@@ -44,7 +44,7 @@ const TopSlider = () => {
   useEffect(() => {
     const fetchSeries = async () => {
       try {
-        const { data } = await axios.get("https://balkanflix-server.up.railway.app/api/content/seriesHeroMobile");
+        const { data } = await axios.get("https://balkanflix-server.up.railway.app/api/content/seriesHero");
         setSeries(data.series);
       } catch (error) {
         console.error("Greška pri učitavanju:", error);

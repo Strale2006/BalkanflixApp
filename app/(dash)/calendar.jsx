@@ -93,7 +93,7 @@ const Calendar = () => {
             >
               <View className="flex flex-row items-center">
               <Image
-                source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}` }}
+                source={{ uri: `https://images.balkanflix.com/${item.img}` }}
                 style={{ width: 80, height: 100 }}
                 contentFit="contain"
               />

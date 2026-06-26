@@ -27,7 +27,7 @@ const ScheduleItem = ({ item }) => {
         {/* Slika sa overlayem */}
         <View className="relative mb-4 rounded-xl overflow-hidden">
           <Image
-            source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${item.img}` }}
+            source={{ uri: `https://images.balkanflix.com/${item.img}` }}
             className="w-full h-40"
             resizeMode="cover"
           />

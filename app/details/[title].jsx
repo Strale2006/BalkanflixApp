@@ -106,7 +106,7 @@ const DetailsScreen = () => {
   return (
     <ScrollView className="flex-1 bg-black dark:bg-[#121212]">
       <Image 
-        source={{ uri: `https://raw.githubusercontent.com/Strale2006/SlikeStranice/main/${seriesData.poster}` }} 
+        source={{ uri: `https://images.balkanflix.com/${seriesData.poster}` }} 
         className="w-full h-[250px] object-cover rounded-b-3xl shadow-lg"
       />
       <View className="p-6">
