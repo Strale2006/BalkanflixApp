@@ -313,23 +313,22 @@ const Episode = () => {
                         paddingBottom: 12,
                     }}
                 >
-                    <Link href={`/details/${seriesData?.title_params}`} asChild>
-                        <TouchableOpacity
-                            activeOpacity={0.75}
-                            style={{
-                                width: 36,
-                                height: 36,
-                                borderRadius: 18,
-                                backgroundColor: 'rgba(255,255,255,0.07)',
-                                borderWidth: 0.5,
-                                borderColor: 'rgba(255,255,255,0.1)',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <MaterialIcons name="arrow-back-ios" size={15} color="#fca5a5" style={{ marginLeft: 3 }} />
-                        </TouchableOpacity>
-                    </Link>
+                    <TouchableOpacity
+                        onPress={() => router.back()}
+                        activeOpacity={0.75}
+                        style={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: 18,
+                            backgroundColor: 'rgba(255,255,255,0.07)',
+                            borderWidth: 0.5,
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <MaterialIcons name="arrow-back-ios" size={15} color="#fca5a5" style={{ marginLeft: 3 }} />
+                    </TouchableOpacity>
 
                     <Link href={`/details/${seriesData?.title_params}`} asChild>
                         <TouchableOpacity style={{ flex: 1, minWidth: 0 }}>

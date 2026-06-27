@@ -23,11 +23,11 @@ const ROWS_PER_PAGE = 5;
 const PAGE_SIZE = COLS * ROWS_PER_PAGE; // 10 kartica / stranica
 
 const STATUS_META = {
-    Gledam:   { icon: 'play',         color: '#34d399' },
-    Planiram: { icon: 'bookmark',     color: '#60a5fa' },
-    Završeno: { icon: 'check-circle', color: '#a3e635' },
-    Pauzirao: { icon: 'pause-circle', color: '#fbbf24' },
-    Odustao:  { icon: 'times-circle', color: '#f87171' },
+    Gledam:   { icon: 'play-circle',   color: '#E50914' },
+    Planiram: { icon: 'bookmark',       color: '#8b5cf6' },
+    Završeno: { icon: 'check-circle',  color: '#22c55e' },
+    Pauzirao: { icon: 'pause-circle',  color: '#eab308' },
+    Odustao:  { icon: 'cancel',        color: '#64748b' },
 };
 
 const CARD_W = (width - 32 - 10) / 2;
@@ -89,18 +89,19 @@ const RoleBadge = ({ user }) => {
 };
 
 // ─── Filter Tab ───────────────────────────────────────────────────────────────
-const FilterTab = ({ label, count, active, color, onPress }) => (
+const FilterTab = ({ label, count, active, color, onPress, icon }) => (
     <TouchableOpacity
         onPress={onPress}
         activeOpacity={0.75}
         style={{
             flexDirection: 'row', alignItems: 'center', gap: 5,
             paddingHorizontal: 12, paddingVertical: 7, borderRadius: 20,
-            backgroundColor: active ? (color ? color + '22' : 'rgba(239,68,68,0.15)') : 'rgba(255,255,255,0.04)',
+            backgroundColor: active ? (color ? color + '25' : 'rgba(239,68,68,0.15)') : 'rgba(255,255,255,0.04)',
             borderWidth: 0.5,
             borderColor: active ? (color || 'rgba(239,68,68,0.5)') : 'rgba(255,255,255,0.08)',
         }}
     >
+        {icon && <MaterialIcons name={icon} size={14} color={active ? (color || '#f87171') : '#64748b'} />}
         <Text style={{
             fontSize: 12, fontFamily: 'Poppins-SemiBold',
             color: active ? (color || '#f87171') : '#64748b',
@@ -117,9 +118,9 @@ const FilterTab = ({ label, count, active, color, onPress }) => (
 );
 
 // ─── Anime Card ───────────────────────────────────────────────────────────────
-const AnimeCard = ({ item, badgeLabel, badgeColor, onPress }) => (
+const AnimeCard = ({ item, badgeLabel, badgeColor, badgeIcon, onPress }) => (
     <TouchableOpacity onPress={onPress} activeOpacity={0.85}
-                      style={{ width: CARD_W, borderRadius: 14, overflow: 'hidden', marginBottom: 10 }}
+                      style={{ width: CARD_W, borderRadius: 14, overflow: 'hidden', marginBottom: 12 }}
     >
         <Image
             source={{ uri: `https://images.balkanflix.com/${item.img}` }}
@@ -131,7 +132,9 @@ const AnimeCard = ({ item, badgeLabel, badgeColor, onPress }) => (
                 position: 'absolute', top: 8, left: 8,
                 backgroundColor: (badgeColor || '#E50914') + 'dd',
                 borderRadius: 20, paddingHorizontal: 8, paddingVertical: 3,
+                flexDirection: 'row', alignItems: 'center', gap: 4,
             }}>
+                {badgeIcon && <MaterialIcons name={badgeIcon} size={10} color="#fff" />}
                 <Text style={{ fontSize: 10, fontFamily: 'Poppins-SemiBold', color: '#fff' }}>{badgeLabel}</Text>
             </View>
         )}
@@ -238,6 +241,7 @@ const CardGrid = ({ items, getBadge, onCardPress }) => {
                                 item={item}
                                 badgeLabel={badge?.label}
                                 badgeColor={badge?.color}
+                                badgeIcon={badge?.icon}
                                 onPress={() => onCardPress(item)}
                             />
                         );
@@ -461,6 +465,7 @@ const Profile = () => {
                                 count={item === 'Sve' ? watchStatus.length : statusCounts[item]}
                                 active={activeFilter === item}
                                 color={item === 'Sve' ? undefined : STATUS_META[item]?.color}
+                                icon={item === 'Sve' ? undefined : STATUS_META[item]?.icon}
                                 onPress={() => handleFilterChange(item)}
                             />
                         )}
@@ -474,7 +479,7 @@ const Profile = () => {
                     : <>
                         <CardGrid
                             items={statusItems}
-                            getBadge={(item) => item._status ? { label: item._status, color: STATUS_META[item._status]?.color } : null}
+                            getBadge={(item) => item._status ? { label: item._status, color: STATUS_META[item._status]?.color, icon: STATUS_META[item._status]?.icon } : null}
                             onCardPress={(item) => router.push(`/details/${item.title_params}`)}
                         />
                         {/* Info red + paginacija */}
