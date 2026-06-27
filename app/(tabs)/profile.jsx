@@ -436,7 +436,7 @@ const Profile = () => {
                         }}>
                             <FontAwesome5 name="chart-bar" size={13} color="#818cf8" />
                             <Text style={{ fontSize: 13, fontFamily: 'Poppins-SemiBold', color: '#818cf8' }}>
-                                Dashboard ({user?.brojPrevoda || 0} prevoda)
+                                Dashboard
                             </Text>
                         </TouchableOpacity>
                     )}

@@ -16,7 +16,7 @@ import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import BalkanflixPlayer from '../../components/BalkanflixPlayer';
-
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 // ─── Sekcija zaglavlje ────────────────────────────────────────────────────────
 const SectionHeader = ({ title }) => (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
@@ -138,6 +138,11 @@ const NavButton = ({ label, icon, iconSide = 'left', onPress, disabled }) => (
 
 // ─── Glavna komponenta ────────────────────────────────────────────────────────
 const Episode = () => {
+
+    const BANNER_ID = __DEV__
+        ? TestIds.BANNER
+        : 'ca-app-pub-5998257044328183/7987732426';
+
     const { token, user } = useGlobalContext();
     const { ep, title } = useLocalSearchParams();
 
@@ -490,6 +495,14 @@ const Episode = () => {
                         marginBottom: 20,
                     }}
                 />
+                {/* ── AdMob Banner ── */}
+                <View style={{ alignItems: 'center', marginHorizontal: 16, marginBottom: 16 }}>
+                    <BannerAd
+                        unitId={BANNER_ID}
+                        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                        onAdFailedToLoad={(error) => console.log('Banner greška:', error)}
+                    />
+                </View>
 
                 {/* ── Info o seriji ── */}
                 <View style={{ paddingHorizontal: 16 }}>
