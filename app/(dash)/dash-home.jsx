@@ -22,19 +22,14 @@ import { schedulePushNotification } from '../../notifications/PushNotificationSe
 const API_URL = 'https://balkanflix-server.up.railway.app/api';
 
 const DashHome = () => {
-  // ---- Glavni dashboard state ----
   const [users, setUsers] = useState(null);
   const [series, setSeries] = useState(null);
   const [viewsToday, setViewsToday] = useState(null);
   const [totalViews, setTotalViews] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-
-  // ---- Top prevodioci state ----
   const [topTranslators, setTopTranslators] = useState([]);
   const [loadingTranslators, setLoadingTranslators] = useState(true);
-
-  // ---- Intro timing state ----
   const [seriesList, setSeriesList] = useState([]);
   const [selectedSeries, setSelectedSeries] = useState(null);
   const [episodes, setEpisodes] = useState([]);
@@ -46,7 +41,6 @@ const DashHome = () => {
   const [showSeriesPicker, setShowSeriesPicker] = useState(false);
   const [showEpisodePicker, setShowEpisodePicker] = useState(false);
 
-  // ---- Auth headers ----
   const getAuthHeaders = useCallback(async () => {
     const token = await AsyncStorage.getItem('authToken');
     return {
@@ -57,7 +51,6 @@ const DashHome = () => {
     };
   }, []);
 
-  // ---- Fetch dashboard data ----
   const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true);
@@ -83,7 +76,6 @@ const DashHome = () => {
     }
   }, []);
 
-  // ---- Fetch top translators ----
   const fetchTopTranslators = async () => {
     try {
       setLoadingTranslators(true);
@@ -97,7 +89,6 @@ const DashHome = () => {
     }
   };
 
-  // ---- Fetch series list for intro timing ----
   const fetchSeriesList = async () => {
     try {
       const { data } = await axios.get(`${API_URL}/content/getTitlesForUploadEpisodes`);
@@ -107,7 +98,6 @@ const DashHome = () => {
     }
   };
 
-  // ---- Fetch episodes when series selected ----
   useEffect(() => {
     if (!selectedSeries) {
       setEpisodes([]);
@@ -128,21 +118,18 @@ const DashHome = () => {
     fetchEpisodes();
   }, [selectedSeries]);
 
-  // ---- Initial data fetch ----
   useEffect(() => {
     fetchDashboardData();
     fetchTopTranslators();
     fetchSeriesList();
   }, []);
 
-  // ---- Refresh ----
   const onRefresh = () => {
     setRefreshing(true);
     fetchDashboardData();
     fetchTopTranslators();
   };
 
-  // ---- Test notifications ----
   const testNotification = async () => {
     try {
       await schedulePushNotification(

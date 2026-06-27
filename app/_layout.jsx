@@ -26,7 +26,7 @@ const RootLayout = () => {
     useEffect(() => {
         if (error) throw error;
         if (fontsLoaded) SplashScreen.hideAsync();
-        scheduleReminderNotifications();
+        // scheduleReminderNotifications();
     }, [fontsLoaded, error]);
 
     if (!fontsLoaded && !error) return null;

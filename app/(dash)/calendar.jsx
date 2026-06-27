@@ -182,6 +182,7 @@ const CalendarScreen = () => {
       const { data } = await axios.get('https://balkanflix-server.up.railway.app/api/schedule/animeCalendar');
       const converted = data.map(item => ({
         ...item,
+        title_params: item.title_params || item.title?.replace(/\s+/g, ''),
         originalTime: item.time,
         time: convertToBelgradeTime(item.time),
         date: formatDate(item.time),
@@ -348,7 +349,7 @@ const CalendarScreen = () => {
     return (
         <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => router.push(`/${item.title_params}`)}
+            onPress={() => router.push(`/details/${encodeURIComponent(item.title_params)}`)}
             className={`w-[48%] mb-4 rounded-xl overflow-hidden border border-gray-800 bg-gray-900 ${isHighlighted ? 'border-blue-500' : ''}`}
         >
           {/* Image Container */}
