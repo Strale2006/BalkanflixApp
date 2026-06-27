@@ -41,7 +41,7 @@ const ScheduleItem = ({ item }) => {
                             locations={[0.4, 1]}
                             style={{ flex: 1, justifyContent: 'flex-end', padding: 8 }}
                         >
-                            <View className="flex-row items-center bg-indigo-500/90 self-start px-2.5 py-1 rounded-full">
+                            <View className="flex-row items-center bg-red-500/90 self-start px-2.5 py-1 rounded-full">
                                 <MaterialIcons name="play-circle-outline" size={14} color="white" />
                                 <Text className="text-white text-xs font-psemibold ml-1">Ep {item.ep}</Text>
                             </View>
@@ -55,14 +55,14 @@ const ScheduleItem = ({ item }) => {
                 </Text>
 
                 <View className="flex-row items-center mb-4">
-                    <MaterialIcons name="access-time" size={15} color="#818cf8" />
+                    <MaterialIcons name="access-time" size={15} color="#ee4444" />
                     <Text className="text-gray-400 text-xs ml-2">{beogradskoVreme}</Text>
                 </View>
 
                 {/* Progress bar */}
                 <View className="h-1.5 bg-[#2d3250] rounded-full mb-5 overflow-hidden">
                     <View
-                        className="h-full bg-indigo-500 rounded-full"
+                        className="h-full bg-red-500 rounded-full"
                         style={{ width: `${item.progress}%` }}
                     />
                 </View>
@@ -162,7 +162,7 @@ const Schedule = () => {
                 <Text className="text-red-400 mt-2">{error}</Text>
                 <TouchableOpacity
                     onPress={fetchSchedule}
-                    className="mt-2 bg-indigo-600 px-4 py-1.5 rounded-full"
+                    className="mt-2 bg-red-600 px-4 py-1.5 rounded-full"
                 >
                     <Text className="text-white font-psemibold">Pokušaj ponovo</Text>
                 </TouchableOpacity>
