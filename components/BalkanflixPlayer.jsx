@@ -5,13 +5,57 @@ import {
     TouchableOpacity,
     StyleSheet,
     Modal,
-    StatusBar,
-    Platform,
 } from 'react-native';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import { useEvent } from 'expo';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { MaterialIcons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
+
+// ── Telo plejera, IZVUCENO van glavne komponente ──────────────────────────
+// Ovo je kljucno: ako je definisano unutar BalkanflixPlayer-a, na svaki
+// re-render (npr. svakih 0.5s kad se currentTime promeni) React vidi
+// "novu" komponentu i remountuje VideoView + dugmice -> treperenje i
+// tapovi koji ne stignu da se uhvate.
+const PlayerBody = ({
+                        player,
+                        fullscreen,
+                        showSkip,
+                        onSkip,
+                        onToggleFullscreen,
+                    }) => (
+    <View style={styles.videoContainer}>
+        <VideoView
+            player={player}
+            style={styles.video}
+            nativeControls={true}
+            allowsFullscreen={false}
+            contentFit="contain"
+        />
+
+        <TouchableOpacity
+            style={fullscreen ? styles.fsButtonActive : styles.fsButton}
+            onPress={onToggleFullscreen}
+            activeOpacity={0.8}
+        >
+            <MaterialIcons
+                name={fullscreen ? 'fullscreen-exit' : 'fullscreen'}
+                size={20}
+                color="#fff"
+            />
+        </TouchableOpacity>
+
+        {showSkip && (
+            <TouchableOpacity
+                style={fullscreen ? styles.skipButtonFS : styles.skipButton}
+                onPress={onSkip}
+                activeOpacity={0.8}
+            >
+                <Text style={styles.skipText}>⏭ Preskoči uvod</Text>
+            </TouchableOpacity>
+        )}
+    </View>
+);
 
 const BalkanflixPlayer = ({ url, intro, onValidView }) => {
     const player = useVideoPlayer(url, (player) => {
@@ -20,7 +64,7 @@ const BalkanflixPlayer = ({ url, intro, onValidView }) => {
     });
 
     const [showSkip, setShowSkip] = useState(false);
-    const [fullscreen, setFullscreen] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
     const viewCounted = useRef(false);
     const watchTime = useRef(0);
     const lastTime = useRef(0);
@@ -60,71 +104,50 @@ const BalkanflixPlayer = ({ url, intro, onValidView }) => {
         }
     };
 
-    // ---- Custom fullscreen logika ----
+    // ── Sopstveni fullscreen (ne koristimo native, jer on prekriva ceo RN sloj
+    //    i skip dugme bi ostalo nevidljivo iza njega) ──
     const enterFullscreen = async () => {
-        setFullscreen(true);
-        await ScreenOrientation.lockAsync(
-            ScreenOrientation.OrientationLock.LANDSCAPE
-        );
+        setIsFullscreen(true);
+        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
     };
 
     const exitFullscreen = async () => {
-        await ScreenOrientation.unlockAsync();
-        setFullscreen(false);
+        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+        setIsFullscreen(false);
     };
 
-    // Zajednički sadržaj za oba moda
-    const playerContent = (
-        <View style={styles.videoContainer}>
-            <VideoView
-                player={player}
-                style={styles.video}
-                nativeControls={true}
-            />
-            {showSkip && (
-                <TouchableOpacity
-                    style={fullscreen ? styles.skipButtonFS : styles.skipButton}
-                    onPress={skipIntro}
-                    activeOpacity={0.8}
-                >
-                    <Text style={styles.skipText}>⏭ Preskoči uvod</Text>
-                </TouchableOpacity>
-            )}
-            {/* Dugme za ulazak u fullscreen (samo u inline modu) */}
-            {!fullscreen && (
-                <TouchableOpacity
-                    style={styles.fullscreenButton}
-                    onPress={enterFullscreen}
-                >
-                    <MaterialCommunityIcons name="fullscreen" size={24} color="white" />
-                </TouchableOpacity>
-            )}
-            {/* Dugme za izlaz iz fullscreen‑a */}
-            {fullscreen && (
-                <TouchableOpacity
-                    style={styles.exitFullscreenButton}
-                    onPress={exitFullscreen}
-                >
-                    <MaterialCommunityIcons name="fullscreen-exit" size={24} color="white" />
-                </TouchableOpacity>
-            )}
-        </View>
-    );
+    useEffect(() => {
+        return () => {
+            ScreenOrientation.unlockAsync();
+            setIsFullscreen(false);
+        };
+    }, []);
 
     return (
         <View style={styles.root}>
-            {/* Inline prikaz */}
-            {!fullscreen && playerContent}
+            <PlayerBody
+                player={player}
+                fullscreen={false}
+                showSkip={showSkip}
+                onSkip={skipIntro}
+                onToggleFullscreen={enterFullscreen}
+            />
 
-            {/* Fullscreen modal */}
             <Modal
-                visible={fullscreen}
+                visible={isFullscreen}
                 animationType="fade"
-                supportedOrientations={['landscape']}
+                supportedOrientations={['landscape', 'landscape-left', 'landscape-right']}
                 onRequestClose={exitFullscreen}
+                statusBarTranslucent
             >
-                <StatusBar hidden />
-                {playerContent}
+                {isFullscreen && <StatusBar hidden />}
+                <PlayerBody
+                    player={player}
+                    fullscreen={true}
+                    showSkip={showSkip}
+                    onSkip={skipIntro}
+                    onToggleFullscreen={exitFullscreen}
+                />
             </Modal>
         </View>
     );
@@ -145,6 +168,37 @@ const styles = StyleSheet.create({
     video: {
         flex: 1,
     },
+    fsButton: {
+        position: 'absolute',
+        bottom: 16,
+        right: 16,
+        backgroundColor: 'rgba(0,0,0,0.75)',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.3)',
+        padding: 9,
+        borderRadius: 20,
+        zIndex: 100,
+        elevation: 6,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+    },
+    fsButtonActive: {
+        position: 'absolute',
+        top: 18,
+        right: 18,
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        borderWidth: 1.5,
+        borderColor: 'rgba(255,255,255,0.45)',
+        padding: 11,
+        borderRadius: 24,
+        zIndex: 999,
+        elevation: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.6,
+        shadowRadius: 4,
+    },
     skipButton: {
         position: 'absolute',
         bottom: 80,
@@ -161,11 +215,11 @@ const styles = StyleSheet.create({
     },
     skipButtonFS: {
         position: 'absolute',
-        bottom: 40,
+        bottom: 24,
         right: 24,
         backgroundColor: '#ef4444',
-        paddingHorizontal: 20,
-        paddingVertical: 12,
+        paddingHorizontal: 22,
+        paddingVertical: 13,
         borderRadius: 30,
         zIndex: 100,
         elevation: 8,
@@ -177,24 +231,6 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: '700',
         fontSize: 14,
-    },
-    fullscreenButton: {
-        position: 'absolute',
-        bottom: 12,
-        right: 12,
-        backgroundColor: 'rgba(0,0,0,0.4)',
-        padding: 8,
-        borderRadius: 20,
-        zIndex: 99,
-    },
-    exitFullscreenButton: {
-        position: 'absolute',
-        top: Platform.OS === 'android' ? StatusBar.currentHeight + 8 : 16,
-        left: 16,
-        backgroundColor: 'rgba(0,0,0,0.4)',
-        padding: 10,
-        borderRadius: 20,
-        zIndex: 99,
     },
 });
 
