@@ -41,13 +41,13 @@ const EpisodePill = ({ episode, currentEp, titleParams }) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     backgroundColor: isCurrent
-                        ? 'rgba(59,130,246,0.85)'
+                        ? 'rgba(239,68,68,0.85)'
                         : isFiller
                             ? 'rgba(139,92,246,0.18)'
                             : 'rgba(255,255,255,0.04)',
                     borderWidth: 0.5,
                     borderColor: isCurrent
-                        ? 'rgba(59,130,246,0.5)'
+                        ? 'rgba(239,68,68,0.5)'
                         : isFiller
                             ? 'rgba(139,92,246,0.35)'
                             : 'rgba(255,255,255,0.09)',
@@ -80,16 +80,16 @@ const ServerButton = ({ server, selected, onPress }) => {
                 borderRadius: 12,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: isActive ? 'rgba(59,130,246,0.12)' : 'rgba(255,255,255,0.04)',
+                backgroundColor: isActive ? 'rgba(239,68,68,0.12)' : 'rgba(255,255,255,0.04)',
                 borderWidth: 0.5,
-                borderColor: isActive ? 'rgba(59,130,246,0.4)' : 'rgba(255,255,255,0.09)',
+                borderColor: isActive ? 'rgba(239,68,68,0.4)' : 'rgba(255,255,255,0.09)',
             }}
         >
             <Text
                 style={{
                     fontSize: 13,
                     fontFamily: 'Poppins-SemiBold',
-                    color: isActive ? '#60a5fa' : '#64748b',
+                    color: isActive ? '#f87171' : '#64748b',
                 }}
             >
                 {server.name}
@@ -112,7 +112,7 @@ const NavButton = ({ label, icon, iconSide = 'left', onPress, disabled }) => (
             gap: 6,
             paddingVertical: 12,
             borderRadius: 12,
-            backgroundColor: disabled ? 'rgba(255,255,255,0.04)' : 'rgba(59,130,246,0.85)',
+            backgroundColor: disabled ? 'rgba(255,255,255,0.04)' : 'rgba(239,68,68,0.85)',
             borderWidth: disabled ? 0.5 : 0,
             borderColor: 'rgba(255,255,255,0.08)',
             opacity: disabled ? 0.45 : 1,
@@ -318,7 +318,7 @@ const Episode = () => {
                                 justifyContent: 'center',
                             }}
                         >
-                            <MaterialIcons name="arrow-back-ios" size={15} color="#93c5fd" style={{ marginLeft: 3 }} />
+                            <MaterialIcons name="arrow-back-ios" size={15} color="#fca5a5" style={{ marginLeft: 3 }} />
                         </TouchableOpacity>
                     </Link>
 
@@ -336,16 +336,16 @@ const Episode = () => {
                                 gap: 5,
                                 marginTop: 2,
                                 alignSelf: 'flex-start',
-                                backgroundColor: 'rgba(59,130,246,0.13)',
+                                backgroundColor: 'rgba(239,68,68,0.13)',
                                 borderWidth: 0.5,
-                                borderColor: 'rgba(59,130,246,0.28)',
+                                borderColor: 'rgba(239,68,68,0.28)',
                                 borderRadius: 20,
                                 paddingHorizontal: 9,
                                 paddingVertical: 2,
                             }}
                         >
-                            <MaterialIcons name="play-arrow" size={13} color="#60a5fa" />
-                            <Text style={{ fontSize: 12, fontFamily: 'Poppins-SemiBold', color: '#60a5fa' }}>
+                            <MaterialIcons name="play-arrow" size={13} color="#f87171" />
+                            <Text style={{ fontSize: 12, fontFamily: 'Poppins-SemiBold', color: '#f87171' }}>
                                 Epizoda {ep}
                             </Text>
                         </View>
@@ -530,15 +530,15 @@ const Episode = () => {
                                         <View
                                             key={index}
                                             style={{
-                                                backgroundColor: 'rgba(59,130,246,0.11)',
+                                                backgroundColor: 'rgba(239,68,68,0.11)',
                                                 borderWidth: 0.5,
-                                                borderColor: 'rgba(59,130,246,0.22)',
+                                                borderColor: 'rgba(239,68,68,0.22)',
                                                 borderRadius: 20,
                                                 paddingHorizontal: 9,
                                                 paddingVertical: 3,
                                             }}
                                         >
-                                            <Text style={{ fontSize: 11, fontFamily: 'Poppins-SemiBold', color: '#60a5fa' }}>
+                                            <Text style={{ fontSize: 11, fontFamily: 'Poppins-SemiBold', color: '#f87171' }}>
                                                 {genre}
                                             </Text>
                                         </View>
