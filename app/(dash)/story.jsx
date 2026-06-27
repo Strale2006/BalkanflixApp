@@ -8,10 +8,9 @@ import {
     Modal,
     FlatList,
     Alert,
-    ActivityIndicator,
     Dimensions,
     Image,
-    StyleSheet
+    StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -19,87 +18,135 @@ import axios from 'axios';
 import * as Sharing from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
 import ViewShot from 'react-native-view-shot';
-import {logoSmall} from "../../constants/images"
+import { logoSmall } from '../../constants/images';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-// ---------- Instagram Story Preview (inline) ----------
-const InstagramStoryPreview = React.forwardRef(({ imageUrl, title, episode, translator }, ref) => (
-    <ViewShot ref={ref} options={{ format: 'png', quality: 1, result: 'tmpfile' }}>
-        <View
-            style={{
-                width: 500,
-                height: 889, // 16:9
-                backgroundColor: '#0a0a0a',
-                overflow: 'hidden',
-            }}
-        >
-            <Image
-                source={{ uri: `https://images.balkanflix.com/${imageUrl}` }}
-                style={{ width: '100%', height: '100%', position: 'absolute', opacity: 0.75 }}
-                resizeMode="cover"
-            />
-            {/* Gradient overlay */}
-            <View
-                style={{
-                    ...StyleSheet.absoluteFillObject,
-                    backgroundColor: 'rgba(0,0,0,0.6)',
-                }}
-            />
-            {/* Content */}
-            <View style={{ flex: 1, justifyContent: 'space-between', padding: 30 }}>
+// ---------- Instagram Story Preview (identičan sajtu) ----------
+const InstagramStoryPreview = React.forwardRef(
+    ({ imageUrl, title, episode, translator }, ref) => (
+        <ViewShot ref={ref} options={{ format: 'png', quality: 1, result: 'tmpfile' }}>
+            <View style={previewStyles.container}>
+                {/* Pozadinska slika */}
                 <Image
-                    source={logoSmall} // prilagodite putanju logotipa
-                    style={{ width: 180, height: 50, resizeMode: 'contain' }}
+                    source={{ uri: `https://images.balkanflix.com/${imageUrl}` }}
+                    style={previewStyles.bgImage}
+                    resizeMode="cover"
                 />
-                <View>
-                    <Text
-                        style={{
-                            fontFamily: 'Poppins_700Bold',
-                            color: '#fff',
-                            fontSize: 28,
-                            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-                        }}
-                        numberOfLines={2}
-                    >
-                        {title}
-                    </Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
-                        <MaterialCommunityIcons name="play-circle" size={32} color="#ef4444" />
-                        <Text
-                            style={{
-                                fontFamily: 'Poppins_600SemiBold',
-                                color: '#fff',
-                                fontSize: 24,
-                                marginLeft: 10,
-                            }}
-                        >
-                            Ep. {episode}
-                        </Text>
-                    </View>
-                    {translator ? (
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
-                            <MaterialCommunityIcons name="account" size={20} color="#ccc" />
-                            <Text
-                                style={{
-                                    fontFamily: 'Poppins_500Medium',
-                                    color: '#ccc',
-                                    fontSize: 18,
-                                    marginLeft: 8,
-                                }}
-                            >
-                                {translator}
+                {/* Tamni overlay */}
+                <View style={previewStyles.overlay} />
+
+                {/* Glavni sadržaj */}
+                <View style={previewStyles.content}>
+                    {/* Logo gore levo */}
+                    <Image source={logoSmall} style={previewStyles.logo} resizeMode="contain" />
+
+                    {/* Donji deo: poster + informacije */}
+                    <View style={previewStyles.bottom}>
+                        {/* Poster u belom ramu */}
+                        <Image
+                            source={{ uri: `https://images.balkanflix.com/${imageUrl}` }}
+                            style={previewStyles.poster}
+                            resizeMode="cover"
+                        />
+
+                        {/* Naslov serije + play ikonica */}
+                        <View style={previewStyles.titleRow}>
+                            <MaterialCommunityIcons name="play-circle" size={36} color="#ef4444" />
+                            <Text style={previewStyles.title} numberOfLines={2}>
+                                {title}
                             </Text>
                         </View>
-                    ) : null}
+
+                        {/* Epizoda */}
+                        <Text style={previewStyles.episode}>Epizoda {episode}</Text>
+
+                        {/* Prevodilac (ako postoji) */}
+                        {translator ? (
+                            <View style={previewStyles.translatorRow}>
+                                <MaterialCommunityIcons name="account" size={18} color="#ccc" />
+                                <Text style={previewStyles.translator}>{translator}</Text>
+                            </View>
+                        ) : null}
+                    </View>
                 </View>
             </View>
-        </View>
-    </ViewShot>
-));
+        </ViewShot>
+    )
+);
 
-// ---------- Main Screen ----------
+const previewStyles = StyleSheet.create({
+    container: {
+        width: 500,
+        height: 889, // 9:16
+        backgroundColor: '#0a0a0a',
+        overflow: 'hidden',
+    },
+    bgImage: {
+        ...StyleSheet.absoluteFillObject,
+        opacity: 0.75,
+    },
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+    },
+    content: {
+        flex: 1,
+        justifyContent: 'space-between',
+        padding: 30,
+    },
+    logo: {
+        width: 150,
+        height: 50,
+    },
+    bottom: {
+        // sve je pri dnu
+    },
+    poster: {
+        width: '100%',
+        height: 180,
+        borderRadius: 12,
+        borderWidth: 3,
+        borderColor: '#ffffff',
+        marginBottom: 15,
+    },
+    titleRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 6,
+    },
+    title: {
+        flex: 1,
+        fontFamily: 'Poppins_700Bold',
+        color: '#fff',
+        fontSize: 22,
+        marginLeft: 8,
+        textShadowColor: 'rgba(0,0,0,0.5)',
+        textShadowOffset: { width: 2, height: 2 },
+        textShadowRadius: 4,
+    },
+    episode: {
+        fontFamily: 'Poppins_600SemiBold',
+        color: '#fff',
+        fontSize: 14,
+        marginBottom: 8,
+        marginLeft: 44, // poravnanje sa naslovom
+    },
+    translatorRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    translator: {
+        fontFamily: 'Poppins_500Medium',
+        color: '#ccc',
+        fontSize: 14,
+        marginLeft: 6,
+    },
+});
+
+// ---------- Glavni ekran ----------
 const StoryMakerScreen = () => {
+    // State i funkcije su identične prethodnoj verziji
     const [seriesList, setSeriesList] = useState([]);
     const [formData, setFormData] = useState({
         selectedSeries: '',
@@ -113,7 +160,6 @@ const StoryMakerScreen = () => {
     const [loading, setLoading] = useState(false);
     const storyRef = useRef(null);
 
-    // Fetch series titles
     useEffect(() => {
         const fetchSeries = async () => {
             try {
@@ -129,7 +175,6 @@ const StoryMakerScreen = () => {
         fetchSeries();
     }, []);
 
-    // Handle form input changes
     const handleInputChange = (field, value) => {
         setFormData(prev => {
             const updated = { ...prev, [field]: value };
@@ -144,7 +189,6 @@ const StoryMakerScreen = () => {
         });
     };
 
-    // Generate story preview
     const handleGenerate = () => {
         if (!formData.selectedSeries || !formData.episode) {
             Alert.alert('Greška', 'Serijal i epizoda su obavezni.');
@@ -153,19 +197,16 @@ const StoryMakerScreen = () => {
         setGenerisanStory(true);
     };
 
-    // Export image (save/share)
     const handleExport = async () => {
         if (!storyRef.current) return;
         try {
             const uri = await storyRef.current.capture();
-            // Prvo podelimo, a korisnik može da sačuva
             if (await Sharing.isAvailableAsync()) {
                 await Sharing.shareAsync(uri, {
                     mimeType: 'image/png',
                     dialogTitle: 'Podeli Instagram Story',
                 });
             } else {
-                // Ako nije dostupno deljenje, sačuvaj u galeriju
                 const { status } = await MediaLibrary.requestPermissionsAsync();
                 if (status === 'granted') {
                     await MediaLibrary.saveToLibraryAsync(uri);
@@ -180,15 +221,13 @@ const StoryMakerScreen = () => {
         }
     };
 
-    // Selected series name for display
-    const selectedSeriesTitle = seriesList.find(
-        s => s.title === formData.selectedSeries
-    )?.title || 'Odaberi serijal...';
+    const selectedSeriesTitle =
+        seriesList.find(s => s.title === formData.selectedSeries)?.title || 'Odaberi serijal...';
 
     return (
         <SafeAreaView className="flex-1 bg-gray-950">
             <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-                {/* Header sa blobovima */}
+                {/* Header */}
                 <View className="relative overflow-hidden bg-gray-900 pb-6 pt-8 px-5 border-b border-gray-800">
                     <View className="absolute inset-0">
                         <View className="absolute -top-12 -right-12 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl" />
@@ -208,7 +247,6 @@ const StoryMakerScreen = () => {
                     <View className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-5 border border-gray-700">
                         <Text className="text-white text-lg font-psemibold mb-4">Podaci za story</Text>
 
-                        {/* Serijal picker */}
                         <Text className="text-gray-300 font-pmedium text-sm mb-1">Serijal</Text>
                         <TouchableOpacity
                             onPress={() => setShowSeriesPicker(true)}
@@ -220,7 +258,6 @@ const StoryMakerScreen = () => {
                             <MaterialCommunityIcons name="chevron-down" size={20} color="#9ca3af" />
                         </TouchableOpacity>
 
-                        {/* Episode & Translator */}
                         <View className="flex-row gap-3 mb-4">
                             <View className="flex-1">
                                 <Text className="text-gray-300 font-pmedium text-sm mb-1">Epizoda</Text>
@@ -245,7 +282,6 @@ const StoryMakerScreen = () => {
                             </View>
                         </View>
 
-                        {/* Buttons */}
                         <TouchableOpacity
                             onPress={handleGenerate}
                             className="bg-indigo-600 py-3 rounded-xl items-center mb-3"
@@ -262,11 +298,11 @@ const StoryMakerScreen = () => {
                         )}
                     </View>
 
-                    {/* Preview Section */}
+                    {/* Preview */}
                     {generisanStory && (
                         <View className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-5 border border-gray-700">
                             <Text className="text-white text-lg font-psemibold mb-4">Pregled</Text>
-                            <View className="items-center">
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                                 <InstagramStoryPreview
                                     ref={storyRef}
                                     imageUrl={formData.imageUrl}
@@ -274,7 +310,7 @@ const StoryMakerScreen = () => {
                                     episode={formData.episode}
                                     translator={formData.translator}
                                 />
-                            </View>
+                            </ScrollView>
                         </View>
                     )}
                 </View>
@@ -295,7 +331,9 @@ const StoryMakerScreen = () => {
                                         setShowSeriesPicker(false);
                                     }}
                                     className={`p-3 rounded-lg mb-1 ${
-                                        formData.selectedSeries === item.title ? 'bg-indigo-600/20 border border-indigo-400' : 'bg-gray-800'
+                                        formData.selectedSeries === item.title
+                                            ? 'bg-indigo-600/20 border border-indigo-400'
+                                            : 'bg-gray-800'
                                     }`}
                                 >
                                     <Text className="text-white font-pmedium">{item.title}</Text>
@@ -305,10 +343,7 @@ const StoryMakerScreen = () => {
                                 <Text className="text-gray-400 text-center mt-4 font-pregular">Nema serijala</Text>
                             }
                         />
-                        <TouchableOpacity
-                            onPress={() => setShowSeriesPicker(false)}
-                            className="mt-3 py-2"
-                        >
+                        <TouchableOpacity onPress={() => setShowSeriesPicker(false)} className="mt-3 py-2">
                             <Text className="text-gray-400 text-center font-pmedium">Zatvori</Text>
                         </TouchableOpacity>
                     </View>

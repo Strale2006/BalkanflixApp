@@ -21,6 +21,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
+import * as Notifications from 'expo-notifications';
+const TRANSLATOR_REMINDER_PREFIX = 'translator-';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const NUM_COLUMNS = SCREEN_WIDTH > 768 ? 2 : 1;
@@ -30,6 +33,8 @@ const CalendarScreen = () => {
   const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(true);
   const [serijali, setSerijali] = useState([]);
+  const { user } = useGlobalContext();
+  const username = user?.username || '';
 
   // Add to calendar modal
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -48,7 +53,7 @@ const CalendarScreen = () => {
   const [editVreme, setEditVreme] = useState(new Date());
   const [showEditDatePicker, setShowEditDatePicker] = useState(false);
 
-  const [username, setUsername] = useState('');
+  const [schedulingNeeded, setSchedulingNeeded] = useState(false);
 
   // ---- HELPERS ----
   const convertToBelgradeTime = (isoString) => {
@@ -104,6 +109,73 @@ const CalendarScreen = () => {
 
   const getImageUrl = (img) => `https://images.balkanflix.com/${img}`;
 
+  // Otkazuje sve prethodne prevodilačke podsetnike
+  const cancelTranslatorReminders = async () => {
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    const toCancel = scheduled.filter(n =>
+        n.identifier.startsWith(TRANSLATOR_REMINDER_PREFIX)
+    );
+    for (const notif of toCancel) {
+      await Notifications.cancelScheduledNotificationAsync(notif.identifier);
+    }
+  };
+
+// Zakazuje podsetnike za sve buduće događaje gde je korisnik prevodilac
+  const scheduleTranslatorReminders = async () => {
+    if (!username || schedule.length === 0) {
+      console.log('⛔ scheduleTranslatorReminders: nedostaje username ili nema schedule');
+      return;
+    }
+    console.log(`📋 Proveravam ${schedule.length} stavki za username: "${username}"`);
+
+    const { status } = await Notifications.getPermissionsAsync();
+    if (status !== 'granted') {
+      const { status: newStatus } = await Notifications.requestPermissionsAsync();
+      if (newStatus !== 'granted') {
+        console.log('❌ Dozvola za notifikacije nije data');
+        return;
+      }
+    }
+
+    await cancelTranslatorReminders();
+    const now = new Date();
+    let scheduledCount = 0;
+
+    for (const item of schedule) {
+      console.log(`   ➤ ${item.title} Ep ${item.ep} | pv="${item.pv}" | eventTime=${item.originalTime}`);
+      if (item.pv !== username) {
+        console.log(`      ❌ pv se ne poklapa (očekivano "${username}", dobijeno "${item.pv}")`);
+        continue;
+      }
+
+      const eventTime = new Date(item.originalTime);
+      if (eventTime <= now) {
+        console.log(`      ⏭️ Vreme je već prošlo: ${eventTime.toISOString()}`);
+        continue;
+      }
+
+      const reminderTime = new Date(eventTime.getTime() - 3 * 60 * 60 * 1000);
+      const triggerDate = reminderTime > now ? reminderTime : new Date(now.getTime() + 10 * 1000);
+
+      console.log(`      🕒 Podsetnik za ${triggerDate.toISOString()} (za ${Math.round((triggerDate - now) / 1000)}s)`);
+
+      await Notifications.scheduleNotificationAsync({
+        identifier: `${TRANSLATOR_REMINDER_PREFIX}${item._id}`,
+        content: {
+          title: `Prevodi: ${item.title} Ep ${item.ep}`,
+          body: `Zakazano za ${item.date} u ${item.time}. Klikni da otvoriš kalendar.`,
+          data: { url: '/calendar' },
+        },
+        trigger: { date: triggerDate },
+      });
+      scheduledCount++;
+      console.log(`      ✅ ZAKAZANO (ID: ${TRANSLATOR_REMINDER_PREFIX}${item._id})`);
+    }
+
+    console.log(`📬 Ukupno zakazanih podsetnika za prevode: ${scheduledCount}`);
+    setSchedulingNeeded(false);
+  };
+
   // ---- DATA FETCHING ----
   const fetchSchedule = useCallback(async () => {
     try {
@@ -118,6 +190,7 @@ const CalendarScreen = () => {
         status: getStatus(item.time),
       }));
       setSchedule(converted);
+      setSchedulingNeeded(true);
     } catch (error) {
       console.error('Error fetching schedule:', error);
     } finally {
@@ -134,16 +207,16 @@ const CalendarScreen = () => {
     }
   }, []);
 
-  const loadUsername = async () => {
-    const stored = await AsyncStorage.getItem('username') || '';
-    setUsername(stored);
-  };
-
   useEffect(() => {
-    loadUsername();
     fetchSchedule();
     fetchSeries();
   }, []);
+
+  useEffect(() => {
+    if (schedulingNeeded && username) {
+      scheduleTranslatorReminders();
+    }
+  }, [schedulingNeeded, username]);
 
   // Live countdown
   useEffect(() => {
