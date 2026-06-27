@@ -428,7 +428,7 @@ const Profile = () => {
                 <View style={{ paddingHorizontal: 16, marginBottom: 24 }}>
                     <View style={{ flexDirection: 'row', gap: 10 }}>
                         <StatBox value={user?.full_ep?.length || 0} label="Epizoda"   icon="play"     iconColor="#E50914" />
-                        <StatBox value={user?.streak || 0}          label="Streak 🔥" icon="fire"     iconColor="#fbbf24" />
+                        <StatBox value={user?.streak || 0}          label="Streak" icon="fire"     iconColor="#fbbf24" />
                         <StatBox value={animeCards.length || 0}     label="Sačuvano"  icon="bookmark" iconColor="#60a5fa" />
                     </View>
                     {user?.isTranslator && (
