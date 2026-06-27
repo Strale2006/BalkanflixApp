@@ -20,7 +20,7 @@ import TopSlider from '../../components/HeroSlide';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import Schedule from './../schedule/schedule';
-
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 const { width } = Dimensions.get('window');
 
 // grid podesavanja za "Najnovije Epizode"
@@ -34,6 +34,11 @@ const IMAGE_HEIGHT = CARD_WIDTH * 1.45;
 const ROW_GAP = 18;
 
 const MainHome = () => {
+
+    const BANNER_ID = __DEV__
+        ? TestIds.BANNER
+        : 'ca-app-pub-5998257044328183/7987732426';
+
   const [topUsers, setTopUsers] = useState([]);
   const [newEpisodes, setNewEpisodes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -206,7 +211,14 @@ const MainHome = () => {
             ListHeaderComponent={
               <View className="pb-5">
                 <TopSlider />
-
+                  {/* AdMob Banner */}
+                  <View style={{ alignItems: 'center', marginVertical: 8 }}>
+                      <BannerAd
+                          unitId={BANNER_ID}
+                          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                          onAdFailedToLoad={(error) => console.log('Banner greška:', error)}
+                      />
+                  </View>
                 {/* New Episodes Section */}
                 <View className="my-4">
                   <View className="flex-row items-center px-4 mb-4">

@@ -1,16 +1,18 @@
 import { SplashScreen, Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import "react-native-url-polyfill/auto";
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { AppState } from 'react-native';
 import GlobalProvider from '../context/GlobalProvider';
 import useNotificationObserver from '../notifications/useNotificationObserver';
-// import {scheduleReminderNotifications} from "../notifications/ReminderNotificationService";
-import mobileAds from "react-native-google-mobile-ads";
-import {
-    loadAppOpen,
-    showAppOpen
-} from "../ads/AppOpenManager";
+import mobileAds, { AppOpenAd, AdEventType, TestIds } from 'react-native-google-mobile-ads';
+
 SplashScreen.preventAutoHideAsync();
+
+// Tokom testiranja uvek koristi TestIds, nikad pravi ID!
+const AD_UNIT_ID = __DEV__
+    ? TestIds.APP_OPEN
+    : 'ca-app-pub-5998257044328183/9226616300';
 
 const RootLayout = () => {
     const [fontsLoaded, error] = useFonts({
@@ -27,23 +29,56 @@ const RootLayout = () => {
 
     useNotificationObserver();
 
-    useEffect(() => {
+    const appState = useRef(AppState.currentState);
+    const lastAdShown = useRef(0);
+    const AD_COOLDOWN = 30 * 60 * 1000;
 
-        if (!fontsLoaded)
+    const loadAd = () => {
+        const now = Date.now();
+
+        // Ne prikazuj reklamu ako nije prošlo dovoljno vremena
+        if (now - lastAdShown.current < AD_COOLDOWN) {
             return;
+        }
 
-        mobileAds().initialize().then(() => {
-            loadAppOpen();
+        const ad = AppOpenAd.createForAdRequest(AD_UNIT_ID);
+
+        ad.addAdEventListener(AdEventType.LOADED, () => {
+            ad.show();
         });
 
+        ad.addAdEventListener(AdEventType.CLOSED, () => {
+            lastAdShown.current = Date.now(); // zabeleži kada je zatvorena
+        });
+
+        ad.addAdEventListener(AdEventType.ERROR, (error) => {
+            console.log('AdMob greška:', error);
+        });
+
+        ad.load();
+    };
+
+    useEffect(() => {
+        mobileAds().initialize().then(() => {
+            loadAd(); // prva reklama pri otvaranju
+        });
+
+        const subscription = AppState.addEventListener('change', (nextState) => {
+            if (
+                appState.current.match(/inactive|background/) &&
+                nextState === 'active'
+            ) {
+                loadAd(); // reklama kad se vrati iz pozadine, ali samo ako je prošlo 60s
+            }
+            appState.current = nextState;
+        });
+
+        return () => subscription.remove();
+    }, []);
+
+    useEffect(() => {
+        if (!fontsLoaded) return;
         SplashScreen.hideAsync();
-
-        const timer = setTimeout(() => {
-            showAppOpen();
-        }, 1000);
-
-        return () => clearTimeout(timer);
-
     }, [fontsLoaded]);
 
     if (!fontsLoaded && !error) return null;
