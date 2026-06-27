@@ -4,8 +4,12 @@ import "react-native-url-polyfill/auto";
 import { useEffect } from 'react';
 import GlobalProvider from '../context/GlobalProvider';
 import useNotificationObserver from '../notifications/useNotificationObserver';
-import {scheduleReminderNotifications} from "../notifications/ReminderNotificationService";
-
+// import {scheduleReminderNotifications} from "../notifications/ReminderNotificationService";
+import mobileAds from "react-native-google-mobile-ads";
+import {
+    loadAppOpen,
+    showAppOpen
+} from "../ads/AppOpenManager";
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
@@ -24,10 +28,23 @@ const RootLayout = () => {
     useNotificationObserver();
 
     useEffect(() => {
-        if (error) throw error;
-        if (fontsLoaded) SplashScreen.hideAsync();
-        // scheduleReminderNotifications();
-    }, [fontsLoaded, error]);
+
+        if (!fontsLoaded)
+            return;
+
+        mobileAds().initialize().then(() => {
+            loadAppOpen();
+        });
+
+        SplashScreen.hideAsync();
+
+        const timer = setTimeout(() => {
+            showAppOpen();
+        }, 1000);
+
+        return () => clearTimeout(timer);
+
+    }, [fontsLoaded]);
 
     if (!fontsLoaded && !error) return null;
 
