@@ -256,10 +256,14 @@ const Episode = () => {
         if (episodeSrc) servers.push({ id: 'Filemoon', name: 'Filemoon' });
         setAvailableServers(servers);
 
-        if (servers.length > 0 && !servers.find((s) => s.id === selectedServer)) {
+        // Ako Balkanflix postoji, uvek ga biraj (bez obzira na trenutni odabir)
+        if (episodeBf) {
+            setSelectedServer('Balkanflix');
+        } else if (servers.length > 0) {
+            // Ako Balkanflix ne postoji, uzmi prvi dostupni (Filemoon)
             setSelectedServer(servers[0].id);
         }
-    }, [episodeSrc, episodeBf, selectedServer]);
+    }, [episodeSrc, episodeBf]);
 
     // ── Unmount tracking ──────────────────────────────────────────────────────
     useEffect(() => {
@@ -322,7 +326,8 @@ const Episode = () => {
                         </TouchableOpacity>
                     </Link>
 
-                    <View style={{ flex: 1, minWidth: 0 }}>
+                    <Link href={`/details/${seriesData?.title_params}`} asChild>
+                        <TouchableOpacity style={{ flex: 1, minWidth: 0 }}>
                         <Text
                             numberOfLines={1}
                             style={{ fontSize: 15, fontFamily: 'Poppins-Bold', color: '#f1f5f9' }}
@@ -349,7 +354,8 @@ const Episode = () => {
                                 Epizoda {ep}
                             </Text>
                         </View>
-                    </View>
+                        </TouchableOpacity>
+                    </Link>
                 </View>
 
                 {/* ── Video Player ── */}
@@ -511,18 +517,22 @@ const Episode = () => {
                             />
 
                             <View style={{ flex: 1, minWidth: 0 }}>
-                                <Text
-                                    numberOfLines={2}
-                                    style={{
-                                        fontSize: 15,
-                                        fontFamily: 'Poppins-Bold',
-                                        color: '#f1f5f9',
-                                        marginBottom: 8,
-                                        lineHeight: 20,
-                                    }}
-                                >
-                                    {seriesData?.title}
-                                </Text>
+                                <Link href={`/details/${seriesData?.title_params}`} asChild>
+                                    <TouchableOpacity>
+                                        <Text
+                                            numberOfLines={2}
+                                            style={{
+                                                fontSize: 15,
+                                                fontFamily: 'Poppins-Bold',
+                                                color: '#f1f5f9',
+                                                marginBottom: 8,
+                                                lineHeight: 20,
+                                            }}
+                                        >
+                                            {seriesData?.title}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </Link>
 
                                 {/* Žanrovi */}
                                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 5, marginBottom: 10 }}>

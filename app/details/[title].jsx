@@ -172,6 +172,8 @@ const DetailsScreen = () => {
           setSeriesData(data.series[0]);
           setSeriesId(data.series[0]._id);
           fetchUserData(data.series[0]);
+            console.log('previous:', JSON.stringify(data.series[0].previous));
+            console.log('next:', JSON.stringify(data.series[0].next));
         }
       } catch (error) {
         console.error('Error fetching series:', error);
@@ -496,28 +498,29 @@ const DetailsScreen = () => {
           </View>
 
           {/* ── Sezone ── */}
-          {(seriesData.previous || seriesData.next) && (
+
+            {((seriesData.previous?.[0] || seriesData.next?.[0])) && (
               <>
                 <View style={{ height: 0.5, backgroundColor: 'rgba(255,255,255,0.07)', marginHorizontal: 16, marginVertical: 22 }} />
                 <View style={{ paddingHorizontal: 16, marginBottom: 28 }}>
                   <SectionHeader title="Druge sezone" />
                   <View style={{ flexDirection: 'row', gap: 12 }}>
-                    {seriesData.previous && (
-                        <SeasonCard
-                            label={seriesData.previous[0]}
-                            badge="← Prethodna"
-                            imagePath={seriesData.previous[2] || seriesData.img}
-                            titleParam={seriesData.previous[1]}
-                        />
-                    )}
-                    {seriesData.next && (
-                        <SeasonCard
-                            label={seriesData.next[0]}
-                            badge="Sledeća →"
-                            imagePath={seriesData.next[2] || seriesData.img}
-                            titleParam={seriesData.next[1]}
-                        />
-                    )}
+                      {Array.isArray(seriesData.previous) && seriesData.previous.length > 0 && seriesData.previous[0] !== '' && (
+                          <SeasonCard
+                              label={seriesData.previous[0]}
+                              badge="← Prethodna"
+                              imagePath={seriesData.previous[2] || seriesData.img}
+                              titleParam={seriesData.previous[1]}
+                          />
+                      )}
+                      {Array.isArray(seriesData.next) && seriesData.next.length > 0 && seriesData.next[0] !== '' && (
+                          <SeasonCard
+                              label={seriesData.next[0]}
+                              badge="Sledeća →"
+                              imagePath={seriesData.next[2] || seriesData.img}
+                              titleParam={seriesData.next[1]}
+                          />
+                      )}
                   </View>
                 </View>
               </>

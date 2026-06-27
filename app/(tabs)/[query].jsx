@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useSearch from '../../lib/useSearch';
@@ -7,57 +7,62 @@ import EmptyState from '../../components/EmptyState';
 import VideoCard from '../../components/VideoCard';
 
 const Search = () => {
-  const [submittedQuery, setSubmittedQuery] = useState('');
-  const flatListRef = useRef(null);
-  const { data: posts, loading, error, loadMore } = useSearch(submittedQuery);
+    const [searchText, setSearchText] = useState('');
+    const flatListRef = useRef(null);
+    const { data: posts, loading, error, loadMore, searchNow } = useSearch(searchText);
 
-  // Scroll to top when search changes
-  useEffect(() => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
-  }, [submittedQuery]);
+    // Resetuj skrol na vrh kad se rezultati promene
+    useEffect(() => {
+        flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    }, [posts]);
 
-  return (
-    <SafeAreaView className="bg-primary h-full">
-      <FlatList
-        ref={flatListRef}
-        data={posts}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => <VideoCard item={item} />}
-        numColumns={2}
-        columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 16 }}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.5}
-        ListHeaderComponent={() => (
-          <View className="my-6 px-4">
-            <Text className="font-pmedium text-sm text-gray-100">
-              Rezultati Pretrage
-            </Text>
-            <Text className="text-2xl font-psemibold text-white">
-              {submittedQuery ? submittedQuery : "Pretražite nešto..."} 
-            </Text>
+    const handleSubmit = useCallback(() => {
+        searchNow();
+    }, [searchNow]);
 
-            <View className="mt-6 mb-8">
-              <SearchInput 
-                initialQuery={submittedQuery}
-                onSearch={setSubmittedQuery}
-              />
+    return (
+        <SafeAreaView className="bg-primary h-full">
+            {/* Fiksni header sa SearchInput */}
+            <View className="px-4 pt-6 pb-2">
+                <Text className="font-pmedium text-sm text-gray-100 mb-1">
+                    Rezultati Pretrage
+                </Text>
+                <Text className="text-2xl font-psemibold text-white mb-4">
+                    {searchText.trim() || "Pretražite nešto..."}
+                </Text>
+                <SearchInput
+                    value={searchText}
+                    onChangeText={setSearchText}
+                    onSubmit={handleSubmit}
+                />
             </View>
-          </View>
-        )}
-        ListFooterComponent={() => (
-          loading && <ActivityIndicator size="small" color="#fff" className="py-4" />
-        )}
-        ListEmptyComponent={() => (
-          !loading && (
-            <EmptyState 
-              title={error ? "Greška u pretrazi" : "Nema rezultata"}
-              subtitle={error || "Ništa nije pronađeno"}
+
+            {/* Lista rezultata */}
+            <FlatList
+                ref={flatListRef}
+                data={posts}
+                keyExtractor={(item) => item._id}
+                renderItem={({ item }) => <VideoCard item={item} />}
+                numColumns={2}
+                columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 16 }}
+                onEndReached={loadMore}
+                onEndReachedThreshold={0.5}
+                ListFooterComponent={() =>
+                    loading && <ActivityIndicator size="small" color="#fff" className="py-4" />
+                }
+                ListEmptyComponent={() =>
+                    !loading && (
+                        <EmptyState
+                            title={error ? "Greška u pretrazi" : "Nema rezultata"}
+                            subtitle={error || "Ništa nije pronađeno"}
+                        />
+                    )
+                }
+                // Važno: sprečava da tastatura nestane pri dodiru liste
+                keyboardShouldPersistTaps="handled"
             />
-          )
-        )}
-      />
-    </SafeAreaView>
-  );
+        </SafeAreaView>
+    );
 };
 
 export default Search;
