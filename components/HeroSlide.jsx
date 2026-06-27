@@ -81,7 +81,7 @@ const SliderItem = ({ item, index, scrollX }) => {
                                     shadowRadius: 8,
                                     elevation: 5,
                                 }}
-                                onPress={() => router.push(`/details/${encodeURIComponent(item?.title_params)}`)}
+                                onPress={() => router.push(`/${encodeURIComponent(item?.title_params)}/1`)}
                             >
                                 <MaterialIcons name="play-arrow" size={22} color="black" />
                                 <Text className="text-black font-pbold ml-1 text-[15px]">Gledaj</Text>
