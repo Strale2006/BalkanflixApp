@@ -4,6 +4,7 @@ import "react-native-url-polyfill/auto";
 import { useEffect } from 'react';
 import GlobalProvider from '../context/GlobalProvider';
 import useNotificationObserver from '../notifications/useNotificationObserver';
+import {scheduleReminderNotifications} from "../notifications/ReminderNotificationService";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -25,6 +26,7 @@ const RootLayout = () => {
     useEffect(() => {
         if (error) throw error;
         if (fontsLoaded) SplashScreen.hideAsync();
+        scheduleReminderNotifications();
     }, [fontsLoaded, error]);
 
     if (!fontsLoaded && !error) return null;

@@ -300,7 +300,8 @@ const GlobalProvider = ({ children }) => {
       return false;
     }
   };
-  
+
+
   return (
     <GlobalContext.Provider
       value={{

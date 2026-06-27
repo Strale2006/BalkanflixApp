@@ -153,7 +153,6 @@ const Profile = () => {
           <InfoBox title={user?.full_ep?.length || 0} subtitle="Odgledanih Epizoda" titleStyles={"text-lg"} />
           <InfoBox title={user?.streak+"🔥" || 0} subtitle="Streak" titleStyles={"text-lg"} />
           {user?.isTranslator && <InfoBox title={user?.brojPrevoda || 0} subtitle="Prevedeno Epizoda" titleStyles={"text-lg"} />}
-          {user?.isTranslator && <InfoBox title={user?.balance+"$" || 0} subtitle="Balans" titleStyles={"text-lg mt-4"} />}
         </View>
 
         {user?.isTranslator && (
