@@ -494,6 +494,7 @@ const Episode = () => {
                         marginBottom: 20,
                     }}
                 />
+
                 {/* ── AdMob Banner ── */}
                 <View style={{ alignItems: 'center', marginHorizontal: 16, marginBottom: 16 }}>
                     <BannerAd
