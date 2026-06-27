@@ -32,6 +32,11 @@ const STATUS_META = {
 
 const CARD_W = (width - 32 - 10) / 2;
 
+// Poznate role koje vec imaju svoj poseban badge preko boolean flagova
+// (isVerified / isAdmin / isTranslator). Sve ostalo iz user.roles[] se
+// tretira kao "custom" rola i prikazuje generičkim stilom.
+const KNOWN_ROLE_KEYS = ['admin', 'moderator', 'translator', 'verified'];
+
 // ─── Section Header ───────────────────────────────────────────────────────────
 const SectionHeader = ({ title, count }) => (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 }}>
@@ -68,6 +73,24 @@ const RoleBadge = ({ user }) => {
     if (user?.isVerified)   badges.push({ label: 'Verifikovan', color: '#10b981', bg: 'rgba(16,185,129,0.1)',   icon: 'checkmark-circle', lib: 'I' });
     if (user?.isAdmin)      badges.push({ label: 'Admin',       color: '#818cf8', bg: 'rgba(129,140,248,0.1)',  icon: 'crown',            lib: 'MC' });
     if (user?.isTranslator) badges.push({ label: 'Prevodilac',  color: '#fb7185', bg: 'rgba(251,113,133,0.1)', icon: 'translate',         lib: 'MI' });
+
+    // ── Custom role iz user.roles[] ──────────────────────────────────────────
+    // Sve sto je u roles[] a nije jedna od poznatih (admin/moderator/translator/
+    // verified) se prikazuje kao generican custom badge, isti stil za sve.
+    const customRoles = Array.isArray(user?.roles)
+        ? user.roles.filter((r) => !KNOWN_ROLE_KEYS.includes(String(r).toLowerCase()))
+        : [];
+
+    customRoles.forEach((role) => {
+        badges.push({
+            label: role,
+            color: '#fbbf24',
+            bg: 'rgba(251,191,36,0.1)',
+            icon: 'star',
+            lib: 'MI',
+        });
+    });
+
     if (!badges.length) return null;
     return (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }}>
@@ -427,9 +450,9 @@ const Profile = () => {
                 {/* ── Stats ── */}
                 <View style={{ paddingHorizontal: 16, marginBottom: 24 }}>
                     <View style={{ flexDirection: 'row', gap: 10 }}>
-                        <StatBox value={user?.full_ep?.length || 0} label="Epizoda"   icon="play"     iconColor="#E50914" />
-                        <StatBox value={user?.streak || 0}          label="Streak" icon="fire"     iconColor="#fbbf24" />
-                        <StatBox value={animeCards.length || 0}     label="Sačuvano"  icon="bookmark" iconColor="#60a5fa" />
+                        <StatBox value={user?.full_ep || 0}     label="Epizoda"   icon="play"     iconColor="#E50914" />
+                        <StatBox value={user?.streak || 0}      label="Streak" icon="fire"     iconColor="#fbbf24" />
+                        <StatBox value={animeCards.length || 0} label="Sačuvano"  icon="bookmark" iconColor="#60a5fa" />
                     </View>
                     {user?.isTranslator && (
                         <TouchableOpacity onPress={() => router.push('/dev-profil')} activeOpacity={0.85} style={{
@@ -519,5 +542,6 @@ const Profile = () => {
         </SafeAreaView>
     );
 };
+
 
 export default Profile;
