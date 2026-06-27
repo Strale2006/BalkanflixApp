@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, Dimensions, Animated } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, Dimensions, Animated, FlatList } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import { router } from 'expo-router';
@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 const HERO_HEIGHT = height * 0.58;
+const AUTO_SCROLL_INTERVAL = 5000;
 
 const SliderItem = ({ item, index, scrollX }) => {
     const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
@@ -31,13 +32,11 @@ const SliderItem = ({ item, index, scrollX }) => {
                     style={{ flex: 1 }}
                     resizeMode="cover"
                 >
-                    {/* gornji fade — da se status bar / nav ikonice vide */}
                     <LinearGradient
                         colors={['rgba(0,0,0,0.55)', 'transparent']}
                         style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 110 }}
                     />
 
-                    {/* donji fade — cinematic + blendira se sa bg ispod */}
                     <LinearGradient
                         colors={['transparent', 'rgba(0,0,0,0.55)', '#000']}
                         locations={[0, 0.6, 1]}
@@ -106,6 +105,9 @@ const SliderItem = ({ item, index, scrollX }) => {
 const TopSlider = () => {
     const [series, setSeries] = useState([]);
     const scrollX = useRef(new Animated.Value(0)).current;
+    const flatListRef = useRef(null);
+    const currentIndex = useRef(0);
+    const timerRef = useRef(null);
 
     useEffect(() => {
         const fetchSeries = async () => {
@@ -119,9 +121,37 @@ const TopSlider = () => {
         fetchSeries();
     }, []);
 
+    const startTimer = (length) => {
+        clearInterval(timerRef.current);
+        timerRef.current = setInterval(() => {
+            currentIndex.current = (currentIndex.current + 1) % length;
+            flatListRef.current?.scrollToIndex({
+                index: currentIndex.current,
+                animated: true,
+            });
+        }, AUTO_SCROLL_INTERVAL);
+    };
+
+    useEffect(() => {
+        if (series.length < 2) return;
+        startTimer(series.length);
+        return () => clearInterval(timerRef.current);
+    }, [series.length]);
+
+    const handleScrollBeginDrag = () => {
+        clearInterval(timerRef.current);
+    };
+
+    const handleMomentumScrollEnd = (e) => {
+        const index = Math.round(e.nativeEvent.contentOffset.x / width);
+        currentIndex.current = index;
+        startTimer(series.length);
+    };
+
     return (
         <View className="bg-black" style={{ height: HERO_HEIGHT }}>
-            <Animated.FlatList
+            <FlatList
+                ref={flatListRef}
                 data={series}
                 renderItem={({ item, index }) => (
                     <SliderItem item={item} index={index} scrollX={scrollX} />
@@ -130,17 +160,22 @@ const TopSlider = () => {
                 horizontal
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}
-                snapToInterval={width}
-                decelerationRate="fast"
                 bounces={false}
                 scrollEventThrottle={16}
+                disableIntervalMomentum={true}
+                onScrollBeginDrag={handleScrollBeginDrag}
+                onMomentumScrollEnd={handleMomentumScrollEnd}
                 onScroll={Animated.event(
                     [{ nativeEvent: { contentOffset: { x: scrollX } } }],
                     { useNativeDriver: false }
                 )}
+                getItemLayout={(_, index) => ({
+                    length: width,
+                    offset: width * index,
+                    index,
+                })}
             />
 
-            {/* linije na dnu koje nagoveštavaju redosled */}
             {series.length > 1 && (
                 <View className="absolute bottom-3 left-0 right-0 flex-row justify-center items-center gap-2">
                     {series.map((_, i) => {
