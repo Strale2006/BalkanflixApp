@@ -81,13 +81,13 @@ const TabsLayout = () => {
               )
           }} />
 
-          <Tabs.Screen name='story' options={{
-              title: 'Objave',
-              headerShown: false,
-              tabBarIcon: ({ color, focused}) => (
-                  <TabIcon icon={icons.upload} color={color} name="Objave" focused={focused} />
-              )
-          }} />
+          {/*<Tabs.Screen name='story' options={{*/}
+          {/*    title: 'Objave',*/}
+          {/*    headerShown: false,*/}
+          {/*    tabBarIcon: ({ color, focused}) => (*/}
+          {/*        <TabIcon icon={icons.upload} color={color} name="Objave" focused={focused} />*/}
+          {/*    )*/}
+          {/*}} />*/}
 
           <Tabs.Screen name='newSeries' options={{
             title: 'Serijali',
